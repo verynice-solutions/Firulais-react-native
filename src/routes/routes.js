@@ -5,7 +5,7 @@ import { StackNavigator, TabNavigator, DrawerNavigator} from 'react-navigation'
 //Screens
 import {scale} from '../lib/responsive'
 import ProfileView from '../Views/profile/ProfileView'
-import Signin from '../Views/login/SigninView'
+import Signin from '../Views/signin/SigninView'
 
 import Drawer from '../Components/Drawer'
 

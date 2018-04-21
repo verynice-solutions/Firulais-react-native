@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, Dimensions, Platform } from 'react-native'
 import {NavigationActions} from 'react-navigation';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { Entypo, FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import { Entypo, FontAwesome, MaterialIcons, Foundation } from '@expo/vector-icons';
 import Ripple from 'react-native-material-ripple';
 import {connect} from 'react-redux'
 
@@ -10,7 +10,7 @@ const {height, width} = Dimensions.get('window');
 import Images from '../../../assets/images'
 import {scale} from '../../lib/responsive'
 import drawerActions from '../../actions/drawerActions'
-
+import Divider from '../Divider'
 class Drawer extends React.Component {
 
   constructor(props) {
@@ -48,14 +48,19 @@ class Drawer extends React.Component {
     return (<Grid style={styles.drawerContainer}>
               <Row style={styles.header}>
                 <Col style={{justifyContent: 'center'}}>
-                  <View style={{flexDirection: 'row', justifyContent: 'center',alignItems:'center', paddingTop: scale(80)}}>
+                  <View style={{flexDirection: 'row', justifyContent: 'center',alignItems:'center', paddingTop: scale(60)}}>
                   <Image resizeMode="contain" source={Images.firulais_logo}/>
                   </View>
                   <View style={{flexDirection: 'row', paddingLeft: scale(20), marginTop: scale(20), paddingBottom: scale(20) }}>
-                    <Text style={{fontSize: scale(13), color: '#fff', backgroundColor: 'transparent', opacity: 0.95}} >Hi!,  </Text><Text style={{ fontSize: scale(13), color:'#fff', backgroundColor: 'transparent', opacity: 0.95}}> {this.props.currentUser.username}</Text>
+                    {/* <Text style={{fontSize: scale(13), color: 'black', backgroundColor: 'transparent', opacity: 0.95}} >Welcome back ,</Text>
+                    <Text style={{ fontSize: scale(13), color:'#fff', backgroundColor: 'transparent', opacity: 0.95}}> 
+                      {this.props.currentUser.username}
+                    </Text> */}
                   </View>
                 </Col>
               </Row>
+              <Divider />
+              <Divider />
               <Row style={styles.drawerContent}>
                 <Col>
                   <Ripple style={[styles.drawerItem, activeView=='Home'?styles.activeItem:null ]} onPress={this.navigateToScreen('Home')} >
@@ -65,19 +70,19 @@ class Drawer extends React.Component {
 
                   <Ripple style={[styles.drawerItem, activeView=='SearchPartiesProviders'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('SearchPartiesProviders')}>
-                    <FontAwesome name="group" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Names</Text>
+                    <FontAwesome name="newspaper-o" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>Eventos</Text>
                   </Ripple>
 
                   <Ripple style={[styles.drawerItem, activeView=='SearchCasesIntakes'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('SearchCasesIntakes')}>
-                    <FontAwesome name="briefcase" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Cases & Intakes</Text>
+                    <Foundation name="guide-dog" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>Solicitudes</Text>
                   </Ripple>
 
                   <Ripple style={[styles.drawerItem, activeView=='CalendarView'?styles.activeItem:null]} onPress={this.navigateToScreen('CalendarView')}>
-                    <MaterialIcons name="today" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Calendar</Text>
+                    <FontAwesome name="history" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>Historial</Text>
                   </Ripple>
 
                 </Col>
@@ -115,7 +120,7 @@ if (Platform.OS === 'ios') {
 
 const styles = {
   header: {
-    backgroundColor: 'white',
+    backgroundColor: '#f8f8ff',
     height: scale(140)
   },
   drawerContent: {
@@ -138,9 +143,11 @@ const styles = {
     paddingLeft: scale(20)
   },
   drawerItemIcon: {
+    flex:0.15,
     marginRight: scale(40)
   },
   drawerItemText: {
+    flex:1,
     fontSize: scale(16),
     textAlign: 'left'
   },
