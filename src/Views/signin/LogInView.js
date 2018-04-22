@@ -40,7 +40,7 @@ class LogInView extends Component {
 				/>
 				<Button title='Entrar' onPress={this.onLogin}/>
 				<Button title='Crear cuenta' onPress={()=>this.props.navigation.navigate('SignUp')}/>
-				<Button title='oh no! mi contraseña' color={Colors.grey} onPress={()=>this.props.navigation.navigate('Forgot')}/>
+				<Button title='oh no !' color={Colors.grey} onPress={()=>this.props.navigation.navigate('Forgot')}/>
 			</View>
 		)
 	}
