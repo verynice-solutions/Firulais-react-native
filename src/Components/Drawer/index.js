@@ -148,6 +148,7 @@ const styles = {
   },
   drawerItemText: {
     flex:1,
+    fontFamily:'Roboto-Medium',
     fontSize: scale(16),
     textAlign: 'left'
   },
