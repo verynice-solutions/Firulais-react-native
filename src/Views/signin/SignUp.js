@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import firebase from 'firebase'
 import { StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native'
 import Colors from '../../utils/colors'
+//Redux
+import {} from '../../actions/sessionActions'
 class SignUp extends Component {
 	constructor(props) {
 		super(props);

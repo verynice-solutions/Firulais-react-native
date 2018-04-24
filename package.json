@@ -19,6 +19,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "expo": "^26.0.0",
     "firebase": "^4.13.1",
     "lodash": "^4.17.5",

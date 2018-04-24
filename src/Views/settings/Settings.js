@@ -19,18 +19,21 @@ class Settings extends Component{
   }
 
   onPressSignout= ()=>{
-    // this.props.signOut() Redux pendiente!!
+    
     firebase.auth().signOut()
+    this.props.signOut()
   }
   render() {
     // console.log("USER",this.props.currentUser)
     // console.log('version app:', versionApp.version)
+    let {user} = this.props.currentUser
     return (
       <View style={{flex:1}}>
         <View style={styles.top}>
           <View/>
           {/* <Image style={{flex:1, resizeMode: 'contain'}}
             source={} /> */}
+            <Text> firulais logo colors ∫2 </Text>
           <View>
             <Text style={styles.version}>Version:
               <Text style={{fontWeight:'normal'}}> firulais {versionApp.version} </Text>
@@ -39,19 +42,19 @@ class Settings extends Component{
           </View>
         </View>
         <View style={styles.bottom}>
-          {/* */}
+          {/* <Text style={styles.text}> Toma! lleva esto contigo {'❤'}  </Text> */}
             <View style={{flexDirection:'row'}}>
               <MaterialIcons style={styles.icons} name='star'/>
-              <Text style={styles.text}> Logeado como
+              <Text style={styles.text}>{user.gender!='male'?'Logeado':'Logeada'} como 
                 <Text style={{color: Colors.pinkyRed,fontWeight: "500"}}>
-                  {' '+this.props.currentUser.username}
+                  {' '} {user.givenName||user.email}
                 </Text>
-                .
               </Text>
+              
             </View>
             <TouchableOpacity style={{flexDirection:'row',paddingVertical:20}} onPress={ this.onPressSignout }>
               <Entypo style={styles.icons} name='log-out'/>
-              <Text style={styles.text} > Log Out </Text>
+              <Text style={styles.text}>Cerrar sesión. </Text>
             </TouchableOpacity>
         </View>
       </View>

@@ -11,7 +11,7 @@ export default function currentUser(state = initialState, action) {
     case SET_SIGN_IN_DATA:
       return {
         ...state,
-        signInData: action.signInData
+        user: action.user
 
       }
     default:

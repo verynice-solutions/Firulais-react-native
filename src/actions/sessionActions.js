@@ -6,17 +6,16 @@ function setCurrentUser( currentUser ) {
   }
 }
 
-function setSignInData( signInData ) {
+function setSignInData( user ) {
   return {
     type: SET_SIGN_IN_DATA,
-    signInData: signInData,
+    user: user,
   }
 }
 
 function signOut() {
-  CacheStore.remove("currentUser")
   return dispatch => {
-    dispatch(setCurrentUser({token: null, loadedFromCache: true}))
+    dispatch(setCurrentUser({ accessToken: '', idToken: '', user:{} }))
   }
 }
 
