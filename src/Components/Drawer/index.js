@@ -1,12 +1,14 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, Dimensions, Platform } from 'react-native'
+import { StyleSheet, View, Text, Image, Dimensions, Platform, TouchableOpacity } from 'react-native'
 import {NavigationActions} from 'react-navigation';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { Entypo, FontAwesome, MaterialIcons, Foundation } from '@expo/vector-icons';
 import Ripple from 'react-native-material-ripple';
 import {connect} from 'react-redux'
-
+import {Thumbnail} from 'native-base'
 const {height, width} = Dimensions.get('window');
+import Colors from '../../utils/colors'
+import {randomPuppers} from '../../utils/random_functions'
 import Images from '../../../assets/images'
 import {scale} from '../../lib/responsive'
 import drawerActions from '../../actions/drawerActions'
@@ -44,19 +46,30 @@ class Drawer extends React.Component {
     // console.log("activeItem: ", this.props.navigation)
     // console.log("drawerState: ",this.props.drawerState.activeView)
     let {activeView} = this.props.drawerState
-
+    let {user} = this.props.currentUser
     return (<Grid style={styles.drawerContainer}>
               <Row style={styles.header}>
-                <Col style={{justifyContent: 'center'}}>
-                  <View style={{flexDirection: 'row', justifyContent: 'center',alignItems:'center', paddingTop: scale(60)}}>
-                  <Image resizeMode="contain" source={Images.firulais_logo}/>
+                <Col style={{}}>
+                  <View style={{flexDirection: 'row', justifyContent: 'flex-start', paddingBottom:scale(8)}}>
+                    <View style={{flex:0.4,flexDirection:'row',justifyContent: 'flex-start',alignItems:'flex-end'}} >
+                      <Thumbnail source={{uri: user.photoUrl||randomPuppers()}} />
+                    </View>
+                    <View style={{flex:1,flexDirection:'row',justifyContent: 'flex-end', alignItems:'flex-start'}} >
+                      {/* <Image resizeMode="contain" style={{height:scale(100),width:scale(120)}} source={Images.firulais_logo}/> */}
+                    </View>
                   </View>
-                  <View style={{flexDirection: 'row', paddingLeft: scale(20), marginTop: scale(20), paddingBottom: scale(20) }}>
-                    {/* <Text style={{fontSize: scale(13), color: 'black', backgroundColor: 'transparent', opacity: 0.95}} >Welcome back ,</Text>
-                    <Text style={{ fontSize: scale(13), color:'#fff', backgroundColor: 'transparent', opacity: 0.95}}> 
-                      {this.props.currentUser.username}
-                    </Text> */}
-                  </View>
+                  <TouchableOpacity style={{flexDirection: 'row'}}>
+                    <View style={{flex:1,flexDirection: 'column'}}>
+                      <Text style={{fontSize: scale(14), fontFamily:'Roboto-Medium', color: Colors.purple, backgroundColor: 'transparent', opacity: 0.95, paddingBottom:scale(1)}}>
+                        {user.name||'Firulais'}</Text>
+                      <Text style={{ fontSize: scale(14), fontFamily:'Roboto', color: Colors.light_purple, backgroundColor: 'transparent', opacity: 0.95}}> 
+                        {user.email}</Text>
+                    </View>
+                    <View style={{flex:0.1,flexDirection: 'column',justifyContent:'flex-end',alignItems:'flex-end'}}>
+                      <Foundation name="paw" size={scale(22)} color={Colors.purple} />
+                    </View>
+                  </TouchableOpacity>
+
                 </Col>
               </Row>
               <Divider />
@@ -64,7 +77,7 @@ class Drawer extends React.Component {
               <Row style={styles.drawerContent}>
                 <Col>
                   <Ripple style={[styles.drawerItem, activeView=='Home'?styles.activeItem:null ]} onPress={this.navigateToScreen('Home')} >
-                    <Entypo name="home" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Entypo name="home" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Home</Text>
                   </Ripple>
 
@@ -81,7 +94,7 @@ class Drawer extends React.Component {
                   </Ripple>
 
                   <Ripple style={[styles.drawerItem, activeView=='CalendarView'?styles.activeItem:null]} onPress={this.navigateToScreen('CalendarView')}>
-                    <FontAwesome name="history" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <MaterialIcons name="stars" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Historial</Text>
                   </Ripple>
 
@@ -90,7 +103,7 @@ class Drawer extends React.Component {
               <Row style={styles.drawerFooter}>
                 <Col>
                   <Ripple style={[styles.drawerItem,activeView=='Settings'?styles.activeItem:null]} onPress={this.navigateToScreen('Settings')}>
-                    <MaterialIcons name="settings" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <MaterialIcons name="settings" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Settings</Text>
                   </Ripple>
                 </Col>
@@ -121,11 +134,15 @@ if (Platform.OS === 'ios') {
 const styles = {
   header: {
     backgroundColor: '#f8f8ff',
-    height: scale(140)
+    alignItems:'flex-end',
+    height: scale(140),
+    paddingHorizontal: scale(16),
+    paddingTop: 24,
+    marginBottom: scale(6)
   },
   drawerContent: {
     backgroundColor: '#fafafa',
-    marginTop: scale(11),
+    marginTop: scale(6),
   },
   drawerFooter: {
     height: scale(80)
@@ -140,16 +157,16 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingLeft: scale(20)
+    paddingHorizontal: scale(16)
   },
   drawerItemIcon: {
     flex:0.15,
-    marginRight: scale(40)
+    marginRight: scale(36)
   },
   drawerItemText: {
     flex:1,
     fontFamily:'Roboto-Medium',
-    fontSize: scale(16),
+    fontSize: scale(14),
     textAlign: 'left'
   },
   activeItem: {

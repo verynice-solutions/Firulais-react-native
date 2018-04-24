@@ -33,43 +33,14 @@ class LogInView extends Component {
 			email:'',
 			password:'',
 		}
-		this._getGoogleProfileInfo = this._getGoogleProfileInfo.bind(this)
 	}
-	_getGoogleProfileInfo(params = { onSuccess: (response)=>{} }, userCredentials) {
-    let { request,} = this.props // currentUser 
-    request(
-      {
-        method: 'GET',
-				path: `https://www.googleapis.com/oauth2/v1/userinfo?`,
-        params: {
-					fields:['email','family_name','gender','given_name','hd','id','link','locale','name','picture','verified_email'],
-          access_token: userCredentials.accessToken,
-        },
-        beforeRequestStart: () => {
-          this.setState({ isFetching: true })
-        },
-        onSuccess: (response)=>{
-					// console.log('Google profile info response',response)
-					
-					this.props.setCurrentUser({
-						token: userCredentials.accessToken,id_token: userCredentials.idToken, signInData: response.data
-					})
-          this.setState({
-            isFetching: false
-          })
-        },
-        onError: (response) => {
-          console.log(response)
-        }
-      }
-    )
-  }
+
 	onLogin= () => {
 		firebase.auth().signInWithEmailAndPassword(this.state.email,this.state.password)
 			.then( (result)=>{
 				// ToDo: WE COULD DO A BUNCH OF STUFF WITH RESULT(eMail Verified): check out object
 				// console.log('RESULT MANUAL LOGIN:',result)
-				this.props.setCurrentUser({user:{result}})
+				this.props.storeCurrentUser({ user: result })
 			},(error) => {
 				Alert.alert(error.message)
 			});
@@ -82,7 +53,7 @@ class LogInView extends Component {
 			// Sign in in Firebase
 			firebase.auth().signInWithCredential(credential)
 				.then( (result)=>{
-					this.props.setCurrentUser(JSON.parse(JSON.stringify(userCredentials)))
+					this.props.storeCurrentUser( JSON.parse(JSON.stringify(userCredentials)) )
 				},(error) => {
 					Alert.alert(error.message)
 				});
@@ -96,7 +67,7 @@ class LogInView extends Component {
 		console.log('USER:',this.props.currentUser)
 		return (
 			<View style={{flex:1, flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
-				<Text style={styles.text}> LOG IN VIEW </Text>
+				<Text style={styles.text}> LOGIN VIEW </Text>
 				<TextInput style={styles.textBox}
 					autoCapitalize='none'
 					autoCorrect={false}
@@ -144,4 +115,5 @@ function mapStateToProps({currentUser}) {
 export default connect(mapStateToProps, {
 	request: requestActions.request,
 	setCurrentUser: sessionActions.setCurrentUser,
+	storeCurrentUser: sessionActions.storeCurrentUser
 })(LogInView)

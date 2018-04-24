@@ -9,7 +9,6 @@ import { MaterialIcons, Entypo } from '@expo/vector-icons'
 import Colors from '../../utils/colors'
 import versionApp from '../../utils/version'
 //Actions
-import firebase from 'firebase'
 import sessionActions from '../../actions/sessionActions'
 
 class Settings extends Component{
@@ -19,8 +18,6 @@ class Settings extends Component{
   }
 
   onPressSignout= ()=>{
-    
-    firebase.auth().signOut()
     this.props.signOut()
   }
   render() {
@@ -33,7 +30,7 @@ class Settings extends Component{
           <View/>
           {/* <Image style={{flex:1, resizeMode: 'contain'}}
             source={} /> */}
-            <Text> firulais logo colors ∫2 </Text>
+            <Text> firulais logo2 </Text>
           <View>
             <Text style={styles.version}>Version:
               <Text style={{fontWeight:'normal'}}> firulais {versionApp.version} </Text>
@@ -43,15 +40,15 @@ class Settings extends Component{
         </View>
         <View style={styles.bottom}>
           {/* <Text style={styles.text}> Toma! lleva esto contigo {'❤'}  </Text> */}
-            <View style={{flexDirection:'row'}}>
+            <TouchableOpacity style={{flexDirection:'row'}}>
               <MaterialIcons style={styles.icons} name='star'/>
-              <Text style={styles.text}>{user.gender!='male'?'Logeado':'Logeada'} como 
+              <Text style={styles.text}>{user.gender!='male'?'Logeado':'Logeada'} como
                 <Text style={{color: Colors.pinkyRed,fontWeight: "500"}}>
                   {' '} {user.givenName||user.email}
                 </Text>
               </Text>
               
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity style={{flexDirection:'row',paddingVertical:20}} onPress={ this.onPressSignout }>
               <Entypo style={styles.icons} name='log-out'/>
               <Text style={styles.text}>Cerrar sesión. </Text>

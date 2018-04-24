@@ -29,7 +29,7 @@ class SessionWrapper extends Component {
   }
   componentWillMount(){
     // here Trigger cache fetching
-
+    this.props.rehydrateCurrentUser()
   }    
   onAuthStateChanged = (user) => {
     this.setState({isAuthenticationReady: true})
@@ -90,5 +90,5 @@ const mapStateToProps = (state) => {
   }
 }
 export default connect(mapStateToProps,{
-  setCurrentUser: sessionActions.rehydrateCurrentUser,
+  rehydrateCurrentUser: sessionActions.rehydrateCurrentUser,
 })(SessionWrapper)
