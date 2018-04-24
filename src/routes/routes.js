@@ -36,7 +36,7 @@ const AllRoutes = StackNavigator({
     path: 'settings',
     screen: Settings
   }
-})
+},{headerMode:'none'})
 
 const {width} = Dimensions.get('window');
 const drawerWidth = width * 0.87

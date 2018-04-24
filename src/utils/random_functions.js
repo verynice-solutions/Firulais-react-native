@@ -1,4 +1,4 @@
-function _getGoogleProfileInfo(params = { onSuccess: (response)=>{} }, userCredentials) {
+export function _getGoogleProfileInfo(params = { onSuccess: (response)=>{} }, userCredentials) {
   let { request,} = this.props // currentUser 
   request(
     {
@@ -27,17 +27,20 @@ function _getGoogleProfileInfo(params = { onSuccess: (response)=>{} }, userCrede
     }
   )
 }
-function randomPuppers() {
+export function register(data, successCB, errorCB) {
+  return (dispatch) => {
+      api.register(data, function (success, data, error) {
+          if (success) successCB(data);
+          else if (error) errorCB(error)
+      });
+  };
+}
+export function randomPuppers() {
   let arrayOfDoggos = [
-  'https://i.amz.mshcdn.com/WdTY0f7QzqQe-zMY8TA6YA-ykik=/fit-in/575x4096/2015%2F08%2F24%2F09%2FScreenShot2.8f1f5.png',
-  'https://www.petresort.com/wp-content/uploads/2015/11/cat-dog-boarding-together-seattle.jpg',
-  'https://global-free-classified-ads-s02.r.worldssl.net/user_images/4646957.jpg',
-  'https://pics.me.me/opet-when-she-calls-you-a-pupper-when-technically-your-14988170.png'
+  'https://data.whicdn.com/images/298844185/large.jpg?t=1507433077',
+  'https://paradelle.files.wordpress.com/2014/04/dog-wink.jpg',
+  'https://i.ytimg.com/vi/I0XPI7Knxxc/maxresdefault.jpg',
+  'https://i.imgflip.com/4a8he.jpg'
   ]
   return arrayOfDoggos[Math.floor(Math.random() * arrayOfDoggos.length)]
 }
-const random_functions = {
-  _getGoogleProfileInfo,
-  randomPuppers
-}
-export default random_functions;
