@@ -28,7 +28,6 @@ class Drawer extends React.Component {
       this.props.setDrawer(routeName)
     }
   }
-
   goToRoot(root){
     let {navigate} = this.props.navigation
     const go = NavigationActions.reset({
@@ -42,7 +41,7 @@ class Drawer extends React.Component {
 
   render() {
 
-    let {activeItemKey} = this.props.navigation
+    // let {activeItemKey} = this.props.navigation
     // console.log("activeItem: ", this.props.navigation)
     // console.log("drawerState: ",this.props.drawerState.activeView)
     let {activeView} = this.props.drawerState
@@ -51,14 +50,16 @@ class Drawer extends React.Component {
               <Row style={styles.header}>
                 <Col style={{}}>
                   <View style={{flexDirection: 'row', justifyContent: 'flex-start', paddingBottom:scale(8)}}>
-                    <View style={{flex:0.4,flexDirection:'row',justifyContent: 'flex-start',alignItems:'flex-end'}} >
+                    <TouchableOpacity style={{flex:0.4,flexDirection:'row',justifyContent: 'flex-start',alignItems:'flex-end'}} 
+                      onPress={this.navigateToScreen('Profile')}>
                       <Thumbnail source={{uri: user.photoUrl||randomPuppers()}} />
-                    </View>
+                    </TouchableOpacity>
                     <View style={{flex:1,flexDirection:'row',justifyContent: 'flex-end', alignItems:'flex-start'}} >
                       {/* <Image resizeMode="contain" style={{height:scale(100),width:scale(120)}} source={Images.firulais_logo}/> */}
                     </View>
                   </View>
-                  <TouchableOpacity style={{flexDirection: 'row'}}>
+                  <TouchableOpacity style={{flexDirection: 'row'}} 
+                    onPress={this.navigateToScreen('Profile')}>
                     <View style={{flex:1,flexDirection: 'column'}}>
                       <Text style={{fontSize: scale(14), fontFamily:'Roboto-Medium', color: Colors.purple, backgroundColor: 'transparent', opacity: 0.95, paddingBottom:scale(1)}}>
                         {user.name||'Firulais'}</Text>
@@ -76,7 +77,8 @@ class Drawer extends React.Component {
               <Divider />
               <Row style={styles.drawerContent}>
                 <Col>
-                  <Ripple style={[styles.drawerItem, activeView=='Home'?styles.activeItem:null ]} onPress={this.navigateToScreen('Home')} >
+                  <Ripple style={[styles.drawerItem, activeView=='Home'?styles.activeItem:null ]} 
+                    onPress={this.navigateToScreen('Home')} >
                     <Entypo name="home" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Home</Text>
                   </Ripple>
@@ -93,7 +95,8 @@ class Drawer extends React.Component {
                     <Text style={styles.drawerItemText}>Solicitudes</Text>
                   </Ripple>
 
-                  <Ripple style={[styles.drawerItem, activeView=='CalendarView'?styles.activeItem:null]} onPress={this.navigateToScreen('CalendarView')}>
+                  <Ripple style={[styles.drawerItem, activeView=='CalendarView'?styles.activeItem:null]} 
+                    onPress={this.navigateToScreen('CalendarView')}>
                     <MaterialIcons name="stars" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Historial</Text>
                   </Ripple>
@@ -102,7 +105,8 @@ class Drawer extends React.Component {
               </Row>
               <Row style={styles.drawerFooter}>
                 <Col>
-                  <Ripple style={[styles.drawerItem,activeView=='Settings'?styles.activeItem:null]} onPress={this.navigateToScreen('Settings')}>
+                  <Ripple style={[styles.drawerItem,activeView=='Settings'?styles.activeItem:null]} 
+                    onPress={this.navigateToScreen('Settings')}>
                     <MaterialIcons name="settings" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Settings</Text>
                   </Ripple>

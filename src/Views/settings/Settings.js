@@ -6,31 +6,35 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Platform } from 'react-native';
 import {connect} from 'react-redux'
 import { MaterialIcons, Entypo } from '@expo/vector-icons'
+import {Button, Icon} from 'native-base'
+
 import Colors from '../../utils/colors'
 import versionApp from '../../utils/version'
 //Actions
 import sessionActions from '../../actions/sessionActions'
+import Images from '../../../assets/images'
 
 class Settings extends Component{
   constructor(props) {
     super(props)
     this.onPressSignout = this.onPressSignout.bind(this)
   }
-
+	static navigationOptions = ({navigation}) => {
+		return{
+			title: 'Opciones',
+    }
+  }
   onPressSignout= ()=>{
     this.props.signOut()
   }
   render() {
-    // console.log("USER",this.props.currentUser)
-    // console.log('version app:', versionApp.version)
     let {user} = this.props.currentUser
     return (
       <View style={{flex:1}}>
         <View style={styles.top}>
           <View/>
-          {/* <Image style={{flex:1, resizeMode: 'contain'}}
-            source={} /> */}
-            <Text> firulais logo2 </Text>
+          <Image style={{flex:1, resizeMode: 'contain'}} 
+          defaultSource={Images.firulais_logo} />
           <View>
             <Text style={styles.version}>Version:
               <Text style={{fontWeight:'normal'}}> firulais {versionApp.version} </Text>

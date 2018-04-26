@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native'
-import Colors from '../../utils/colors'
+import { StyleSheet, View, TextInput, Alert} from 'react-native'
 import {Google} from 'expo'
 import firebase from 'firebase'
 import {connect} from 'react-redux'
-import {scale} from '../../lib/responsive'
+import { Button, Text } from 'native-base'
 
+import Colors from '../../utils/colors'
+import {scale, scaleModerate, scaleVertical} from '../../lib/responsive'
+
+import {getOnceUser,registerUserFirstTime} from '../../firebase/functions'
 import OAuth from '../../config/OAuth'
 import requestActions from '../../config/requestActions'
 import sessionActions from '../../actions/sessionActions'
@@ -24,8 +27,6 @@ async function signInWithGoogleAsync() {
 		return {error: true};
 	}
 }
-// Alert.alert(result.accessToken)
-// Alert.alert('Google Sync Error');
 class LogInView extends Component {
 	constructor(props) {
 		super(props);
@@ -45,6 +46,32 @@ class LogInView extends Component {
 				Alert.alert(error.message)
 			});
 	}
+	onLoginFundacionWithGoogle = () => {
+		signInWithGoogleAsync().then( (userCredentials)=>{
+			if(!userCredentials.error){
+			let credential = firebase.auth.GoogleAuthProvider.credential(
+				userCredentials.idToken , userCredentials.accessToken)
+			// Sign in in Firebase
+			firebase.auth().signInWithCredential(credential)
+				.then( (result)=>{
+					this.props.storeCurrentUser( JSON.parse(JSON.stringify({
+						...userCredentials, 
+						uid: result.uid,
+						type: 'fundation'
+					})))
+					//User is in Database?
+					registerUserFirstTime(result.uid,{
+						...userCredentials.user,
+						type: 'fundation'
+					})
+				},(error) => {
+					Alert.alert(error.message)
+				});
+			}
+		},(error)=>{
+			Alert.alert(error.message)
+		})
+	}
 	onLoginWithGoogle = () => {
 		signInWithGoogleAsync().then( (userCredentials)=>{
 			if(!userCredentials.error){
@@ -53,7 +80,16 @@ class LogInView extends Component {
 			// Sign in in Firebase
 			firebase.auth().signInWithCredential(credential)
 				.then( (result)=>{
-					this.props.storeCurrentUser( JSON.parse(JSON.stringify(userCredentials)) )
+					this.props.storeCurrentUser( JSON.parse(JSON.stringify({
+						...userCredentials, 
+						uid: result.uid,
+						type: 'user'
+					})))
+					//User is in Database?
+					registerUserFirstTime(result.uid,{
+						...userCredentials.user,
+						type: 'user'
+					})
 				},(error) => {
 					Alert.alert(error.message)
 				});
@@ -61,14 +97,14 @@ class LogInView extends Component {
 		},(error)=>{
 			Alert.alert(error.message)
 		})
-		
 	}
 	render() {
-		console.log('USER:',this.props.currentUser)
+		// console.log('USER:',this.props.currentUser)
 		return (
 			<View style={{flex:1, flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
-				<Text style={styles.text}> LOGIN VIEW </Text>
-				<TextInput style={styles.textBox}
+				<Text style={styles.text}> Inicio de sesion </Text>
+				<View style={{marginTop:80}}/>
+				{/* <TextInput style={styles.textBox}
 					autoCapitalize='none'
 					autoCorrect={false}
 					value={this.state.email}
@@ -84,9 +120,15 @@ class LogInView extends Component {
 				/>
 				<Button title='Entrar' onPress={this.onLogin}/>
 				<Button title='Crear cuenta' onPress={()=>this.props.navigation.navigate('SignUp')}/>
-				<Button title='¡ oh no !' color={Colors.grey} onPress={()=>this.props.navigation.navigate('Forgot')}/>
-				<View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}} >
-					<Button title='Do it with Google..' color={Colors.purple} onPress={this.onLoginWithGoogle}/>
+				<Button title='¡ oh no !' color={Colors.grey} onPress={()=>this.props.navigation.navigate('Forgot')}/> */}
+				<View style={{flexDirection:'column', alignItems:'center', justifyContent:'space-around'}}>
+					<Button onPress={this.onLoginWithGoogle} block primary>
+						<Text> Usuario </Text>
+					</Button>
+					<View style={{marginTop:40}}/>
+					<Button onPress={this.onLoginFundacionWithGoogle} block info>
+						<Text> Fundación </Text>
+					</Button>
 				</View>
 			</View>
 		)

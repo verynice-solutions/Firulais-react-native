@@ -4,6 +4,7 @@ import { StackNavigator, TabNavigator, DrawerNavigator} from 'react-navigation'
 
 //Screens
 import {scale} from '../lib/responsive'
+import HomeView from '../Views/home'
 import ProfileView from '../Views/profile/ProfileView'
 import LogInView from '../Views/signin/LogInView'
 import SignUp from '../Views/signin/SignUp'
@@ -29,14 +30,19 @@ const SignedOutRoutes = StackNavigator({
 }, {headerMode: 'none'})
 
 const AllRoutes = StackNavigator({
+  Home: {
+    path: 'home',
+    screen: HomeView
+  },
   Profile:{
+    path: 'perfil',
     screen: ProfileView
   },
   Settings: {
     path: 'settings',
     screen: Settings
   }
-},{headerMode:'none'})
+})
 
 const {width} = Dimensions.get('window');
 const drawerWidth = width * 0.87

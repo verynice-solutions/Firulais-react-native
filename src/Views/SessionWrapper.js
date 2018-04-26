@@ -69,6 +69,7 @@ class SessionWrapper extends Component {
         'Roboto': require('../../assets/fonts/Roboto/Roboto-Regular.ttf'),
         'Roboto-Bold': require('../../assets/fonts/Roboto/Roboto-Bold.ttf'),
         'Roboto-Medium': require('../../assets/fonts/Roboto/Roboto-Medium.ttf'),
+        'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
       }),
     ]);
   };
