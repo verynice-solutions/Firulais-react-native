@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Platform,	View, StyleSheet, Image, TouchableOpacity,Alert } from 'react-native'
+import { Platform,	View, StyleSheet, Image, TouchableOpacity,Alert, ActivityIndicator } from 'react-native'
 import {connect} from 'react-redux'
 //Style
 import { Button, Icon,Thumbnail,Text,Item, Input} from 'native-base'
@@ -14,9 +14,12 @@ import firebase from 'firebase'
 class ProfileView extends Component {
 	constructor(props) {
 		super(props);
-		this.state ={
-			description:''
+		this.state = {
+			description:'',
+			fetching: true
 		}
+		this.profiles_fire_reference=firebase.database().ref('users/' + this.props.currentUser.uid + '/profile')
+		this._fetch_profile=this._fetch_profile.bind(this)
 	}
 	static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
@@ -28,26 +31,42 @@ class ProfileView extends Component {
 			</Button>)
     }
 	}
-	componentWillMount() {
-		this.props.navigation.setParams({ saveProfile: this._saveProfile })
 
-		let {uid} = this.props.currentUser
-		firebase.database().ref('users/' + uid + '/profile').on('value', (snapshot)=>{
-			var exist = snapshot.val()
-			this.setState(exist)
+	componentDidMount() {
+		this.props.navigation.setParams({ saveProfile: this._saveProfile })
+		this._fetch_profile()
+	}
+
+	_fetch_profile(){
+		this.setState({fetching:true})
+		
+		this.profiles_fire_reference.once('value')
+		.then( (res)=>{
+			this.setState({ ...res.val() ,fetching: false })
 		})
 	}
-	
+
 	_saveProfile = () => {
-		updateUserProfile(this.props.currentUser.uid,{
-			description: this.state.description
+		this.profiles_fire_reference.update({...this.state})
+		.then(() => {
+			Alert.alert('Profile saved successfully')
 		})
-		
-		Alert.alert('Profile saved successfully')
-  };
+		.catch(() => {
+			Alert.alert('Sorry, your profile could not be saved')
+			this._fetch_profile()
+		})	
+	}
+	
 	render() {
 		let {user} = this.props.currentUser
 		// console.log('USER PROFILE',this.state)
+		if(this.state.fetching){
+			return (
+				<View style={{flex:1,justifyContent:'center'}}> 
+					<ActivityIndicator size="large" /> 
+				</View>
+			)
+		}else{
 		return (
 			<View style={{flex:1}}>
 				<View style={{marginTop:40}}/>
@@ -82,15 +101,16 @@ class ProfileView extends Component {
 						</Item>
 						<View style={{marginTop:40}}/>
 						<View style={{flexDirection:'row',justifyContent:'center'}}>
-							<Button bordered onPress={this._saveProfile}>
+								{/* <Button bordered onPress={this._saveProfile}>
 								<Text primary>Guardar</Text>
-							</Button>
+								</Button> */}
 						</View>
 					</View>
 				</View>
 			</View>
 		)
 	}
+}
 }
 
 function mapStateToProps({currentUser}) {
