@@ -21,7 +21,7 @@ export default class App extends React.Component {
       <Provider store={store}>
         <View style={{flex:1}}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          {Platform.OS === 'android' && <View style={{ height: 24, backgroundColor: Colors.light_purple}}  />}
+          {Platform.OS === 'android' && <View style={{ height: 24}}  />}
           <SessionWrapper/>
         </View>
       </Provider>

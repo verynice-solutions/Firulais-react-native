@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, TextInput, Alert} from 'react-native'
+import { StyleSheet, View, TextInput, Alert, ActivityIndicator} from 'react-native'
 import {Google} from 'expo'
 import firebase from 'firebase'
 import {connect} from 'react-redux'
@@ -33,6 +33,7 @@ class LogInView extends Component {
 		this.state = {
 			email:'',
 			password:'',
+			fetching:false,
 		}
 	}
 
@@ -100,38 +101,46 @@ class LogInView extends Component {
 	}
 	render() {
 		// console.log('USER:',this.props.currentUser)
-		return (
-			<View style={{flex:1, flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
-				<Text style={styles.text}> Inicio de sesion </Text>
-				<View style={{marginTop:80}}/>
-				{/* <TextInput style={styles.textBox}
-					autoCapitalize='none'
-					autoCorrect={false}
-					value={this.state.email}
-					keyboardType='email-address'
-					onChangeText={(text)=> this.setState({email: text})}
-				/>
-				<TextInput style={styles.textBox}
-					autoCapitalize='none'
-					autoCorrect={false}
-					secureTextEntry
-					value={this.state.password}
-					onChangeText={(text)=> this.setState({password: text})}
-				/>
-				<Button title='Entrar' onPress={this.onLogin}/>
-				<Button title='Crear cuenta' onPress={()=>this.props.navigation.navigate('SignUp')}/>
-				<Button title='¡ oh no !' color={Colors.grey} onPress={()=>this.props.navigation.navigate('Forgot')}/> */}
-				<View style={{flexDirection:'column', alignItems:'center', justifyContent:'space-around'}}>
-					<Button onPress={this.onLoginWithGoogle} block primary>
-						<Text> Usuario </Text>
-					</Button>
-					<View style={{marginTop:40}}/>
-					<Button onPress={this.onLoginFundacionWithGoogle} block info>
-						<Text> Fundación </Text>
-					</Button>
+		if(this.state.fetching){
+			return (
+				<View style={{flex:1,justifyContent:'center'}}> 
+					<ActivityIndicator size="large" /> 
 				</View>
-			</View>
-		)
+			)
+		}else{
+			return (
+				<View style={{flex:1, flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
+					<Text style={styles.text}> Inicio de sesion </Text>
+					<View style={{marginTop:80}}/>
+					{/* <TextInput style={styles.textBox}
+						autoCapitalize='none'
+						autoCorrect={false}
+						value={this.state.email}
+						keyboardType='email-address'
+						onChangeText={(text)=> this.setState({email: text})}
+					/>
+					<TextInput style={styles.textBox}
+						autoCapitalize='none'
+						autoCorrect={false}
+						secureTextEntry
+						value={this.state.password}
+						onChangeText={(text)=> this.setState({password: text})}
+					/>
+					<Button title='Entrar' onPress={this.onLogin}/>
+					<Button title='Crear cuenta' onPress={()=>this.props.navigation.navigate('SignUp')}/>
+					<Button title='¡ oh no !' color={Colors.grey} onPress={()=>this.props.navigation.navigate('Forgot')}/> */}
+					<View style={{flexDirection:'column', alignItems:'center', justifyContent:'space-around'}}>
+						<Button onPress={this.onLoginWithGoogle} block primary>
+							<Text> Usuario </Text>
+						</Button>
+						<View style={{marginTop:40}}/>
+						<Button onPress={this.onLoginFundacionWithGoogle} block info>
+							<Text> Fundación </Text>
+						</Button>
+					</View>
+				</View>
+			)
+		}
 	}
 }
 const styles = StyleSheet.create({
