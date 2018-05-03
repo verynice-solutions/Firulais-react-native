@@ -60,7 +60,7 @@ class HomeFundation extends Component {
       let result = await ImagePicker.launchCameraAsync()
       // console.log('RESULT ',result)
       if(!result.cancelled){
-        this._uploadImage(result.uri,)
+        this._uploadImage(result.uri,'test1')
           .then(() => {
             Alert.alert('La imagen fue guardada')
           })
