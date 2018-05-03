@@ -51,7 +51,7 @@ class Drawer extends React.Component {
                 <Col style={{}}>
                   <View style={{flexDirection: 'row', justifyContent: 'flex-start', paddingBottom:scale(8)}}>
                     <TouchableOpacity style={{flex:0.4,flexDirection:'row',justifyContent: 'flex-start',alignItems:'flex-end'}} 
-                      onPress={this.navigateToScreen('Profile')}>
+                      onPress={this.navigateToScreen('EditProfile')}>
                       <Thumbnail source={{uri: user.photoUrl||randomPuppers()}} />
                     </TouchableOpacity>
                     <View style={{flex:1,flexDirection:'row',justifyContent: 'flex-end', alignItems:'flex-start'}} >
@@ -59,7 +59,7 @@ class Drawer extends React.Component {
                     </View>
                   </View>
                   <TouchableOpacity style={{flexDirection: 'row'}} 
-                    onPress={this.navigateToScreen('Profile')}>
+                    onPress={this.navigateToScreen('EditProfile')}>
                     <View style={{flex:1,flexDirection: 'column'}}>
                       <Text style={{fontSize: scale(14), fontFamily:'Roboto-Medium', color: Colors.purple, backgroundColor: 'transparent', opacity: 0.95, paddingBottom:scale(1)}}>
                         {user.name||'Firulais'}</Text>

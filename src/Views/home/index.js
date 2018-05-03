@@ -27,9 +27,9 @@ class Home extends Component {
     let {user} = this.props.currentUser
     // console.log('user:',this.props.currentUser)
     if(this.props.currentUser.type=='fundation'){
-      return <HomeFundation />
+      return <HomeFundation navigation={this.props.navigation}/>
     }else{
-      return <HomeUser />
+      return <HomeUser navigation={this.props.navigation} />
     }
 		
 	}

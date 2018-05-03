@@ -48,6 +48,7 @@ class LogInView extends Component {
 			});
 	}
 	onLoginFundacionWithGoogle = () => {
+		this.setState({fetching:true})
 		signInWithGoogleAsync().then( (userCredentials)=>{
 			if(!userCredentials.error){
 			let credential = firebase.auth.GoogleAuthProvider.credential(
@@ -67,13 +68,17 @@ class LogInView extends Component {
 					})
 				},(error) => {
 					Alert.alert(error.message)
-				});
+				})
 			}
-		},(error)=>{
-			Alert.alert(error.message)
+		}).then(() => {
+			this.setState({fetching:false})
+		})
+		.catch((error) => {
+			Alert.alert('hello')
 		})
 	}
 	onLoginWithGoogle = () => {
+		this.setState({fetching:true})
 		signInWithGoogleAsync().then( (userCredentials)=>{
 			if(!userCredentials.error){
 			let credential = firebase.auth.GoogleAuthProvider.credential(
@@ -97,6 +102,8 @@ class LogInView extends Component {
 			}
 		},(error)=>{
 			Alert.alert(error.message)
+		}).then(() => {
+			this.setState({fetching:false})
 		})
 	}
 	render() {

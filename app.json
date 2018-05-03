@@ -1,5 +1,14 @@
 {
   "expo": {
-    "sdkVersion": "26.0.0"
+    "name":"Firulais",
+    "sdkVersion": "26.0.0",
+    "privacy":"public",
+    "loading": {
+      "icon": "./assets/images/logo_firulais_op@2x.png",
+      "hideExponentText": false
+    }
+  },
+  "android":{
+    "permissions":["CAMERA","CAMERA_ROLL"]
   }
 }

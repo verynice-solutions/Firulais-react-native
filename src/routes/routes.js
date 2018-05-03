@@ -5,13 +5,13 @@ import { StackNavigator, TabNavigator, DrawerNavigator} from 'react-navigation'
 //Screens
 import {scale} from '../lib/responsive'
 import HomeView from '../Views/home'
-import ProfileView from '../Views/profile/ProfileView'
+import EditProfileView from '../Views/profile/EditProfile'
 import LogInView from '../Views/signin/LogInView'
 import SignUp from '../Views/signin/SignUp'
 import ForgotPass from '../Views/signin/ForgotPass'
 import Settings from '../Views/settings/Settings'
 import Drawer from '../Components/Drawer'
-
+import AddPetScreen from '../Views/profile/fundation/AddPet'
 
 
 const SignedOutRoutes = StackNavigator({
@@ -34,9 +34,13 @@ const AllRoutes = StackNavigator({
     path: 'home',
     screen: HomeView
   },
-  Profile:{
-    path: 'perfil',
-    screen: ProfileView
+  EditProfile:{
+    path: 'editarperfil',
+    screen: EditProfileView
+  },
+  AddPet:{
+    path: 'addpet',
+    screen: AddPetScreen
   },
   Settings: {
     path: 'settings',

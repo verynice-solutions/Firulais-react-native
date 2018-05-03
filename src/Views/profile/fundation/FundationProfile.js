@@ -11,29 +11,25 @@ import { scale } from '../../lib/responsive';
 import Divider from '../../Components/Divider'
 import firebase from 'firebase'
 
-class ProfileView extends Component {
+class FundationProfileView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			description:'',
 			fetching: true
 		}
-		this.profiles_fire_reference=firebase.database().ref('users/' + this.props.currentUser.uid + '/profile')
+		this.profiles_fire_reference=firebase.database().ref('users/' + this.props.otherUserUid + '/profile')
 		this._fetch_profile=this._fetch_profile.bind(this)
 	}
 	static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-			title: 'Editar perfil',
-			headerRight: (
-			<Button transparent onPress={params.saveProfile}>
-				<Text primary>Guardar</Text>
-			</Button>)
+			title: 'Fundación: '+params.nameFundation,
     }
 	}
 
 	componentDidMount() {
-		this.props.navigation.setParams({ saveProfile: this._saveProfile })
+		this.props.navigation.setParams({nameFundation:'test'})
 		this._fetch_profile()
 	}
 
@@ -80,17 +76,6 @@ class ProfileView extends Component {
 							{user.name}
 						</Text>
 						<View style={{marginTop:10}}/>
-						{/* <TextInput style={styles.textBox}
-							autoCapitalize='none'
-							autoCorrect={false}
-							value={this.state.email}
-							keyboardType='email-address'
-							onChangeText={(text)=> this.setState({email: text})}
-						/>
-						 */}
-						{/* <Text style={{paddingTop:5,textAlign:'center',color:Colors.greyishBrown}}> 
-							{user.description}
-						</Text> */}
 						<Text>  Info:</Text>
 						<Item regular>
 							<Input placeholder='Descripción...'
@@ -118,7 +103,7 @@ function mapStateToProps({currentUser}) {
     currentUser: currentUser,
   }
 }
-export default connect(mapStateToProps)(ProfileView)
+export default connect(mapStateToProps)(FundationProfileView)
 
 const styles = StyleSheet.create({
 
