@@ -33,8 +33,8 @@ class Settings extends Component{
       <View style={{flex:1}}>
         <View style={styles.top}>
           <View/>
-          <Image style={{flex:1, resizeMode: 'contain'}} 
-          defaultSource={Images.firulais_logo} />
+          <Image style={{flex:1}} resizeMode='contain'
+          source={Images.firulais_logo} />
           <View>
             <Text style={styles.version}>Version:
               <Text style={{fontWeight:'normal'}}> firulais {versionApp.version} </Text>

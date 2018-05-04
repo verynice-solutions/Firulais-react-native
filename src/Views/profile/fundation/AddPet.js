@@ -3,24 +3,17 @@ import React, { Component } from 'react'
 import { Platform, View, StyleSheet, Image, TouchableOpacity,Alert } from 'react-native'
 import {connect} from 'react-redux'
 import firebase from 'firebase'
-import {ImagePicker} from 'expo'
+import { ImagePicker } from 'expo'
 //Style
 import {Container,Content,Body,Button,Text,Icon,Form,Textarea,CheckBox,List,ListItem} from 'native-base'
 import { scale } from '../../../lib/responsive';
 import {randomPuppers} from '../../../utils/random_functions'
 
-async function getCameraPermission() {
-  const { Permissions } = Expo;
-  const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-  if (status === 'granted') {
-    return true
-  }
-}
-
-class HomeFundation extends Component {
+class AddPet extends Component {
 	constructor(props) {
     super(props);
     this.state={
+      cameraGranted:false,
       description:'',
       dog:false, cat:false,
       pequeño:false, mediano:false, grande:false,
@@ -30,7 +23,6 @@ class HomeFundation extends Component {
       amigableConPersonas: true,
       amigableConOtrosPets: true,
     }
-    this.fire_pets_reference=firebase.database().ref().child('pets')
 		this._añadirMascota=this._añadirMascota.bind(this)
   }
   
@@ -44,32 +36,46 @@ class HomeFundation extends Component {
 			</Button>)
     }
   }
+  getCameraPermission= async ()=>{
+    try{
+      const { Permissions } = Expo;
+      const response = await Permissions.getAsync('camera');
+      console.log('RESPONSE PERMISSION:',response)
+      if (response.status !== 'granted') {
+        if (response.status === 'denied' || response.status === 'undetermined') {
+          Alert.alert('Please enable camera access from your device settings.');
+        }else{
+          const { status } = await Permissions.askAsync('camera');
+          if(status==='granted') this.setState({cameraGranted:true})
+        }
+      }else{ this.setState({cameraGranted:true})}
+    }catch(error){
+      Alert.alert(error.message)
+    }
+  }
   componentDidMount() {
     this.props.navigation.setParams({ addPet: this._añadirMascota })
 	}
   _añadirMascota(){
-    this.fire_pets_reference.push({
+    firebase.database().ref().child('pets').push({
       ...this.state
     }).then(() => {
       Alert.alert('Mascota añadida')
     })
 	}
   _onCamera = async () => {
-    let permi = await getCameraPermission()
-    if (permi){
-      let result = await ImagePicker.launchCameraAsync()
-      // console.log('RESULT ',result)
-      if(!result.cancelled){
-        this._uploadImage(result.uri,'test1')
-          .then(() => {
-            Alert.alert('La imagen fue guardada')
-          })
-          .catch((error) => {
-            Alert.alert(error)
-          })
-      }
-    }else{ Alert.alert(permi.error)}
-    
+    // let permi = await this.getCameraPermission()
+    let result = await ImagePicker.launchCameraAsync()
+    // console.log('RESULT ',result)
+    if(!result.cancelled){
+      this._uploadImage(result.uri,'test1')
+        .then(() => {
+          Alert.alert('La imagen fue guardada')
+        })
+        .catch((error) => {
+          Alert.alert(error)
+        })
+    }
   }
   _uploadImage = async (uri,petID) => {
     const response = await fetch(uri)
@@ -159,7 +165,7 @@ function mapStateToProps({currentUser}) {
     currentUser: currentUser,
   }
 }
-export default connect(mapStateToProps)(HomeFundation)
+export default connect(mapStateToProps)(AddPet)
 
 const styles = StyleSheet.create({
 

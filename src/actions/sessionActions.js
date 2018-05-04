@@ -35,7 +35,7 @@ function rehydrateCurrentUser() {
       if (currentUser) {
         dispatch( setCurrentUser({...currentUser, loadedFromCache: true}) )
       } else {
-        dispatch( setCurrentUser({ accessToken: '', idToken: '',user:{}, loadedFromCache: false}) )
+        dispatch( signOut() )
       }
     })
   }

@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name":"Firulais",
+    "name":"Firulais doggo love",
     "sdkVersion": "26.0.0",
     "privacy":"public",
     "loading": {
       "icon": "./assets/images/logo_firulais_op@2x.png",
       "hideExponentText": false
+    },
+    "androidStatusBar": {
+      "barStyle":"light-content"
     }
-  },
-  "android":{
-    "permissions":["CAMERA","CAMERA_ROLL"]
   }
 }

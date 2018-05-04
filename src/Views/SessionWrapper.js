@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import { Alert } from 'react-native';
 //Firebase
 import firebase from 'firebase'
 import ApiKeys from '../firebase/ApiKeys'
 //Routes
 import { SignedOutRoutes, SignedInRoutes } from '../routes/routes'
-//Actions
+//Session
 import sessionActions from '../actions/sessionActions'
 //Resources
 import { Entypo, FontAwesome, MaterialIcons, Foundation } from '@expo/vector-icons';
@@ -28,9 +29,9 @@ class SessionWrapper extends Component {
     firebase.auth().onAuthStateChanged(this.onAuthStateChanged)
   }
   componentWillMount(){
-    // here Trigger cache fetching
+    //Here trigger Cache 
     this.props.rehydrateCurrentUser()
-  }    
+  }
   onAuthStateChanged = (user) => {
     this.setState({isAuthenticationReady: true})
     this.setState({isAuthenticated: !!user})
@@ -49,7 +50,7 @@ class SessionWrapper extends Component {
         />
       )
     }else{
-      if (this.state.isAuthenticated) {
+      if (this.props.currentUser.user.email) {
         welcomeContainer = <SignedInRoutes/>
       } else {
         welcomeContainer = <SignedOutRoutes/>
@@ -65,7 +66,7 @@ class SessionWrapper extends Component {
         ...Entypo.font, ...FontAwesome.font, ...MaterialIcons.font, ...Foundation.font,
         // This is the font that we are using for our tab bar
         // We include SpaceMono because we use it in HomeScreen.js. Feel free
-        // to remove this if you are not using it in your app
+        // to remove this if you are not using it in your app 
         'Roboto': require('../../assets/fonts/Roboto/Roboto-Regular.ttf'),
         'Roboto-Bold': require('../../assets/fonts/Roboto/Roboto-Bold.ttf'),
         'Roboto-Medium': require('../../assets/fonts/Roboto/Roboto-Medium.ttf'),

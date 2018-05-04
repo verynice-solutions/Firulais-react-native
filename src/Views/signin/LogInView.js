@@ -3,14 +3,13 @@ import { StyleSheet, View, TextInput, Alert, ActivityIndicator} from 'react-nati
 import {Google} from 'expo'
 import firebase from 'firebase'
 import {connect} from 'react-redux'
-import { Button, Text } from 'native-base'
+import { Button, Text, Toast } from 'native-base'
 
 import Colors from '../../utils/colors'
 import {scale, scaleModerate, scaleVertical} from '../../lib/responsive'
 
 import {getOnceUser,registerUserFirstTime} from '../../firebase/functions'
 import OAuth from '../../config/OAuth'
-import requestActions from '../../config/requestActions'
 import sessionActions from '../../actions/sessionActions'
 
 async function signInWithGoogleAsync() {
@@ -34,6 +33,7 @@ class LogInView extends Component {
 			email:'',
 			password:'',
 			fetching:false,
+			showToast: false,
 		}
 	}
 
@@ -71,10 +71,23 @@ class LogInView extends Component {
 				})
 			}
 		}).then(() => {
-			this.setState({fetching:false})
+			// successfull log-in <3
+			Toast.show({
+				text:'Inicio de sessión Exitoso!',
+				buttonText:'vale',
+				duration: 6000,
+				type:'success'
+			})
 		})
 		.catch((error) => {
-			Alert.alert('hello')
+			// no log-in </3
+			Toast.show({
+				text:'Log-in cómo Fundación cancelado',
+				buttonText:'sip',
+				duration: 6000,
+				type:'danger'
+			})
+			this.setState({fetching:false})
 		})
 	}
 	onLoginWithGoogle = () => {
@@ -98,11 +111,25 @@ class LogInView extends Component {
 					})
 				},(error) => {
 					Alert.alert(error.message)
-				});
+				})
 			}
-		},(error)=>{
-			Alert.alert(error.message)
 		}).then(() => {
+			// successfull log-in <3 
+			Toast.show({
+				text:'Inicio de sessión Exitoso!',
+				buttonText:'vale',
+				duration: 6000,
+				type:'success'
+			})
+		})
+		.catch((error) => {
+			// no log-in </3
+			Toast.show({
+				text:'Log-in cómo Usuario cancelado',
+				buttonText:'sip',
+				duration: 6000,
+				type:'danger'
+			})
 			this.setState({fetching:false})
 		})
 	}
@@ -171,7 +198,6 @@ function mapStateToProps({currentUser}) {
   }
 }
 export default connect(mapStateToProps, {
-	request: requestActions.request,
 	setCurrentUser: sessionActions.setCurrentUser,
 	storeCurrentUser: sessionActions.storeCurrentUser
 })(LogInView)
