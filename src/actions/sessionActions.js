@@ -1,6 +1,6 @@
 import {SET_CURRENT_USER,SET_SIGN_IN_DATA} from '../utils/constants'
 import CacheStore from 'react-native-cache-store';
-import firebase from 'firebase'
+import firebase from '../firebase/firebaseSingleton'
 
 function setCurrentUser( currentUser ) {
   return {

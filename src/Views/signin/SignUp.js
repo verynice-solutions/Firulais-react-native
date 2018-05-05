@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import firebase from 'firebase'
+import firebase from '../../firebase/firebaseSingleton'
 import { StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native'
 import Colors from '../../utils/colors'
 //Redux

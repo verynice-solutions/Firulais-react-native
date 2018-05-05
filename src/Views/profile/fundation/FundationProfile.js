@@ -9,7 +9,7 @@ import Colors from '../../utils/colors'
 import { updateUserProfile,getUserProfile} from '../../firebase/functions'
 import { scale } from '../../lib/responsive';
 import Divider from '../../Components/Divider'
-import firebase from 'firebase'
+import firebase from '../../../firebase/firebaseSingleton'
 
 class FundationProfileView extends Component {
 	constructor(props) {

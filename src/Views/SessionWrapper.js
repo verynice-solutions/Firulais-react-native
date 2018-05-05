@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Alert } from 'react-native';
 //Firebase
-import firebase from 'firebase'
+import firebase from '../firebase/firebaseSingleton'
 import ApiKeys from '../firebase/ApiKeys'
 //Routes
 import { SignedOutRoutes, SignedInRoutes } from '../routes/routes'

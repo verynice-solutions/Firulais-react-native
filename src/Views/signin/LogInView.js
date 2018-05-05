@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, TextInput, Alert, ActivityIndicator} from 'react-native'
 import {Google} from 'expo'
-import firebase from 'firebase'
+import firebase from '../../firebase/firebaseSingleton'
 import {connect} from 'react-redux'
 import { Button, Text, Toast } from 'native-base'
 
@@ -73,8 +73,8 @@ class LogInView extends Component {
 		}).then(() => {
 			// successfull log-in <3
 			Toast.show({
-				text:'Inicio de sessión Exitoso!',
-				buttonText:'vale',
+				text:'Inicio de sessión exitoso!',
+				buttonText:'OK',
 				duration: 6000,
 				type:'success'
 			})
@@ -116,8 +116,8 @@ class LogInView extends Component {
 		}).then(() => {
 			// successfull log-in <3 
 			Toast.show({
-				text:'Inicio de sessión Exitoso!',
-				buttonText:'vale',
+				text:'Inicio de sessión exitoso!',
+				buttonText:'OK',
 				duration: 6000,
 				type:'success'
 			})

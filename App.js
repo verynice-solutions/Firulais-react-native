@@ -1,9 +1,6 @@
 import React from 'react';
 import {View,Platform, StatusBar} from 'react-native'
 import {Root} from 'native-base'
-//Firebase
-import firebase from 'firebase'
-import ApiKeys from './src/firebase/ApiKeys'
 //Screens
 import SessionWrapper from './src/Views/SessionWrapper'
 import Colors from './src/utils/colors'
@@ -26,12 +23,8 @@ export default class App extends React.Component {
         _console.warn(message);
       }
     };
-    //initialize Firebase....
-    if(!firebase.apps.lenght){ 
-      firebase.initializeApp(ApiKeys.FirebaseConfig)
-    }
   }
-
+  
   render() {
     return (
       <Provider store={store}>

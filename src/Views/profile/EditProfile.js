@@ -4,7 +4,7 @@ import { Platform,	View, StyleSheet, Image, TouchableOpacity,Alert, ActivityIndi
 import {connect} from 'react-redux'
 //Style
 import { Button, Icon,Thumbnail,Text,Item, Input} from 'native-base'
-import firebase from 'firebase'
+import firebase from '../../firebase/firebaseSingleton'
 
 class EditProfileView extends Component {
 	constructor(props) {

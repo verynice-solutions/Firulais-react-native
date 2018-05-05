@@ -1,5 +1,4 @@
-//
-import firebase from 'firebase'
+import firebase from '../firebase/firebaseSingleton'
 
 //USER LOGIN
 export function getOnceUser(userId){

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { Platform, View, StyleSheet, Image, TouchableOpacity,Alert } from 'react-native'
 import {connect} from 'react-redux'
-import firebase from 'firebase'
+import firebase from '../../../firebase/firebaseSingleton'
 import { ImagePicker } from 'expo'
 //Style
 import {Container,Content,Body,Button,Text,Icon,Form,Textarea,CheckBox,List,ListItem} from 'native-base'
