@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, Dimensions, Platform, TouchableOpacity } from 'react-native'
 import {NavigationActions} from 'react-navigation';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { Entypo, FontAwesome, MaterialIcons, Foundation } from '@expo/vector-icons';
+import { Entypo, FontAwesome, MaterialIcons, Foundation, Ionicons } from '@expo/vector-icons';
 import Ripple from 'react-native-material-ripple';
 import {connect} from 'react-redux'
 import {Thumbnail} from 'native-base'
@@ -67,7 +67,10 @@ class Drawer extends React.Component {
                         {user.email}</Text>
                     </View>
                     <View style={{flex:0.1,flexDirection: 'column',justifyContent:'flex-end',alignItems:'flex-end'}}>
+                      {user.type=='fundation'? 
                       <Foundation name="paw" size={scale(22)} color={Colors.purple} />
+                        :
+                        <Ionicons name="md-person" size={scale(22)} color={Colors.purple} />}
                     </View>
                   </TouchableOpacity>
 

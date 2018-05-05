@@ -9,7 +9,7 @@ import { SignedOutRoutes, SignedInRoutes } from '../routes/routes'
 //Session
 import sessionActions from '../actions/sessionActions'
 //Resources
-import { Entypo, FontAwesome, MaterialIcons, Foundation } from '@expo/vector-icons';
+import { Entypo, FontAwesome, MaterialIcons, Foundation, Ionicons } from '@expo/vector-icons';
 import { AppLoading, Asset, Font} from 'expo';
 import Images from '../../assets/images'
 
@@ -63,6 +63,7 @@ class SessionWrapper extends Component {
     return Promise.all([
       ...Images,
       Font.loadAsync({
+        ...Ionicons.font,
         ...Entypo.font, ...FontAwesome.font, ...MaterialIcons.font, ...Foundation.font,
         // This is the font that we are using for our tab bar
         // We include SpaceMono because we use it in HomeScreen.js. Feel free
