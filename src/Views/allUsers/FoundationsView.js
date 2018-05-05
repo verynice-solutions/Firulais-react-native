@@ -7,16 +7,20 @@ import foundationsActions from '../../actions/foundationsActions'
 
 class FoundationsView extends Component {
 	constructor(props) {
-    super(props);
-    
+    super(props)
+    this.state = {
+      allFoundations: []
+    }
   }
     
   componentDidMount() {
-      this.props.fetchFoundations()
+    foundationsActions.fetchAllFoundations().then((val)=>{
+      console.log("DUDEEEEE: ", val)
+      this.setState({allFoundations: val})
+    })
   }
 
 	render() {
-    console.log('USER PROFILE',this.state)
     return (
       <View style={{flex:1,justifyContent:'center'}}> 
         <Text>Something Foundations Views</Text>
@@ -30,9 +34,7 @@ function mapStateToProps({currentUser}) {
     currentUser: currentUser,
   }
 }
-export default connect(mapStateToProps, {
-    fetchFoundations: foundationsActions.fetchAllFoundations,
-})(FoundationsView)
+export default connect(mapStateToProps)(FoundationsView)
 
 const styles = StyleSheet.create({
 

@@ -1,21 +1,13 @@
 import firebase from '../firebase/firebaseSingleton'
 
-
-const databaseRef = firebase.database().ref('users/')
-//const querybaseRef = querybase.ref(databaseRef, [])
+let db = firebase.database();
+let ref = db.ref('users');
 
 function fetchAllFoundations() {
-    console.log("PERRA");
-    console.log("Firebase",databaseRef);
-    //console.log(querybaseRef.where({ type: 'user'}))
-    // firebase.database().ref('users/').
-    return dispatch => {
+    return ref.orderByChild("type").equalTo("fundation").once("value", function(snapshot) {
+        return snapshot.val()
+    })      
 
-    }
-    
-    // firebase.database().ref('/fundaciones').once('value').then(function(snapshot) {
-    //     let foundations = snapshot.val()
-    // });
 }
 
 const foundationsActions = {
