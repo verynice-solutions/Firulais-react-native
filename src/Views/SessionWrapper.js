@@ -21,10 +21,6 @@ class SessionWrapper extends Component {
       isAuthenticationReady: false,
       isAuthenticated: false,
     }
-    //initialize Firebase....
-    if(!firebase.apps.lenght){ 
-      firebase.initializeApp(ApiKeys.FirebaseConfig)
-    }
     firebase.auth().useDeviceLanguage()
     firebase.auth().onAuthStateChanged(this.onAuthStateChanged)
   }

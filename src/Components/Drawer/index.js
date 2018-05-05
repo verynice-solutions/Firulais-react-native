@@ -64,13 +64,10 @@ class Drawer extends React.Component {
                       <Text style={{fontSize: scale(14), fontFamily:'Roboto-Medium', color: Colors.purple, backgroundColor: 'transparent', opacity: 0.95, paddingBottom:scale(1)}}>
                         {user.name||'Firulais'}</Text>
                       <Text style={{ fontSize: scale(14), fontFamily:'Roboto', color: Colors.light_purple, backgroundColor: 'transparent', opacity: 0.95}}> 
-                        {user.email}</Text>
+                        {user.email}    </Text>
                     </View>
                     <View style={{flex:0.1,flexDirection: 'column',justifyContent:'flex-end',alignItems:'flex-end'}}>
-                      {user.type=='fundation'? 
-                      <Foundation name="paw" size={scale(22)} color={Colors.purple} />
-                        :
-                        <Ionicons name="md-person" size={scale(22)} color={Colors.purple} />}
+                      <MaterialIcons name="edit" size={scale(22)} color={Colors.purple} />
                     </View>
                   </TouchableOpacity>
 
