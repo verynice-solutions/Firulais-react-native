@@ -85,7 +85,7 @@ class Drawer extends React.Component {
 
                   <Ripple style={[styles.drawerItem, activeView=='SearchPartiesProviders'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('SearchPartiesProviders')}>
-                    <FontAwesome name="newspaper-o" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Ionicons name="md-paper" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Eventos</Text>
                   </Ripple>
 
@@ -93,6 +93,18 @@ class Drawer extends React.Component {
                     onPress={this.navigateToScreen('SearchCasesIntakes')}>
                     <Foundation name="guide-dog" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Solicitudes</Text>
+                  </Ripple>
+
+                  <Ripple style={[styles.drawerItem, activeView=='AllFoundationsView'?styles.activeItem:null]} 
+                    onPress={this.navigateToScreen('AllFoundationsView')}>
+                    <Ionicons name="md-paw" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>Fundaciones</Text>
+                  </Ripple>
+
+                  <Ripple style={[styles.drawerItem, activeView=='AllUsersView'?styles.activeItem:null]} 
+                    onPress={this.navigateToScreen('AllUsersView')}>
+                    <Ionicons name="md-people" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>Personas</Text>
                   </Ripple>
 
                   <Ripple style={[styles.drawerItem, activeView=='CalendarView'?styles.activeItem:null]} 
