@@ -37,7 +37,7 @@ class Settings extends Component{
           source={Images.firulais_logo} />
           <View>
             <Text style={styles.version}>Version:
-              <Text style={{fontWeight:'normal'}}> firulais {versionApp.version} </Text>
+              <Text style={{fontWeight:'normal'}}> firulais {versionApp.version}. </Text>
             </Text>
             <View style={{flex:0.06}}/>
           </View>
