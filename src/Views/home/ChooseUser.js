@@ -22,7 +22,7 @@ class ChooseUser extends Component {
 				<Content>
 					<View style={{marginTop:40}}/>
 					<Text style={styles.textDefault}> 
-						¿Qué tipo de usuario quieres ser?
+						¿Qué tipo de usuario te gustaría ser?
 					</Text>
 					<View style={{marginTop:40}}/>
 					<View style={{flexDirection:'row',justifyContent:'center'}}>
