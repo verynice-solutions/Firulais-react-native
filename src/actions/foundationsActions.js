@@ -4,10 +4,14 @@ let db = firebase.database();
 let ref = db.ref('users');
 
 function fetchAllFoundations() {
-    return ref.orderByChild("type").equalTo("fundation").once("value", function(snapshot) {
+    let promise = ref.orderByChild("type").equalTo("fundation").once("value")
+    .then( (snapshot)=> {
         return snapshot.val()
-    })      
-
+    }) 
+    .catch(err=>{
+        console.log("Error: " + error);
+    }) 
+    return promise
 }
 
 const foundationsActions = {
