@@ -1,11 +1,10 @@
 const images = {
-	//Home view
-
+	//Login
+	login_hero: require('./images/kittyClouds.png'),
+	//Home
+	
 	//Drawer
 	firulais_logo: require('./images/logo_firulais_op.png'),
-	//Invites home
-
-	//Action-button Menu
 
 	//Messages 
 

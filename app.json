@@ -8,7 +8,7 @@
       "hideExponentText": false
     },
     "androidStatusBar": {
-      "barStyle":"light-content"
+      "backgroundColor": "#000000"
     }
   }
 }
