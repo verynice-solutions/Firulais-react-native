@@ -15,12 +15,45 @@ function setSignInData( user ) {
     user: user,
   }
 }
+function updateUserDB(userId, object) {
+  return  dispatch => {  
+    firebase.database().ref('users/').child(userId).once('value')
+      .then( (snapshot)=> {
+      let exist = snapshot.val()
+      if(!exist){
+        // console.log('user doesnt exist',object)
+        firebase.database().ref('users/' + userId).set(object)
+        dispatch( storeCurrentUser({
+          user: {...object},
+          uid: userId,
+          type: null
+        }))
+      }else{ 
+        // console.log('user exist',exist)
+        firebase.database().ref('users/' + userId).update(object)
+        dispatch( storeCurrentUser({
+          user: {...exist},
+          uid: userId,
+          type: exist.type
+        }))
+      }
+    })
+  }
+}
+function updateUserType(previousState, type) {
+  return  dispatch => {  
+    firebase.database().ref('users/' + previousState.uid).update({type:type})
+    dispatch( storeCurrentUser({
+      ...previousState, type: type
+    }))
+  }
+}
 
 function signOut() {
   CacheStore.remove('currentUser')
   firebase.auth().signOut()
   return dispatch => {
-    dispatch(setCurrentUser({ accessToken: '', idToken: '', user:{}, loadedFromCache: false}))
+    dispatch(setCurrentUser({ user:{}, uid:'',type:'', loadedFromCache: false}))
   }
 }
 function storeCurrentUser( currentUser = {} ) {
@@ -47,6 +80,8 @@ const sessionActions = {
   signOut,
   storeCurrentUser,
   rehydrateCurrentUser,
+  updateUserDB,
+  updateUserType
 };
 
 export default sessionActions;

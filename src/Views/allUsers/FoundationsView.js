@@ -16,7 +16,6 @@ class FoundationsView extends Component {
   }
 
 	render() {
-    console.log('USER PROFILE',this.state)
     return (
       <View style={{flex:1,justifyContent:'center'}}> 
         <Text>Something Foundations Views</Text>
