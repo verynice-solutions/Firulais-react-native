@@ -1,7 +1,7 @@
 export default {
     loadedFromCache: false,
-    accessToken: '', 
-    idToken: '', 
-    user:{}
+    user: {},
+    uid: '',
+    type: ''
   }
   
