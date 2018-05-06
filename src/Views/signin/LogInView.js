@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, TextInput, Alert, ActivityIndicator} from 'react-native'
-import {Google} from 'expo'
-import firebase from '../../firebase/firebaseSingleton'
+import { StyleSheet, View, TextInput, Alert, ActivityIndicator,Image, Dimensions} from 'react-native'
+import {Ionicons} from '@expo/vector-icons'
+import {Google,Constants} from 'expo'
 import {connect} from 'react-redux'
-import { Button, Text, Toast } from 'native-base'
+import { Button, Text, Toast,Icon } from 'native-base'
+import firebase from '../../firebase/firebaseSingleton'
 
-import Colors from '../../utils/colors'
+
+import Images from '../../../assets/images'
 import {scale, scaleModerate, scaleVertical} from '../../lib/responsive'
-
-import {getOnceUser,registerUserFirstTime} from '../../firebase/functions'
+import {updateUserDB} from '../../firebase/functions'
 import OAuth from '../../config/OAuth'
 import sessionActions from '../../actions/sessionActions'
 
@@ -47,92 +48,45 @@ class LogInView extends Component {
 				Alert.alert(error.message)
 			});
 	}
-	onLoginFundacionWithGoogle = () => {
-		this.setState({fetching:true})
-		signInWithGoogleAsync().then( (userCredentials)=>{
-			if(!userCredentials.error){
-			let credential = firebase.auth.GoogleAuthProvider.credential(
-				userCredentials.idToken , userCredentials.accessToken)
-			// Sign in in Firebase
-			firebase.auth().signInWithCredential(credential)
-				.then( (result)=>{
-					this.props.storeCurrentUser( JSON.parse(JSON.stringify({
-						...userCredentials, 
-						uid: result.uid,
-						type: 'fundation'
-					})))
-					//User is in Database?
-					registerUserFirstTime(result.uid,{
-						...userCredentials.user,
-						type: 'fundation'
-					})
-				},(error) => {
-					Alert.alert(error.message)
-				})
-			}
-		}).then(() => {
-			// successfull log-in <3
-			Toast.show({
-				text:'Inicio de sessión exitoso!',
-				buttonText:'OK',
-				duration: 6000,
-				type:'success'
-			})
-		})
-		.catch((error) => {
-			// no log-in </3
-			Toast.show({
-				text:'Log-in cómo Fundación cancelado',
-				buttonText:'sip',
-				duration: 6000,
-				type:'danger'
-			})
-			this.setState({fetching:false})
-		})
-	}
 	onLoginWithGoogle = () => {
-		this.setState({fetching:true})
-		signInWithGoogleAsync().then( (userCredentials)=>{
-			if(!userCredentials.error){
-			let credential = firebase.auth.GoogleAuthProvider.credential(
-				userCredentials.idToken , userCredentials.accessToken)
-			// Sign in in Firebase
-			firebase.auth().signInWithCredential(credential)
-				.then( (result)=>{
-					this.props.storeCurrentUser( JSON.parse(JSON.stringify({
-						...userCredentials, 
-						uid: result.uid,
-						type: 'user'
-					})))
-					//User is in Database?
-					registerUserFirstTime(result.uid,{
-						...userCredentials.user,
-						type: 'user'
+		setTimeout(() => {
+			this.setState({fetching:true})
+			signInWithGoogleAsync().then( (userCredentials)=>{
+				if(!userCredentials.error){
+				let credential = firebase.auth.GoogleAuthProvider.credential(
+					userCredentials.idToken , userCredentials.accessToken)
+				// Sign in in Firebase
+				firebase.auth().signInWithCredential(credential)
+					.then( (result)=>{
+						//Refresh or Add user in DB
+						this.props.updateUserDB(result.uid,{
+							...userCredentials.user,
+						})
+						setTimeout(() => {
+							Toast.show({
+								text:'Inicio de sessión exitoso!',
+								buttonText:'OK',
+								duration: 6000,
+								type:'success'
+							})
+						}, 1000);
+					},(error) => {
+						Alert.alert(error.message)
 					})
-				},(error) => {
-					Alert.alert(error.message)
+				}
+			}).catch((error) => {
+				// no log-in </3
+				Toast.show({
+					text:'Inicio de sessión cancelado',
+					buttonText:'OK',
+					duration: 6000,
+					type:'danger'
 				})
-			}
-		}).then(() => {
-			// successfull log-in <3 
-			Toast.show({
-				text:'Inicio de sessión exitoso!',
-				buttonText:'OK',
-				duration: 6000,
-				type:'success'
+				this.setState({fetching:false})
 			})
-		})
-		.catch((error) => {
-			// no log-in </3
-			Toast.show({
-				text:'Log-in cómo Usuario cancelado',
-				buttonText:'sip',
-				duration: 6000,
-				type:'danger'
-			})
-			this.setState({fetching:false})
-		})
+		}, 1000);
 	}
+	
 	render() {
 		// console.log('USER:',this.props.currentUser)
 		if(this.state.fetching){
@@ -143,34 +97,35 @@ class LogInView extends Component {
 			)
 		}else{
 			return (
-				<View style={{flex:1, flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
-					<Text style={styles.text}> Inicio de sesion </Text>
-					<View style={{marginTop:80}}/>
-					{/* <TextInput style={styles.textBox}
-						autoCapitalize='none'
-						autoCorrect={false}
-						value={this.state.email}
-						keyboardType='email-address'
-						onChangeText={(text)=> this.setState({email: text})}
-					/>
-					<TextInput style={styles.textBox}
-						autoCapitalize='none'
-						autoCorrect={false}
-						secureTextEntry
-						value={this.state.password}
-						onChangeText={(text)=> this.setState({password: text})}
-					/>
-					<Button title='Entrar' onPress={this.onLogin}/>
-					<Button title='Crear cuenta' onPress={()=>this.props.navigation.navigate('SignUp')}/>
-					<Button title='¡ oh no !' color={Colors.grey} onPress={()=>this.props.navigation.navigate('Forgot')}/> */}
+				<View style={{flex:1, flexDirection:'column', alignItems:'center', backgroundColor:'white'}}>
+
+					<View style={{ height: Constants.statusBarHeight, width:Dimensions.get('window').width,  backgroundColor:'#6c46b3'}}/>
+
+					<Image style={{width:Dimensions.get('window').width}} source={Images.login_hero}/>
+					<View style={{marginTop:40}}/>
 					<View style={{flexDirection:'column', alignItems:'center', justifyContent:'space-around'}}>
-						<Button onPress={this.onLoginWithGoogle} block primary>
-							<Text> Usuario </Text>
+						<Button onPress={this.onLoginWithGoogle} rounded danger >
+							<Icon name="logo-google" />
+							<Text> Google + </Text>
 						</Button>
 						<View style={{marginTop:40}}/>
-						<Button onPress={this.onLoginFundacionWithGoogle} block info>
-							<Text> Fundación </Text>
-						</Button>
+						{/* <TextInput style={styles.textBox}
+							autoCapitalize='none'
+							autoCorrect={false}
+							value={this.state.email}
+							keyboardType='email-address'
+							onChangeText={(text)=> this.setState({email: text})}
+						/>
+						<TextInput style={styles.textBox}
+							autoCapitalize='none'
+							autoCorrect={false}
+							secureTextEntry
+							value={this.state.password}
+							onChangeText={(text)=> this.setState({password: text})}
+						/>
+						<Button title='Entrar' onPress={this.onLogin}/>
+						<Button title='Crear cuenta' onPress={()=>this.props.navigation.navigate('SignUp')}/>
+						<Button title='¡ oh no !' color={Colors.grey} onPress={()=>this.props.navigation.navigate('Forgot')}/> */}
 					</View>
 				</View>
 			)
@@ -199,5 +154,6 @@ function mapStateToProps({currentUser}) {
 }
 export default connect(mapStateToProps, {
 	setCurrentUser: sessionActions.setCurrentUser,
+	updateUserDB: sessionActions.updateUserDB,
 	storeCurrentUser: sessionActions.storeCurrentUser
 })(LogInView)

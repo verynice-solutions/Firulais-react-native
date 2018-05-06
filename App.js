@@ -16,23 +16,24 @@ const store = configureStore(getInitialState())
 export default class App extends React.Component {
   constructor(props){
     super(props)
-    // YellowBox.ignoreWarnings(['Setting a timer']);
-    // const _console = _.clone(console);
-    // console.warn = message => {
-    //   if (message.indexOf('Setting a timer') <= -1) {
-    //     _console.warn(message);
-    //   }
-    // };
+    if(Platform.OS ==='android'){
+      YellowBox.ignoreWarnings(['Setting a timer']);
+      const _console = _.clone(console);
+      console.warn = message => {
+        if (message.indexOf('Setting a timer') <= -1) {
+          _console.warn(message);
+        }
+      };
+    }
   }
   
   render() {
     return (
       <Provider store={store}>
         <Root style={{flex:1}}>
-          {/* {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          {Platform.OS === 'android' && <StatusBar barStyle='light-content' backgroundColor='black'/>} */}
-          <StatusBar barStyle='default'/>
-            <SessionWrapper/>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          {Platform.OS === 'android' && <StatusBar backgroundColor="#A9A9A9"/>}
+          <SessionWrapper/>
         </Root>
       </Provider>
     );
