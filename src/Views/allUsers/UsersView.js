@@ -40,7 +40,7 @@ class UsersView extends Component {
                   <Thumbnail square size={80} source={{ uri: users[i].photoUrl }} />
                   <Body>
                     <Text>{users[i].name}</Text>
-                    <Text note>{ profile.description  } </Text>
+                    <Text note>{ profile && profile.description  } </Text>
                   </Body>
                 </ListItem>
               })
