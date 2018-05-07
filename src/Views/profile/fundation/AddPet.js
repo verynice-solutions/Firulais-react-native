@@ -36,23 +36,6 @@ class AddPet extends Component {
 			</Button>)
     }
   }
-  getCameraPermission= async ()=>{
-    try{
-      const { Permissions } = Expo;
-      const response = await Permissions.getAsync('camera');
-      console.log('RESPONSE PERMISSION:',response)
-      if (response.status !== 'granted') {
-        if (response.status === 'denied' || response.status === 'undetermined') {
-          Alert.alert('Please enable camera access from your device settings.');
-        }else{
-          const { status } = await Permissions.askAsync('camera');
-          if(status==='granted') this.setState({cameraGranted:true})
-        }
-      }else{ this.setState({cameraGranted:true})}
-    }catch(error){
-      Alert.alert(error.message)
-    }
-  }
   componentDidMount() {
     this.props.navigation.setParams({ addPet: this._añadirMascota })
 	}
@@ -85,7 +68,19 @@ class AddPet extends Component {
   //console.log(Object.values(val).some(el => el === '') )
 
   _onCamera = async () => {
-    // let permi = await this.getCameraPermission()
+    let result = await ImagePicker.launchCameraAsync()
+    // console.log('RESULT ',result)
+    if(!result.cancelled){
+      this._uploadImage(result.uri,'test1')
+        .then(() => {
+          Alert.alert('La imagen fue guardada')
+        })
+        .catch((error) => {
+          Alert.alert(error)
+        })
+    }
+  }
+  _onCamera = async () => {
     let result = await ImagePicker.launchCameraAsync()
     // console.log('RESULT ',result)
     if(!result.cancelled){
