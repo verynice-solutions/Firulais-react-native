@@ -14,6 +14,8 @@ import Drawer from '../Components/Drawer'
 import AddPetScreen from '../Views/profile/fundation/AddPet'
 import AllFoundationsView from '../Views/allUsers/FoundationsView'
 import AllUsersView from '../Views/allUsers/UsersView'
+import FoundationProfile from '../Views/profile/fundation/FoundationProfile'
+import UserProfile from '../Views/profile/user/UsersProfile'
 
 const SignedOutRoutes = StackNavigator({
   Login: {
@@ -43,9 +45,17 @@ const AllRoutes = StackNavigator({
     path: 'foundationsView',
     screen: AllFoundationsView
   },
+  FoundationProfile: {
+    path: 'foundationProfile',
+    screen: FoundationProfile
+  },
   AllUsersView: {
     path: 'usersView',
     screen: AllUsersView
+  },
+  UserProfile: {
+    path: 'userProfile',
+    screen: UserProfile
   },
   AddPet:{
     path: 'addpet',

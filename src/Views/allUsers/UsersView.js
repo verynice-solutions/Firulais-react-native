@@ -22,13 +22,15 @@ class UsersView extends Component {
     
   componentWillMount() {
     usersActions.fetchAllUsers().then( (val) =>{
-      console.log("RESPONSE", val)
+      //console.log("RESPONSE", val)
       this.setState({allUsers: val})
     })
   }
 
 	render() {
     let users = this.state.allUsers
+    const { navigate } = this.props.navigation
+
     return (
       <View style={{flex:1}}> 
         <List>
@@ -36,7 +38,7 @@ class UsersView extends Component {
             users!==undefined ?(
               Object.keys(users).map((i)=>{
                 let profile = users[i].profile             
-                return <ListItem key={i}>
+                return <ListItem key={i} onPress={ ()=> navigate('UserProfile', { userID: i }) }>
                   <Thumbnail square size={80} source={{ uri: users[i].photoUrl }} />
                   <Body>
                     <Text>{users[i].name}</Text>
