@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 
-import { Platform,	Text,	View, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { Platform,	Text,	View, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native'
 import {connect} from 'react-redux'
 import {Button, Icon} from 'native-base'
-
+import {Permissions} from 'expo'
 import drawerActions from '../../actions/drawerActions'
 import HomeFundation from './HomeFundation'
 import HomeUser from './HomeUser'
@@ -23,6 +23,40 @@ class Home extends Component {
       )
     }
   }
+  componentWillMount(){
+    this.getCameraPermission()
+      .then(() => {
+        //success getting permissions!
+      })
+  }
+  getCameraPermission= async ()=>{
+    try{
+      //ASK FOR CAMERA PERMISSION
+      const cameraPermi = await Permissions.getAsync(Permissions.CAMERA);
+      console.log('RESPONSE CAMERA PERMISSION:',cameraPermi)
+      if (cameraPermi.status !== 'granted') {
+        if (cameraPermi.status === 'denied' || cameraPermi.status === 'undetermined') {
+          const { status } = await Permissions.askAsync(Permissions.CAMERA);
+        }else{
+          if(status==='granted') this.setState({cameraGranted:true})
+        }
+      }else{ this.setState({cameraGranted:true})}
+      //ASK FOR CAMERA_ROLL PERMISSION
+
+      const camera_rollPermi = await Permissions.getAsync(Permissions.CAMERA_ROLL);
+      console.log('RESPONSE CAMERA_ROLL PERMISSION:',camera_rollPermi)
+      if (camera_rollPermi.status !== 'granted') {
+        if (camera_rollPermi.status === 'denied' || camera_rollPermi.status === 'undetermined') {
+          const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        }else{
+          if(status==='granted') this.setState({cameraGranted:true})
+        }
+      }else{ this.setState({cameraGranted:true})}
+    }catch(error){
+      Alert.alert(error.message)
+    }
+  }
+
 	render() {
     let {currentUser} = this.props
     // console.log('user:',this.props.currentUser)
