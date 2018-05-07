@@ -40,7 +40,7 @@ class FoundationsView extends Component {
                   <Thumbnail square size={80} source={{ uri: foundations[i].photoUrl }} />
                   <Body>
                     <Text>{foundations[i].name}</Text>
-                    <Text note>{ profile.description  } </Text>
+                    <Text note>{profile && profile.description  } </Text>
                   </Body>
                 </ListItem>
               })

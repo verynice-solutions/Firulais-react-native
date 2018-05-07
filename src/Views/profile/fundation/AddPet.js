@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { Component } from 'react'
 
 import { Platform, View, StyleSheet, Image, TouchableOpacity,Alert } from 'react-native'
@@ -15,11 +16,10 @@ class AddPet extends Component {
     this.state={
       cameraGranted:false,
       description:'',
-      dog:false, cat:false,
-      pequeño:false, mediano:false, grande:false,
-      macho:false, hembra:false,
+      dog:true, cat:null,
+      pequeño:true, mediano:null, grande:null,
+      hembra:true, macho:null,
       edad:'',
-      cuidado:'',
       amigableConPersonas: true,
       amigableConOtrosPets: true,
     }
@@ -57,12 +57,33 @@ class AddPet extends Component {
     this.props.navigation.setParams({ addPet: this._añadirMascota })
 	}
   _añadirMascota(){
-    firebase.database().ref().child('pets').push({
-      ...this.state
-    }).then(() => {
-      Alert.alert('Mascota añadida')
-    })
-	}
+    let valuesToSend = this._setValuesMascota(this.state)
+    if(valuesToSend===false) {
+      Alert.alert('Recuerda llenar todos los campos!')
+    }else {
+      firebase.database().ref().child('pets').push({
+        ...valuesToSend,
+        idFundacion: this.props.currentUser.uid
+      }).then(() => {
+        Alert.alert('Mascota añadida')
+      })
+    }
+  }
+  
+  _setValuesMascota(values){
+    console.log(values)
+    let result =  _.pickBy(values, (value)=>{
+      return !value === false
+    }) 
+    if(_.some(values, (val)=> val==='')){
+      return false
+    }else{
+      return result
+    }
+  }
+
+  //console.log(Object.values(val).some(el => el === '') )
+
   _onCamera = async () => {
     // let permi = await this.getCameraPermission()
     let result = await ImagePicker.launchCameraAsync()
