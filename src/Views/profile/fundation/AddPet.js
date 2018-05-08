@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
 
-import { Platform, View, StyleSheet, Image, TouchableOpacity,Alert } from 'react-native'
+import { Platform, View, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
 import {connect} from 'react-redux'
 import firebase from '../../../firebase/firebaseSingleton'
 import { ImagePicker } from 'expo'
@@ -9,12 +9,14 @@ import { ImagePicker } from 'expo'
 import {Container,Content,Body,Button,Text,Icon,Form,Textarea,CheckBox,List,ListItem} from 'native-base'
 import { scale } from '../../../lib/responsive';
 import {randomPuppers} from '../../../utils/random_functions'
+import { FlatList } from 'react-native-gesture-handler';
 
 class AddPet extends Component {
 	constructor(props) {
     super(props);
     this.state={
-      cameraGranted:false,
+      images:[],
+      fetchingImages:false,
       description:'',
       dog:true, cat:null,
       pequeño:true, mediano:null, grande:null,
@@ -23,7 +25,9 @@ class AddPet extends Component {
       amigableConPersonas: true,
       amigableConOtrosPets: true,
     }
-		this._añadirMascota=this._añadirMascota.bind(this)
+
+    this._añadirMascota=this._añadirMascota.bind(this)
+    this.renderImageItem=this.renderImageItem.bind(this)
   }
   
   static navigationOptions = ({navigation}) => {
@@ -40,21 +44,43 @@ class AddPet extends Component {
     this.props.navigation.setParams({ addPet: this._añadirMascota })
 	}
   _añadirMascota(){
-    let valuesToSend = this._setValuesMascota(this.state)
-    if(valuesToSend===false) {
-      Alert.alert('Recuerda llenar todos los campos!')
-    }else {
-      firebase.database().ref().child('pets').push({
-        ...valuesToSend,
-        idFundacion: this.props.currentUser.uid
-      }).then(() => {
-        Alert.alert('Mascota añadida')
-      })
-    }
+    this._upLoadPhotos().then(() => {
+      let valuesToSend = this._setValuesMascota(this.state)
+      if(valuesToSend===false) {
+        Alert.alert('Recuerda llenar todos los campos!')
+      }else {
+        firebase.database().ref().child('pets').push({
+          ...valuesToSend,
+          idFundacion: this.props.currentUser.uid,
+  
+        }).then(() => {
+          Alert.alert('Mascota añadida')
+        })
+      }
+    })
+  }
+  _upLoadPhotos= async ()=>{
+
+    let PromisesImages = []
+    let imagesInState = this.state.images
+    let count = 0
+    imagesInState.forEach(function(img) {
+      
+      PromisesImages.push(this._uploadImage(img,`P00${count++}`))
+
+    })
+    return Promise.all(PromisesImages)
+    // this._uploadImage(result.uri,'test1')
+    // .then(() => {
+    //   // Alert.alert('La imagen fue guardada')
+    // })
+    // .catch((error) => {
+    //   Alert.alert(error)
+    // })
   }
   
   _setValuesMascota(values){
-    console.log(values)
+    // console.log(values)
     let result =  _.pickBy(values, (value)=>{
       return !value === false
     }) 
@@ -68,29 +94,38 @@ class AddPet extends Component {
   //console.log(Object.values(val).some(el => el === '') )
 
   _onCamera = async () => {
+    this.setState({fetchingImages:true})
     let result = await ImagePicker.launchCameraAsync()
     // console.log('RESULT ',result)
     if(!result.cancelled){
-      this._uploadImage(result.uri,'test1')
-        .then(() => {
-          Alert.alert('La imagen fue guardada')
-        })
-        .catch((error) => {
-          Alert.alert(error)
-        })
+
+      this.setState({
+        images: [...this.state.images , result.uri],
+        fetchingImages: false
+      })
+
+      // this._uploadImage(result.uri,'test1')
+      // .then(() => {
+      //   Alert.alert('La imagen fue guardada')
+      // })
+      // .catch((error) => {
+      //   Alert.alert(error)
+      // })
+    }else{
+      this.setState({ fetchingImages: false })
     }
   }
-  _onCamera = async () => {
-    let result = await ImagePicker.launchCameraAsync()
+  _onGalery = async () => {
+    this.setState({fetchingImages:true})
+    let result = await ImagePicker.launchImageLibraryAsync()
     // console.log('RESULT ',result)
     if(!result.cancelled){
-      this._uploadImage(result.uri,'test1')
-        .then(() => {
-          Alert.alert('La imagen fue guardada')
-        })
-        .catch((error) => {
-          Alert.alert(error)
-        })
+      this.setState({
+        images: [...this.state.images , result.uri ],
+        fetchingImages: false
+      })
+    }else{
+      this.setState({ fetchingImages: false })
     }
   }
   _uploadImage = async (uri,petID) => {
@@ -100,12 +135,35 @@ class AddPet extends Component {
     var ref = firebase.storage().ref().child('images/pets/'+ petID)
     return ref.put(blop)
   }
+
+  renderImageItem({item}){
+    return (
+      <View>
+        <Image resizeMode='contain' style={styles.petImage} source={{uri: item}}/>
+      </View>
+    )
+  }
+
 	render() {
-		let {user} = this.props.currentUser
+    let {user} = this.props.currentUser
+    let imagesPupers = this.state.images
+    // console.log('images: ',this.state.images)
 		return (
 			<Container>
 				<Content padder>
-					<View style={{marginTop:20}}/>
+					<View style={{marginTop:5}}/>
+          {imagesPupers?<Text style={styles.textHeaders}>Fotos:</Text>:null}
+          {this.state.fetchingImages?
+            <ActivityIndicator size="small" /> 
+          :
+          <FlatList horizontal style={{backgroundColor:'#F2F2F2',marginBottom:8}}
+              data={imagesPupers}
+              bounces={true}
+              showsHorizontalScrollIndicator={true}
+              renderItem={this.renderImageItem}
+              keyExtractor={(item) => {return `${item}` }}
+            />
+          }
           <View style={{flexDirection:'row',justifyContent:'space-around'}}>
 						<Button bordered onPress={this._onGalery}>
 							<Text primary>Galería +</Text>
@@ -114,62 +172,62 @@ class AddPet extends Component {
 							<Text primary>Cámara +</Text>
 						</Button>
 					</View>
-            <View style={{marginTop:20}}/>
-            <Text> Cómo es? </Text>
-            <Textarea bordered placeholder='He is the best dog EVER...'
-            autoCorrect={true}
-            value={this.state.description}
-            onChangeText={(text)=> this.setState({description: text})} 
-            />
-            <View style={{marginTop:10}}/>
-            <Text> Tipo </Text>
-              <ListItem>
-                <CheckBox onPress={()=>{this.setState({dog:!this.state.dog ,cat:false})}} 
-                  checked={this.state.dog}/>
-                <Text style={{paddingLeft:15}}>Perro</Text>
-              </ListItem>
-              <ListItem>
-                <CheckBox onPress={()=>{this.setState({cat:!this.state.cat ,dog:false})}} 
-                  checked={this.state.cat} />
-                <Text style={{paddingLeft:15}}>Gato</Text>
-              </ListItem>
-              <View style={{marginTop:10}}/>
-            <Text> Tamaño </Text>
+          <View style={{marginTop:20}}/>
+          <Text> Cómo es? </Text>
+          <Textarea bordered placeholder='He is the best dog EVER...'
+          autoCorrect={true}
+          value={this.state.description}
+          onChangeText={(text)=> this.setState({description: text})} 
+          />
+          <View style={{marginTop:10}}/>
+          <Text> Tipo </Text>
             <ListItem>
-              <CheckBox onPress={()=>{this.setState({pequeño:!this.state.pequeño ,mediano:false, grande:false})}} 
-                checked={this.state.pequeño} color='green'/>
-              <Text style={{paddingLeft:15}}>Pequeño</Text>
+              <CheckBox onPress={()=>{this.setState({dog:!this.state.dog ,cat:false})}} 
+                checked={this.state.dog}/>
+              <Text style={{paddingLeft:15}}>Perro</Text>
             </ListItem>
             <ListItem>
-              <CheckBox onPress={()=>{this.setState({mediano:!this.state.mediano ,pequeño:false, grande:false})}} 
-                checked={this.state.mediano} color='green'/>
-              <Text style={{paddingLeft:15}}>Mediano</Text>
-            </ListItem>
-            <ListItem>
-              <CheckBox onPress={()=>{this.setState({grande:!this.state.grande ,mediano:false, pequeño:false})}} 
-                checked={this.state.grande} color='green'/>
-              <Text style={{paddingLeft:15}}>Grande</Text>
+              <CheckBox onPress={()=>{this.setState({cat:!this.state.cat ,dog:false})}} 
+                checked={this.state.cat} />
+              <Text style={{paddingLeft:15}}>Gato</Text>
             </ListItem>
             <View style={{marginTop:10}}/>
-            <Text> Que edad tiene? </Text>
-            <Textarea bordered placeholder='2 años y 3 cuartos...'
-            autoCorrect={false}
-            value={this.state.edad}
-            onChangeText={(text)=> this.setState({edad: text})} 
-            />
-            <View style={{marginTop:10}}/>
-            <Text> Género </Text>
-            <ListItem>
-              <CheckBox onPress={()=>{this.setState({hembra:!this.state.hembra , macho:false })}} 
-                checked={this.state.hembra} color='purple'/>
-              <Text style={{paddingLeft:15}}>Hembra</Text>
-            </ListItem>
-            <ListItem>
-              <CheckBox onPress={()=>{this.setState({macho:!this.state.macho ,hembra:false })}} 
-                checked={this.state.macho} color='purple' />
-              <Text style={{paddingLeft:15}}>Macho</Text>
-            </ListItem>
-            <View style={{marginBottom:40}}/>
+          <Text> Tamaño </Text>
+          <ListItem>
+            <CheckBox onPress={()=>{this.setState({pequeño:!this.state.pequeño ,mediano:false, grande:false})}} 
+              checked={this.state.pequeño} color='green'/>
+            <Text style={{paddingLeft:15}}>Pequeño</Text>
+          </ListItem>
+          <ListItem>
+            <CheckBox onPress={()=>{this.setState({mediano:!this.state.mediano ,pequeño:false, grande:false})}} 
+              checked={this.state.mediano} color='green'/>
+            <Text style={{paddingLeft:15}}>Mediano</Text>
+          </ListItem>
+          <ListItem>
+            <CheckBox onPress={()=>{this.setState({grande:!this.state.grande ,mediano:false, pequeño:false})}} 
+              checked={this.state.grande} color='green'/>
+            <Text style={{paddingLeft:15}}>Grande</Text>
+          </ListItem>
+          <View style={{marginTop:10}}/>
+          <Text> Que edad tiene? </Text>
+          <Textarea bordered placeholder='2 años y 3 cuartos...'
+          autoCorrect={false}
+          value={this.state.edad}
+          onChangeText={(text)=> this.setState({edad: text})} 
+          />
+          <View style={{marginTop:10}}/>
+          <Text> Género </Text>
+          <ListItem>
+            <CheckBox onPress={()=>{this.setState({hembra:!this.state.hembra , macho:false })}} 
+              checked={this.state.hembra} color='purple'/>
+            <Text style={{paddingLeft:15}}>Hembra</Text>
+          </ListItem>
+          <ListItem>
+            <CheckBox onPress={()=>{this.setState({macho:!this.state.macho ,hembra:false })}} 
+              checked={this.state.macho} color='purple' />
+            <Text style={{paddingLeft:15}}>Macho</Text>
+          </ListItem>
+          <View style={{marginBottom:40}}/>
 				</Content>
 			</Container>
 		)
@@ -184,5 +242,8 @@ function mapStateToProps({currentUser}) {
 export default connect(mapStateToProps)(AddPet)
 
 const styles = StyleSheet.create({
-
+  petImage:{
+    width:160,
+    height:120
+  },
 });
