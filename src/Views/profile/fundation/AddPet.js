@@ -17,26 +17,26 @@ class AddPet extends Component {
     this.state={
       images:[],
       fetchingImages:false,
-      description:'',
+      description:'test',
       dog:true, cat:null,
       pequeño:true, mediano:null, grande:null,
       hembra:true, macho:null,
-      edad:'',
+      edad:'2',
       amigableConPersonas: true,
       amigableConOtrosPets: true,
+      pet_fire_key: firebase.database().ref().child('pets').push().key
     }
 
     this._añadirMascota=this._añadirMascota.bind(this)
     this.renderImageItem=this.renderImageItem.bind(this)
   }
-  
   static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
 			title: 'Añadir mascota',
 			headerRight: (
 			<Button transparent onPress={params.addPet}>
-				<Text primary>save</Text>
+				<Text primary>guardar</Text>
 			</Button>)
     }
   }
@@ -44,39 +44,51 @@ class AddPet extends Component {
     this.props.navigation.setParams({ addPet: this._añadirMascota })
 	}
   _añadirMascota(){
-    this._upLoadPhotos().then(() => {
-      let valuesToSend = this._setValuesMascota(this.state)
-      if(valuesToSend===false) {
-        Alert.alert('Recuerda llenar todos los campos!')
-      }else {
-        firebase.database().ref().child('pets').push({
+    let valuesToSend = this._setValuesMascota(this.state)
+    let petID = this.state.pet_fire_key
+    if(valuesToSend===false) {
+      Alert.alert('Recuerda llenar todos los campos <3')
+    }else {
+      this._upLoadPhotos()
+        .then(() => {
+        let imagesInState = this.state.images
+        imagesInState.forEach((img,count) => {
+          firebase.storage().ref(`images/pets/${petID}/P-${count}`).getDownloadURL().then((url)=>{
+            firebase.database().ref().child(`pets/${petID}/imageUrls`).push({
+              url
+            })
+          })
+        })
+        firebase.database().ref().child(`pets/${petID}`).update({
           ...valuesToSend,
           idFundacion: this.props.currentUser.uid,
-  
-        }).then(() => {
-          Alert.alert('Mascota añadida')
         })
-      }
-    })
+      }).then(() => {
+        Alert.alert('\u2b50 Success \u2b50','Mascota subida con éxito')
+      })
+      .catch((err) => {
+        console.log('Error Subiendo Fotos:', err)
+        Alert.alert('Hubo un error',' :( ')
+      })
+    }
   }
   _upLoadPhotos= async ()=>{
-
     let PromisesImages = []
     let imagesInState = this.state.images
-    let count = 0
-    imagesInState.forEach(function(img) {
-      
-      PromisesImages.push(this._uploadImage(img,`P00${count++}`))
-
+    imagesInState.forEach( (img,count)=>{
+      let petID = this.state.pet_fire_key
+      let fileName = `P-${count}`
+      PromisesImages.push( this._uploadImage( img, petID, fileName) )
     })
-    return Promise.all(PromisesImages)
-    // this._uploadImage(result.uri,'test1')
-    // .then(() => {
-    //   // Alert.alert('La imagen fue guardada')
-    // })
-    // .catch((error) => {
-    //   Alert.alert(error)
-    // })
+    return Promise.all(PromisesImages);
+  }
+  _uploadImage = async (uri,fundId,fotoName) => {
+    // console.log('uploadImage:',uri,fotoName)
+    const response = await fetch(uri)
+    const blop = await response.blob()
+    let storage_ref = `images/pets/${fundId}/${fotoName}`
+    var ref = firebase.storage().ref().child(storage_ref)
+    return ref.put(blop)
   }
   
   _setValuesMascota(values){
@@ -98,19 +110,10 @@ class AddPet extends Component {
     let result = await ImagePicker.launchCameraAsync()
     // console.log('RESULT ',result)
     if(!result.cancelled){
-
       this.setState({
         images: [...this.state.images , result.uri],
         fetchingImages: false
       })
-
-      // this._uploadImage(result.uri,'test1')
-      // .then(() => {
-      //   Alert.alert('La imagen fue guardada')
-      // })
-      // .catch((error) => {
-      //   Alert.alert(error)
-      // })
     }else{
       this.setState({ fetchingImages: false })
     }
@@ -128,13 +131,6 @@ class AddPet extends Component {
       this.setState({ fetchingImages: false })
     }
   }
-  _uploadImage = async (uri,petID) => {
-    const response = await fetch(uri)
-    const blop = await response.blob()
-
-    var ref = firebase.storage().ref().child('images/pets/'+ petID)
-    return ref.put(blop)
-  }
 
   renderImageItem({item}){
     return (
@@ -145,9 +141,9 @@ class AddPet extends Component {
   }
 
 	render() {
-    let {user} = this.props.currentUser
     let imagesPupers = this.state.images
     // console.log('images: ',this.state.images)
+    // console.log('petKey',this.state.pet_fire_key)
 		return (
 			<Container>
 				<Content padder>
