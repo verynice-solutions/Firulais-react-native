@@ -25,8 +25,18 @@ function fetchByUID(uid) {
     return promise
 }
 
+function createService(mascotaId, fundacionId, userId){
+    let key = firebase.database().ref().child('services').push().key
+    firebase.database().ref().child('services/'+key).update({
+        petId: mascotaId,
+        founId: fundacionId,
+        userId: userId
+    })
+}
+
 const usersActions = {
     fetchAllUsers,
+    createService,
     fetchByUID
 }
 

@@ -9,6 +9,8 @@ import { Button, Icon, Thumbnail, Text, Item, Input,
 					Card, CardItem, Content, Left } from 'native-base'
 import firebase from '../../../firebase/firebaseSingleton'
 
+import userActions from '../../../actions/usersActions'
+
 class FundationProfileView extends Component {
 	constructor(props) {
 		super(props);
@@ -17,6 +19,7 @@ class FundationProfileView extends Component {
 			pets: []
 		}
 		this.renderPets = this.renderPets.bind(this)
+		this.petTouched = this.petTouched.bind(this)
 	}
 
 	static navigationOptions = ({navigation}) => {
@@ -36,16 +39,35 @@ class FundationProfileView extends Component {
 		})
 	}
 
+	createService(mascotaId, fundacionId, userId, objectMascota) {
+		userActions.createService(mascotaId, fundacionId, userId, objectMascota);
+	}
+
+	petTouched(mascotaId, fundacionId, userId) {
+		if(fundacionId !== userId) {
+			Alert.alert(
+				'Ayudar mascota',
+				`¿Quieres ayudar al amigo? ${fundacionId}`,
+				[
+					{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+					{text: 'OK', onPress: () => this.createService(mascotaId, fundacionId, userId)},
+				],
+				{ cancelable: false }
+			)
+		}
+	}
+
 	renderPets({item, index}) {
 		let pets = this.state.pets
-		return <Card key={item} style={styles.petCard}>
+		let images = pets[item].imageUrls
+		return <TouchableOpacity onPress={()=>this.petTouched(item, pets[item].idFundacion, this.props.currentUser.uid)}><Card key={item} style={styles.petCard}>
 						<CardItem>
 								<View style={styles.petCardContent}>
-									<Thumbnail circle small source={{ uri: 'https://pbs.twimg.com/profile_images/828073361397932032/eKTigt-2_400x400.jpg' }}/>
+									<Thumbnail circle small source={{ uri: images[Object.keys(images)[0]].url}}/>
 									<Text note> {pets[item].edad} años </Text>
 								</View>
 						</CardItem>
-				</Card>
+				</Card></TouchableOpacity>
 	}
 
 	render() {

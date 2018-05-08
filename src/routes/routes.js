@@ -16,6 +16,7 @@ import AllFoundationsView from '../Views/allUsers/FoundationsView'
 import AllUsersView from '../Views/allUsers/UsersView'
 import FoundationProfile from '../Views/profile/fundation/FoundationProfile'
 import UserProfile from '../Views/profile/user/UsersProfile'
+import ServicesView from '../Views/services/ServicesView'
 
 const SignedOutRoutes = StackNavigator({
   Login: {
@@ -40,6 +41,10 @@ const AllRoutes = StackNavigator({
   EditProfile:{
     path: 'editarperfil',
     screen: EditProfileView
+  },
+  ServicesView: {
+    path: 'servicesView',
+    screen: ServicesView
   },
   AllFoundationsView: {
     path: 'foundationsView',

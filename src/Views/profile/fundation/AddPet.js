@@ -24,7 +24,8 @@ class AddPet extends Component {
       edad:'2',
       amigableConPersonas: true,
       amigableConOtrosPets: true,
-      pet_fire_key: firebase.database().ref().child('pets').push().key
+      pet_fire_key: firebase.database().ref().child('pets').push().key,
+      blockButton: false
     }
 
     this._añadirMascota=this._añadirMascota.bind(this)
@@ -49,6 +50,7 @@ class AddPet extends Component {
     if(valuesToSend===false) {
       Alert.alert('Recuerda llenar todos los campos <3')
     }else {
+      this.setState({blockButton: true})
       this._upLoadPhotos()
         .then(() => {
         let imagesInState = this.state.images
@@ -65,6 +67,7 @@ class AddPet extends Component {
         })
       }).then(() => {
         Alert.alert('\u2b50 Success \u2b50','Mascota subida con éxito')
+        this.setState({blockButton: false});
       })
       .catch((err) => {
         console.log('Error Subiendo Fotos:', err)
