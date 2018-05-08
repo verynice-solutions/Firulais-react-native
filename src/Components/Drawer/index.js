@@ -89,8 +89,8 @@ class Drawer extends React.Component {
                     <Text style={styles.drawerItemText}>Eventos</Text>
                   </Ripple>
 
-                  <Ripple style={[styles.drawerItem, activeView=='SearchCasesIntakes'?styles.activeItem:null]} 
-                    onPress={this.navigateToScreen('SearchCasesIntakes')}>
+                  <Ripple style={[styles.drawerItem, activeView=='ServicesView'?styles.activeItem:null]} 
+                    onPress={this.navigateToScreen('ServicesView')}>
                     <Foundation name="guide-dog" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Solicitudes</Text>
                   </Ripple>

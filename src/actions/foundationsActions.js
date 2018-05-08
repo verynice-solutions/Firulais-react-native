@@ -14,6 +14,19 @@ function fetchAllFoundations() {
     return promise
 }
 
+function fetchAllServices(userId) {
+    let dRef = db.ref('services');
+    let promise = dRef.orderByChild("founId").equalTo(userId).once("value")
+    .then( (snapshot)=> {
+        return snapshot.val()
+    }) 
+    .catch(err=>{
+        console.log("Error: " + error);
+    }) 
+    return promise
+}
+
+
 function fetchFoundationPets(uid) {
     let petsRef = db.ref('pets')
     let promise = petsRef.orderByChild("idFundacion").equalTo(uid).once("value")
@@ -41,6 +54,7 @@ function fetchByUID(uid) {
 
 const foundationsActions = {
     fetchAllFoundations,
+    fetchAllServices,
     fetchFoundationPets,
     fetchByUID
 }
