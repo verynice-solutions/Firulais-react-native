@@ -32,7 +32,7 @@ export default class App extends React.Component {
       <Provider store={store}>
         <Root style={{flex:1}}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          {Platform.OS === 'android' && <StatusBar backgroundColor="#A9A9A9"/>}
+          {/* {Platform.OS === 'android' && <StatusBar backgroundColor="#A9A9A9"/>} */}
           <SessionWrapper/>
         </Root>
       </Provider>

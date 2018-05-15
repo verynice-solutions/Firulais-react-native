@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, TextInput, Alert, ActivityIndicator,Image, Dimensions} from 'react-native'
+import { StyleSheet, View, TextInput, Alert, ActivityIndicator,Image, Dimensions, StatusBar} from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
 import {Google,Constants} from 'expo'
 import {connect} from 'react-redux'
@@ -99,7 +99,7 @@ class LogInView extends Component {
 			return (
 				<View style={{flex:1, flexDirection:'column', alignItems:'center', backgroundColor:'white'}}>
 
-					<View style={{ height: Constants.statusBarHeight, width:Dimensions.get('window').width,  backgroundColor:'#6c46b3'}}/>
+					<StatusBar backgroundColor='#6c46b3' />
 
 					<Image style={{width:Dimensions.get('window').width}} source={Images.login_hero}/>
 					<View style={{marginTop:40}}/>
