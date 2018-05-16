@@ -162,14 +162,14 @@ class AddPet extends Component {
               renderItem={this.renderImageItem}
               keyExtractor={(item) => {return `${item}` }}
             />
-          }
+          } 
           <View style={{flexDirection:'row',justifyContent:'space-around'}}>
 						<Button bordered onPress={this._onGalery}>
 							<Text primary>Galería +</Text>
 						</Button>
-            <Button bordered onPress={this._onCamera}>
+            {/* <Button bordered onPress={this._onCamera}>
 							<Text primary>Cámara +</Text>
-						</Button>
+						</Button> */}
 					</View>
           <View style={{marginTop:20}}/>
           <Text> Cómo es? </Text>

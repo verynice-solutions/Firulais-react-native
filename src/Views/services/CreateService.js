@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Button } from 'native-base';
 import DatePicker from 'react-native-datepicker'
 import userActions from '../../actions/usersActions'
-import {_getNowDateISO,_getNextYear} from '../../utils/random_functions'
+import {_getNowDateISO, _getNextYear} from '../../utils/random_functions'
 
 class CreateService extends Component {
 	constructor(props) {
@@ -57,7 +57,28 @@ class CreateService extends Component {
       </View>
     }
   }
+  renderAdopt = () =>{
+    let ids = this.props.navigation.getParam('toModal')
+    return(
+      <View style={styles.subcontainer}>
+        <Text> Adopt me, you pretty face :3 </Text>
+        <Text>{ids.pid}</Text>
+        <Text>{ids.fid}</Text>
+      </View>
+    )
+  }
 
+  renderCare = ()=>{
+    return(
+      <View style={styles.subcontainer}>
+        <Text> Or wanna take care of my ass :D </Text>
+        {this.renderDatePicker()}
+        <View><Button rounded info>
+          <Text>Sure?</Text>
+        </Button></View>
+      </View>
+    )
+  }
   renderDatePicker = () => {
     return <View><DatePicker
       style={{width: 200}}
@@ -86,26 +107,16 @@ class CreateService extends Component {
   }
 
 	render() {
-    let ids = this.props.navigation.getParam('toModal')
+    
     return (
-      <View style={{ flex: 0.5, justifyContent:'center'}}> 
-       
+      <View style={{ flex: 0.6, justifyContent:'center'}}> 
+
         {this.renderBtns()}
         {
           this.state.selectedView === 0 ? (
-            <View style={styles.subcontainer}>
-              <Text> Adopt me, you pretty face :3 </Text>
-              <Text>{ids.pid}</Text>
-              <Text>{ids.fid}</Text>
-            </View>
+            this.renderAdopt()
           ):(
-            <View style={styles.subcontainer}>
-              <Text> Or wanna take care of my ass :D </Text>
-              {this.renderDatePicker()}
-              <View><Button rounded info>
-                <Text>Sure?</Text>
-              </Button></View>
-            </View>
+            this.renderCare()
           )
         }
 

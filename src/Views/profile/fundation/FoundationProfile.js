@@ -52,9 +52,9 @@ class FundationProfileView extends Component {
 		userActions.createService(mascotaId, fundacionId, userId, objectMascota);
 	}
 
-	petTouched(mascotaId, fundacionId, userId) {
+	petTouched(mascotaId, fundacionId, userId,images) {
 		if(fundacionId !== userId) {
-			this.props.navigation.navigate('CreateService',{toModal:{pid:mascotaId,fid:fundacionId,uid:userId}})
+			this.props.navigation.navigate('CreateService',{toModal:{pid:mascotaId,fid:fundacionId,uid:userId,images:images}})
 			
 			// Alert.alert(
 			// 	'Ayudar mascota',
@@ -71,31 +71,33 @@ class FundationProfileView extends Component {
 	renderPets({item, index}) {
 		let pets = this.state.pets
 		let images = pets[item].imageUrls
-		return <TouchableOpacity onPress={()=>this.petTouched(item, pets[item].idFundacion, this.props.currentUser.uid)}><Card key={item} style={styles.petCard}>
+		let imgURL = images[Object.keys(images)[0]].url
+		return(
+			<TouchableOpacity onPress={()=>this.petTouched(item, pets[item].idFundacion, this.props.currentUser.uid,images)}>
+				<Card key={item} style={styles.petCard}>
 						<CardItem>
 								<View style={styles.petCardContent}>
-									<Thumbnail circle small source={{ uri: images[Object.keys(images)[0]].url}}/>
+								<Thumbnail circle large source={{ uri: imgURL}}/> 
 									<Text note> {pets[item].edad} años </Text>
 								</View>
 						</CardItem>
-				</Card></TouchableOpacity>
+				</Card>
+			</TouchableOpacity>
+		)
 	}
-
 	render() {
 		let info = this.state.data
 		let pets = this.state.pets
-		
+		// console.log('info',info)
 		let news = null
 		let profile = info.profile
 		return (
 			<View style={{flex:1}}>
-				<View style={{ flexDirection:'column'}}>
+				<View style={{flexDirection:'column'}}>
 					{
 						this.state.isFetchingData?(
 							<View style={styles.infoContainer}>
-								<Text style={styles.infoField}>
-									Nobody here :(
-								</Text>
+								<ActivityIndicator size='large' />
 							</View>
 						):(
 							<View>
@@ -117,24 +119,29 @@ class FundationProfileView extends Component {
 						{
 							this.state.isFetchingPets ? (
 								<View style={styles.infoContainer}>
-										<Text style={styles.infoField}>
-										No hay mascotas :(
-										</Text>
+									<ActivityIndicator size='large' />
 								</View>
 								
 							):(
 								<View style={styles.cardsContainer}>
+									{pets?
 									<FlatList data={Object.keys(pets)}
 										horizontal
 										showsHorizontalScrollIndicator={false}
 										bounces={true}
 										renderItem={this.renderPets}
-										onEndReached={ this.props.onEndReached }
 										keyExtractor={ (item, index) => {return `${index}` } }
-										onEndReachedThreshold={0.5}
-										keyboardShouldPersistTaps='never'
 									/>
-									<TouchableOpacity><Text style={styles.verMas} primary> Ver más... </Text></TouchableOpacity>
+									:
+									<View style={styles.infoContainer}>
+										<Text style={styles.infoField}>
+											{info.givenName} no tiene mascotas todavía :(
+										</Text>
+									</View>
+									}
+										<TouchableOpacity>
+											<Text style={styles.verMas} primary> Ver más... </Text>
+										</TouchableOpacity>
 								</View>
 							)
 						}
@@ -192,7 +199,6 @@ const styles = StyleSheet.create({
 	},
 	cardsContainer: {
 		alignItems:'center', 
-		backgroundColor: 'whitesmoke',
 		paddingVertical: 5  
 	},
 	petCard: {
