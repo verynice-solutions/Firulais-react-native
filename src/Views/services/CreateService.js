@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Button } from 'native-base';
 import DatePicker from 'react-native-datepicker'
 import userActions from '../../actions/usersActions'
@@ -11,11 +11,14 @@ class CreateService extends Component {
     super(props)
     this.state = {
       selectedView: 0,
-      date: _getNowDateISO()
+      dateIni: null,
+      dateFin: null,
+      infoObject: this.props.navigation.getParam('toCreate'),
+
     }
     this.toggleAdopt = this.toggleAdopt.bind(this)
     this.toggleCare = this.toggleCare.bind(this)
-
+    this.createService = this.createService.bind(this)
   }
 	static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
@@ -58,38 +61,73 @@ class CreateService extends Component {
     }
   }
   renderAdopt = () =>{
-    let ids = this.props.navigation.getParam('toModal')
+    let object = this.state.infoObject
     return(
       <View style={styles.subcontainer}>
         <Text> Adopt me, you pretty face :3 </Text>
-        <Text>{ids.pid}</Text>
-        <Text>{ids.fid}</Text>
+        <Text>{object.petObj.pet_fire_key}</Text>
+        <Text>{object.fid}</Text>
+        <Text>{object.uid}</Text>
       </View>
     )
   }
 
+	createService(object,type){
+    if(type=='cuidado'){
+      if(this.state.dateIni || this.state.dateFin){
+        userActions.createService(
+          object.petObj.pet_fire_key, 
+          object.fid, 
+          object.uid, 
+          object.petObj,
+          type,
+          this.state.dateIni,
+          this.state.dateFin
+        )
+        this.props.navigation.goBack()
+      }else{
+        Alert.alert('Fechas vacías ','Recuerda llenar todos los campos 📅',)
+      }
+    }else{
+      userActions.createService(
+        object.petObj.pet_fire_key, 
+        object.fid, 
+        object.uid, 
+        object.petObj,
+        type,
+        _getNowDateISO()
+      )
+      this.props.navigation.goBack()
+    }
+  }
+  
   renderCare = ()=>{
+    let object = this.state.infoObject
     return(
       <View style={styles.subcontainer}>
         <Text> Or wanna take care of my ass :D </Text>
-        {this.renderDatePicker()}
-        <View><Button rounded info>
-          <Text>Sure?</Text>
-        </Button></View>
+        {this.renderDatePickerIni()}
+        {this.renderDatePickerFin()}
+        <View>
+          <Button rounded info onPress={()=>this.createService(object,'cuidado')}>
+            <Text>Sure?</Text>
+          </Button>
+        </View>
       </View>
     )
   }
-  renderDatePicker = () => {
+
+  renderDatePickerIni = () => {
     return <View><DatePicker
       style={{width: 200}}
-      date={this.state.date}
+      date = {this.state.dateIni}
       mode="date"
-      placeholder="select date"
+      placeholder="Inicio cuidado"
       format="YYYY-MM-DD"
       minDate={_getNowDateISO()}
       maxDate={_getNextYear()}
-      confirmBtnText="Confirm"
-      cancelBtnText="Cancel"
+      confirmBtnText="Confirmar"
+      cancelBtnText="Cancelar"
       customStyles={{
         dateIcon: {
           position: 'absolute',
@@ -98,11 +136,37 @@ class CreateService extends Component {
           marginLeft: 0
         },
         dateInput: {
-          marginLeft: 36
+          marginLeft: 0 //36
         }
         // ... You can check the source to find the other keys.
       }}
-      onDateChange={(date) => {this.setState({date: date})}}
+      onDateChange={(date) => {this.setState({dateIni: date})}}
+    /></View>
+  }
+  renderDatePickerFin = () => {
+    return <View><DatePicker
+      style={{width: 200}}
+      date={this.state.dateFin}
+      mode="date"
+      placeholder="Fin cuidado"
+      format="YYYY-MM-DD"
+      minDate={_getNowDateISO()}
+      maxDate={_getNextYear()}
+      confirmBtnText="Confirmar"
+      cancelBtnText="Cancelar"
+      customStyles={{
+        dateIcon: {
+          position: 'absolute',
+          right: 0,
+          top: 4,
+          marginRight: 0
+        },
+        dateInput: {
+          marginRight: 0 //36
+        }
+        // ... You can check the source to find the other keys.
+      }}
+      onDateChange={(date) => {this.setState({dateFin: date})}}
     /></View>
   }
 

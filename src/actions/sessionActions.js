@@ -70,6 +70,8 @@ function rehydrateCurrentUser() {
       } else {
         dispatch( signOut() )
       }
+    }).catch(err=>{
+      console.log('ERROR REHYDRATING USER',err)
     })
   }
 }

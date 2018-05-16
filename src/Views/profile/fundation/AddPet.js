@@ -37,7 +37,7 @@ class AddPet extends Component {
 			title: 'Añadir mascota',
 			headerRight: (
 			<Button transparent onPress={params.addPet}>
-				<Text primary>guardar</Text>
+				<Text primary>GUARDAR</Text>
 			</Button>)
     }
   }
@@ -66,12 +66,13 @@ class AddPet extends Component {
           idFundacion: this.props.currentUser.uid,
         })
       }).then(() => {
-        Alert.alert('\u2b50 Success \u2b50','Mascota subida con éxito')
-        this.setState({blockButton: false});
+        Alert.alert('\u2b50 Success \u2b50','Mascota añadida con éxito')
+        this.props.navigation.goBack()
       })
       .catch((err) => {
         console.log('Error Subiendo Fotos:', err)
         Alert.alert('Hubo un error',' :( ')
+        this.setState({blockButton: false})
       })
     }
   }

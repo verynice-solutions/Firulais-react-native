@@ -38,6 +38,7 @@ class FundationProfileView extends Component {
 		this.setState({isFetchingData: true, isFetchingData: true})
 		this.fetchEverything(params)
 	}
+	
 	fetchEverything = async (params) =>{
 		let promise = await foundationsActions.fetchByUID(params.foundationID).then((val)=>{ 
 			// console.log('FUNDATIONVALUE',val)
@@ -52,9 +53,9 @@ class FundationProfileView extends Component {
 		userActions.createService(mascotaId, fundacionId, userId, objectMascota);
 	}
 
-	petTouched(mascotaId, fundacionId, userId,images) {
+	petTouched(mascotaId, fundacionId, userId,petObj) {
 		if(fundacionId !== userId) {
-			this.props.navigation.navigate('CreateService',{toModal:{pid:mascotaId,fid:fundacionId,uid:userId,images:images}})
+			this.props.navigation.navigate('CreateService',{toCreate:{petObj:petObj,fid:fundacionId,uid:userId}})
 			
 			// Alert.alert(
 			// 	'Ayudar mascota',
@@ -73,7 +74,7 @@ class FundationProfileView extends Component {
 		let images = pets[item].imageUrls
 		let imgURL = images[Object.keys(images)[0]].url
 		return(
-			<TouchableOpacity onPress={()=>this.petTouched(item, pets[item].idFundacion, this.props.currentUser.uid,images)}>
+			<TouchableOpacity onPress={()=>this.petTouched(item, pets[item].idFundacion, this.props.currentUser.uid, pets[item])}>
 				<Card key={item} style={styles.petCard}>
 						<CardItem>
 								<View style={styles.petCardContent}>
