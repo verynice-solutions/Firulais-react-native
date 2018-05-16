@@ -17,6 +17,7 @@ import AllUsersView from '../Views/allUsers/UsersView'
 import FoundationProfile from '../Views/profile/fundation/FoundationProfile'
 import UserProfile from '../Views/profile/user/UsersProfile'
 import ServicesView from '../Views/services/ServicesView'
+import CreateService from '../Views/services/CreateService'
 
 const SignedOutRoutes = StackNavigator({
   Login: {
@@ -41,6 +42,10 @@ const AllRoutes = StackNavigator({
   EditProfile:{
     path: 'editarperfil',
     screen: EditProfileView
+  },
+  CreateService:{
+    path:'createService',
+    screen: CreateService
   },
   ServicesView: {
     path: 'servicesView',

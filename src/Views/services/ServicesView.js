@@ -16,7 +16,7 @@ class ServicesView extends Component {
   static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-			title: 'Servicios'
+			title: 'Solicitudes'
     }
 	}
     

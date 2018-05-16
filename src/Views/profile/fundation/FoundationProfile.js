@@ -3,20 +3,24 @@ import React, { Component } from 'react'
 import { Platform,	View, StyleSheet, Image, TouchableOpacity, 
 					Alert, ActivityIndicator, ScrollView, FlatList} from 'react-native'
 import {connect} from 'react-redux'
+//Accions
 import foundationsActions from '../../../actions/foundationsActions'
+import userActions from '../../../actions/usersActions'
 //Style
 import { Button, Icon, Thumbnail, Text, Item, Input, 
 					Card, CardItem, Content, Left } from 'native-base'
 import firebase from '../../../firebase/firebaseSingleton'
+import CreateService from '../../services/CreateService'
 
-import userActions from '../../../actions/usersActions'
 
 class FundationProfileView extends Component {
 	constructor(props) {
 		super(props);
 		this.state={
 			data: [],
-			pets: []
+			pets: [],
+			isFetchingData: true,
+			isFetchingPets: true
 		}
 		this.renderPets = this.renderPets.bind(this)
 		this.petTouched = this.petTouched.bind(this)
@@ -28,32 +32,39 @@ class FundationProfileView extends Component {
 			title: 'Perfil'
     }
 	}
-
-	componentWillMount() {
+		
+	componentDidMount() {
 		let params = this.props.navigation.state.params
-		foundationsActions.fetchByUID(params.foundationID).then((val)=>{
-			this.setState({data: val})
+		this.setState({isFetchingData: true, isFetchingData: true})
+		this.fetchEverything(params)
+	}
+	fetchEverything = async (params) =>{
+		let promise = await foundationsActions.fetchByUID(params.foundationID).then((val)=>{ 
+			// console.log('FUNDATIONVALUE',val)
+			this.setState({data: val, isFetchingData: false})
 		})
-		foundationsActions.fetchFoundationPets(params.foundationID).then((val)=>{
-			this.setState({pets: val})
+		let promise2 = await foundationsActions.fetchFoundationPets(params.foundationID).then((val)=>{
+			// console.log('PETVALUES',val)
+			this.setState({pets: val, isFetchingPets: false})
 		})
 	}
-
 	createService(mascotaId, fundacionId, userId, objectMascota) {
 		userActions.createService(mascotaId, fundacionId, userId, objectMascota);
 	}
 
 	petTouched(mascotaId, fundacionId, userId) {
 		if(fundacionId !== userId) {
-			Alert.alert(
-				'Ayudar mascota',
-				`¿Quieres ayudar al amigo? ${fundacionId}`,
-				[
-					{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-					{text: 'OK', onPress: () => this.createService(mascotaId, fundacionId, userId)},
-				],
-				{ cancelable: false }
-			)
+			this.props.navigation.navigate('CreateService',{toModal:{pid:mascotaId,fid:fundacionId,uid:userId}})
+			
+			// Alert.alert(
+			// 	'Ayudar mascota',
+			// 	`¿Quieres ayudar al amigo? ${fundacionId}`,
+			// 	[
+			// 		{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+			// 		{text: 'OK', onPress: () => this.createService(mascotaId, fundacionId, userId)},
+			// 	],
+			// 	{ cancelable: false }
+			// )
 		}
 	}
 
@@ -73,13 +84,20 @@ class FundationProfileView extends Component {
 	render() {
 		let info = this.state.data
 		let pets = this.state.pets
+		
 		let news = null
 		let profile = info.profile
 		return (
 			<View style={{flex:1}}>
 				<View style={{ flexDirection:'column'}}>
 					{
-						info ?(
+						this.state.isFetchingData?(
+							<View style={styles.infoContainer}>
+								<Text style={styles.infoField}>
+									Nobody here :(
+								</Text>
+							</View>
+						):(
 							<View>
 								<View style={styles.thumbContainer}>
 									<Thumbnail circle large source={{ uri: info.photoUrl }}/>
@@ -92,18 +110,19 @@ class FundationProfileView extends Component {
 									<Text style={styles.infoField}> {profile && profile.description  }  </Text>
 								</View>
 							</View>
-						):(
-							<View style={styles.infoContainer}>
-									<Text style={styles.infoField}>
-										Nobody here :(
-									</Text>
-							</View>
 						)
 					}
 					<View>
 						<View style={styles.subtitle}><Text> Mascotas </Text></View>
 						{
-							pets ? (
+							this.state.isFetchingPets ? (
+								<View style={styles.infoContainer}>
+										<Text style={styles.infoField}>
+										No hay mascotas :(
+										</Text>
+								</View>
+								
+							):(
 								<View style={styles.cardsContainer}>
 									<FlatList data={Object.keys(pets)}
 										horizontal
@@ -116,12 +135,6 @@ class FundationProfileView extends Component {
 										keyboardShouldPersistTaps='never'
 									/>
 									<TouchableOpacity><Text style={styles.verMas} primary> Ver más... </Text></TouchableOpacity>
-								</View>
-							):(
-								<View style={styles.infoContainer}>
-										<Text style={styles.infoField}>
-										No hay mascotas :(
-										</Text>
 								</View>
 							)
 						}

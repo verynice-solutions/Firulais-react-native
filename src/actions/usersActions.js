@@ -30,7 +30,8 @@ function createService(mascotaId, fundacionId, userId){
     firebase.database().ref().child('services/'+key).update({
         petId: mascotaId,
         founId: fundacionId,
-        userId: userId
+        userId: userId,
+        status: 'pendiente'
     })
 }
 

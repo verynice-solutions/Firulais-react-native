@@ -35,6 +35,40 @@ export function register(data, successCB, errorCB) {
       });
   };
 }
+export function _getNowDateISO(){
+  // to 2018-02-31T12:05:23 like
+  let d = new Date()
+  let month = (d.getMonth()+1).toString()
+  month = month<10? '0'+month : month
+  let day = d.getDate().toString()
+  day = day<10? '0'+day : day
+  let hours = d.getHours().toString()
+  hours = hours<10? '0'+hours : hours
+  let minutes = d.getMinutes().toString()
+  minutes = minutes<10? '0'+minutes : minutes
+  let seconds = d.getSeconds().toString()
+  seconds = seconds<10? '0'+seconds : seconds
+  return `${d.getFullYear()}-${month}-${day}
+    T${hours}:${minutes}:${seconds}`
+}
+
+export function _getNextYear(){
+  // to 2018-02-31T12:05:23 like
+  let d = new Date()
+  let month = (d.getMonth()+1).toString()
+  month = month<10? '0'+month : month
+  let day = d.getDate().toString()
+  day = day<10? '0'+day : day
+  let hours = d.getHours().toString()
+  hours = hours<10? '0'+hours : hours
+  let minutes = d.getMinutes().toString()
+  minutes = minutes<10? '0'+minutes : minutes
+  let seconds = d.getSeconds().toString()
+  seconds = seconds<10? '0'+seconds : seconds
+  return `${d.getFullYear()+1}-${month}-${day}
+    T${hours}:${minutes}:${seconds}`
+}
+
 export function randomPuppers() {
   let arrayOfDoggos = [
   'https://data.whicdn.com/images/298844185/large.jpg?t=1507433077',
