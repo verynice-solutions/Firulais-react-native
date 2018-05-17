@@ -10,7 +10,7 @@ class CreateService extends Component {
 	constructor(props) {
     super(props)
     this.state = {
-      selectedView: 0,
+      selectedView: 1,
       dateIni: null,
       dateFin: null,
       infoObject: this.props.navigation.getParam('toCreate'),
@@ -42,20 +42,20 @@ class CreateService extends Component {
   renderBtns = () => {
     if(this.state.selectedView === 0){
       return <View style={{flex:0, marginTop:10, flexDirection: 'row', justifyContent:'space-around'}}>
-        <Button onPress={this.toggleAdopt} rounded info>
-            <Text>Adoptar</Text>
-        </Button>
         <Button onPress={this.toggleCare} rounded light>
             <Text>Cuidar</Text>
+        </Button>
+        <Button onPress={this.toggleAdopt} rounded info>
+            <Text>Adoptar</Text>
         </Button>
       </View>
     }else{
       return <View style={{flex:0, marginTop:10, flexDirection: 'row', justifyContent:'space-around'}}>
-        <Button onPress={this.toggleAdopt} rounded light>
-            <Text>Adoptar</Text>
-        </Button>
         <Button onPress={this.toggleCare} rounded info>
             <Text>Cuidar</Text>
+        </Button>
+        <Button onPress={this.toggleAdopt} rounded light>
+            <Text>Adoptar</Text>
         </Button>
       </View>
     }
@@ -65,9 +65,19 @@ class CreateService extends Component {
     return(
       <View style={styles.subcontainer}>
         <Text> Adopt me, you pretty face :3 </Text>
-        <Text>{object.petObj.pet_fire_key}</Text>
-        <Text>{object.fid}</Text>
-        <Text>{object.uid}</Text>
+        <View>
+          <Button rounded success onPress={()=>Alert.alert(
+            `Adoptar a ${object.petObj.tempName}`,
+            'Lo quiero for ever <3',
+            [
+              {text: 'NO', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+              {text: 'SI', onPress: () => this.createService(object,'adoptar')},
+            ],
+            { cancelable: false }
+          )}>
+            <Text>Registrar adopción</Text>
+          </Button>
+        </View>
       </View>
     )
   }
@@ -95,7 +105,7 @@ class CreateService extends Component {
         object.uid, 
         object.petObj,
         type,
-        _getNowDateISO()
+        null,null
       )
       this.props.navigation.goBack()
     }
@@ -110,7 +120,7 @@ class CreateService extends Component {
         {this.renderDatePickerFin()}
         <View>
           <Button rounded info onPress={()=>this.createService(object,'cuidado')}>
-            <Text>Sure?</Text>
+            <Text>Programar cuidado</Text>
           </Button>
         </View>
       </View>
@@ -202,6 +212,6 @@ const styles = StyleSheet.create({
    padding:20, 
    margin: 10, 
    alignItems:'center', 
-   justifyContent:'space-between'
+   justifyContent:'space-around'
   }
 });

@@ -27,6 +27,8 @@ function fetchByUID(uid) {
 }
 
 function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dateFin){
+    let images = petObj.imageUrls
+    let imgURL = images[Object.keys(images)[0]].url
     let key = firebase.database().ref().child('services').push().key
     firebase.database().ref().child('services/'+key).update({
         type: type,
@@ -35,6 +37,7 @@ function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dat
         founId: fundacionId,
         userId: userId,
         status: 'pendiente',
+        thumbnail: imgURL,
         dateIni: dateIni,
         dateFin: dateFin
     }).then(res=>{

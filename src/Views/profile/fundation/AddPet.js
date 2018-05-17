@@ -17,6 +17,7 @@ class AddPet extends Component {
     this.state={
       images:[],
       fetchingImages:false,
+      tempName:'Firulais',
       description:'test',
       dog:true, cat:null,
       pequeño:true, mediano:null, grande:null,
@@ -173,7 +174,14 @@ class AddPet extends Component {
 						</Button> */}
 					</View>
           <View style={{marginTop:20}}/>
-          <Text> Cómo es? </Text>
+          <Text> Cómo lo llamas? </Text>
+          <Textarea bordered placeholder='Firulais...'
+          autoCorrect={false}
+          value={this.state.tempName}
+          onChangeText={(text)=> this.setState({tempName: text})} 
+          />
+          <View style={{marginTop:10}}/>
+          <Text> Que caracteristicas tiene? </Text>
           <Textarea bordered placeholder='He is the best dog EVER...'
           autoCorrect={true}
           value={this.state.description}
