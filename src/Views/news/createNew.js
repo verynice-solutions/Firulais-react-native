@@ -3,50 +3,75 @@ import React, { Component } from 'react'
 
 import { Platform, View, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
 import {connect} from 'react-redux'
-import firebase from '../../../firebase/firebaseSingleton'
+import firebase from '../../firebase/firebaseSingleton'
 import { ImagePicker } from 'expo'
+import DatePicker from 'react-native-datepicker'
+import {_getNowDateISO, _getNextYear} from '../../utils/random_functions'
 //Style
-import {Container,Content,Body,Button,Text,Icon,Form,Textarea,CheckBox,List,ListItem} from 'native-base'
-import { scale } from '../../../lib/responsive';
-import {randomPuppers} from '../../../utils/random_functions'
+import {Container,Content,Body,Button,Text,Icon,Form,Textarea,CheckBox,List,ListItem,Label,Input,Item} from 'native-base'
+import { scale } from '../../lib/responsive';
+import {randomPuppers} from '../../utils/random_functions'
 import { FlatList } from 'react-native-gesture-handler';
 
-class AddPet extends Component {
+class createNew extends Component {
 	constructor(props) {
     super(props);
     this.state={
       images:[],
       fetchingImages:false,
-      description:'test',
-      dog:true, cat:null,
-      pequeño:true, mediano:null, grande:null,
-      hembra:true, macho:null,
-      edad:'2',
-      amigableConPersonas: true,
-      amigableConOtrosPets: true,
-      pet_fire_key: firebase.database().ref().child('pets').push().key,
+      title:'test',
+      date: '',
+      evento:true, noticia:null,
+
+      new_fire_key: firebase.database().ref().child('news').push().key,
       blockButton: false
     }
 
-    this._añadirMascota=this._añadirMascota.bind(this)
+    this._añadirNew=this._añadirNew.bind(this)
     this.renderImageItem=this.renderImageItem.bind(this)
   }
   static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-			title: 'Añadir mascota',
+			title: 'Añadir Noticia/Evento',
 			headerRight: (
-			<Button transparent onPress={params.addPet}>
+			<Button transparent style={{marginTop: 8}}onPress={params.addPet}>
 				<Text primary>guardar</Text>
 			</Button>)
     }
   }
   componentDidMount() {
-    this.props.navigation.setParams({ addPet: this._añadirMascota })
-	}
-  _añadirMascota(){
-    let valuesToSend = this._setValuesMascota(this.state)
-    let petID = this.state.pet_fire_key
+    this.props.navigation.setParams({ addPet: this._añadirNew })
+  }
+  renderDatePicker = () => {
+    return <View style={{margin: -10}}><DatePicker
+      style={{width: 200}}
+      date={this.state.date}
+      mode="date"
+      placeholder="selecciona fecha"
+      format="YYYY-MM-DD"
+      minDate={_getNowDateISO()}
+      maxDate={_getNextYear()}
+      confirmBtnText="Confirm"
+      cancelBtnText="Cancel"
+      customStyles={{
+        dateIcon: {
+          position: 'absolute',
+          left: 0,
+          top: 4,
+          marginLeft: 0
+        },
+        dateInput: {
+          marginLeft: 36
+        }
+        // ... You can check the source to find the other keys.
+      }}
+      onDateChange={(date) => {this.setState({date: date})}}
+    /></View>
+  }
+  _añadirNew(){
+    let valuesToSend = this._setValuesNew(this.state)
+    let newID = this.state.new_fire_key
     if(valuesToSend===false) {
       Alert.alert('Recuerda llenar todos los campos <3')
     }else {
@@ -55,18 +80,18 @@ class AddPet extends Component {
         .then(() => {
         let imagesInState = this.state.images
         imagesInState.forEach((img,count) => {
-          firebase.storage().ref(`images/pets/${petID}/P-${count}`).getDownloadURL().then((url)=>{
-            firebase.database().ref().child(`pets/${petID}/imageUrls`).push({
+          firebase.storage().ref(`images/news/${newID}/P-${count}`).getDownloadURL().then((url)=>{
+            firebase.database().ref().child(`news/${newID}/imageUrls`).push({
               url
             })
           })
         })
-        firebase.database().ref().child(`pets/${petID}`).update({
+        firebase.database().ref().child(`news/${newID}`).update({
           ...valuesToSend,
           idFundacion: this.props.currentUser.uid,
         })
       }).then(() => {
-        Alert.alert('\u2b50 Success \u2b50','Mascota subida con éxito',[
+        Alert.alert('\u2b50 Success \u2b50','Subida con éxito',[
           {text: 'OK', onPress: () => this.props.navigation.goBack()},
         ],
         { cancelable: false })
@@ -78,13 +103,13 @@ class AddPet extends Component {
       })
     }
   }
-  _upLoadPhotos= async ()=>{
+  _upLoadPhotos = async ()=>{
     let PromisesImages = []
     let imagesInState = this.state.images
     imagesInState.forEach( (img,count)=>{
-      let petID = this.state.pet_fire_key
+      let newID = this.state.new_fire_key
       let fileName = `P-${count}`
-      PromisesImages.push( this._uploadImage( img, petID, fileName) )
+      PromisesImages.push( this._uploadImage( img, newID, fileName) )
     })
     return Promise.all(PromisesImages);
   }
@@ -92,12 +117,12 @@ class AddPet extends Component {
     // console.log('uploadImage:',uri,fotoName)
     const response = await fetch(uri)
     const blop = await response.blob()
-    let storage_ref = `images/pets/${fundId}/${fotoName}`
+    let storage_ref = `images/news/${fundId}/${fotoName}`
     var ref = firebase.storage().ref().child(storage_ref)
     return ref.put(blop)
   }
   
-  _setValuesMascota(values){
+  _setValuesNew(values){
     // console.log(values)
     let result =  _.pickBy(values, (value)=>{
       return !value === false
@@ -149,12 +174,12 @@ class AddPet extends Component {
 	render() {
     let imagesPupers = this.state.images
     // console.log('images: ',this.state.images)
-    // console.log('petKey',this.state.pet_fire_key)
+    // console.log('petKey',this.state.new_fire_key)
 		return (
 			<Container>
 				<Content padder>
 					<View style={{marginTop:5}}/>
-          {imagesPupers?<Text style={styles.textHeaders}>Fotos:</Text>:null}
+          {imagesPupers&&<Label>Fotos</Label>}
           {this.state.fetchingImages?
             <ActivityIndicator size="small" /> 
           :
@@ -175,61 +200,35 @@ class AddPet extends Component {
 						</Button> */}
 					</View>
           <View style={{marginTop:20}}/>
-          <Text> Cómo es? </Text>
-          <Textarea bordered placeholder='He is the best dog EVER...'
+          <Item stackedLabel>
+            <Label> Título </Label>
+            <Input onChangeText={(text)=> this.setState({title: text})} />
+          </Item>
+          <View style={{marginTop:20}}/>
+          <Item stackedLabel>
+            <Label> Fecha </Label>
+            {this.renderDatePicker()}
+          </Item>
+          <View style={{marginTop:20}}/>
+          <Label> Descripcion </Label>
+          <Textarea bordered placeholder='Best. Doggo. Party. Ever... No cates allowed'
           autoCorrect={true}
           value={this.state.description}
           onChangeText={(text)=> this.setState({description: text})} 
           />
           <View style={{marginTop:10}}/>
-          <Text> Tipo </Text>
+          <Label> Tipo </Label>
             <ListItem>
-              <CheckBox onPress={()=>{this.setState({dog:!this.state.dog ,cat:false})}} 
-                checked={this.state.dog}/>
-              <Text style={{paddingLeft:15}}>Perro</Text>
+              <CheckBox onPress={()=>{this.setState({evento:!this.state.evento ,noticia:false})}} 
+                checked={this.state.evento}/>
+              <Label style={{paddingLeft:15}}>Evento</Label>
             </ListItem>
             <ListItem>
-              <CheckBox onPress={()=>{this.setState({cat:!this.state.cat ,dog:false})}} 
-                checked={this.state.cat} />
-              <Text style={{paddingLeft:15}}>Gato</Text>
+              <CheckBox onPress={()=>{this.setState({noticia:!this.state.noticia ,evento:false})}} 
+                checked={this.state.noticia} />
+              <Label style={{paddingLeft:15}}>Noticia</Label>
             </ListItem>
-            <View style={{marginTop:10}}/>
-          <Text> Tamaño </Text>
-          <ListItem>
-            <CheckBox onPress={()=>{this.setState({pequeño:!this.state.pequeño ,mediano:false, grande:false})}} 
-              checked={this.state.pequeño} color='green'/>
-            <Text style={{paddingLeft:15}}>Pequeño</Text>
-          </ListItem>
-          <ListItem>
-            <CheckBox onPress={()=>{this.setState({mediano:!this.state.mediano ,pequeño:false, grande:false})}} 
-              checked={this.state.mediano} color='green'/>
-            <Text style={{paddingLeft:15}}>Mediano</Text>
-          </ListItem>
-          <ListItem>
-            <CheckBox onPress={()=>{this.setState({grande:!this.state.grande ,mediano:false, pequeño:false})}} 
-              checked={this.state.grande} color='green'/>
-            <Text style={{paddingLeft:15}}>Grande</Text>
-          </ListItem>
-          <View style={{marginTop:10}}/>
-          <Text> Que edad tiene? </Text>
-          <Textarea bordered placeholder='2 años y 3 cuartos...'
-          autoCorrect={false}
-          value={this.state.edad}
-          onChangeText={(text)=> this.setState({edad: text})} 
-          />
-          <View style={{marginTop:10}}/>
-          <Text> Género </Text>
-          <ListItem>
-            <CheckBox onPress={()=>{this.setState({hembra:!this.state.hembra , macho:false })}} 
-              checked={this.state.hembra} color='purple'/>
-            <Text style={{paddingLeft:15}}>Hembra</Text>
-          </ListItem>
-          <ListItem>
-            <CheckBox onPress={()=>{this.setState({macho:!this.state.macho ,hembra:false })}} 
-              checked={this.state.macho} color='purple' />
-            <Text style={{paddingLeft:15}}>Macho</Text>
-          </ListItem>
-          <View style={{marginBottom:40}}/>
+        
 				</Content>
 			</Container>
 		)
@@ -241,7 +240,7 @@ function mapStateToProps({currentUser}) {
     currentUser: currentUser,
   }
 }
-export default connect(mapStateToProps)(AddPet)
+export default connect(mapStateToProps)(createNew)
 
 const styles = StyleSheet.create({
   petImage:{

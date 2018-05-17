@@ -35,10 +35,34 @@ function createService(mascotaId, fundacionId, userId){
     })
 }
 
+function addFoundationToUser(userId, fundacionId, name, thumb){
+    let dbRef = ref.child(userId)
+    dbRef.child('fundaciones/'+fundacionId).update({
+        funId: fundacionId,
+        name: name,
+        thumbnail: thumb
+    })
+}
+
+function fetchAllFoundationsNews(userId) {
+    // CHECK THIS PLEASE
+    let dbRef = db.ref('news');
+    let promise = dbRef.orderByChild("idFundacion").equalTo("fundation").once("value")
+    .then( (snapshot)=> {
+        return snapshot.val()
+    }) 
+    .catch(err=>{
+        console.log("Error: " + error);
+    }) 
+    return promise
+}
+
 const usersActions = {
     fetchAllUsers,
     createService,
-    fetchByUID
+    fetchByUID,
+    fetchAllFoundationsNews,
+    addFoundationToUser
 }
 
 export default usersActions

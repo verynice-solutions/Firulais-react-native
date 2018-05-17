@@ -24,6 +24,7 @@ class FundationProfileView extends Component {
 		}
 		this.renderPets = this.renderPets.bind(this)
 		this.petTouched = this.petTouched.bind(this)
+		this.addVoluntario = this.addVoluntario.bind(this)
 	}
 
 	static navigationOptions = ({navigation}) => {
@@ -55,7 +56,6 @@ class FundationProfileView extends Component {
 	petTouched(mascotaId, fundacionId, userId,images) {
 		if(fundacionId !== userId) {
 			this.props.navigation.navigate('CreateService',{toModal:{pid:mascotaId,fid:fundacionId,uid:userId,images:images}})
-			
 			// Alert.alert(
 			// 	'Ayudar mascota',
 			// 	`¿Quieres ayudar al amigo? ${fundacionId}`,
@@ -66,6 +66,18 @@ class FundationProfileView extends Component {
 			// 	{ cancelable: false }
 			// )
 		}
+	}
+
+	addVoluntario() {
+		let info = this.state.data
+		let uid = this.props.currentUser.uid
+		let fundId = this.props.navigation.state.params.foundationID
+		let name = info.name
+		let thumb = info.photoUrl
+		Alert.alert('\u2b50','Se un voluntario!',[
+			{text: 'YES!', onPress: () => userActions.addFoundationToUser(uid, fundId, name, thumb)},
+		],
+		{ cancelable: true })
 	}
 
 	renderPets({item, index}) {
@@ -163,6 +175,20 @@ class FundationProfileView extends Component {
 							)
 						}
 					</View>
+
+					{
+						this.props.currentUser.type === 'user' &&(
+							<View style={styles.infoContainer}>
+								<View>
+									<Button iconLeft rounded onPress={this.addVoluntario}>
+										<Icon name='paw'/>
+										<Text> Se un voluntario! </Text>
+									</Button>
+								</View>
+							</View>
+						)	
+					}
+
 			</View>
 		</View>
 	)}

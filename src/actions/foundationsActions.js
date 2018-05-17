@@ -26,7 +26,6 @@ function fetchAllServices(userId) {
     return promise
 }
 
-
 function fetchFoundationPets(uid) {
     let petsRef = db.ref('pets')
     let promise = petsRef.orderByChild("idFundacion").equalTo(uid).once("value")
