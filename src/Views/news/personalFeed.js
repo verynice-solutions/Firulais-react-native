@@ -11,52 +11,64 @@ class PersonalFeed extends Component {
 	constructor(props) {
     super(props)
     this.state = {
-      allFoundations: []
+      feedNews: []
     }
   }
 
   static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-			title: 'Personal'
+			title: 'Personal Feed'
     }
 	}
     
   componentWillMount() {
-    // foundationsActions.fetchAllFoundationsNews().then((val)=>{
-    //   console.log("RESPONSE", val)
-    // })
-    foundationsActions.fetchAllFoundations().then( (val) =>{
-      //console.log("RESPONSE", val)
-      this.setState({allFoundations: val})
+    foundationsActions.fetchAllUserFoundations(this.props.currentUser.uid).then( (val) =>{
+      // this.setState({allFoundations: val})
+      if(val){
+        let promises = []
+        Object.keys(val).map((item, index)=>{
+          promises.push(foundationsActions.fetchFoundationNews(item))
+        })
+        Promise.all(promises).then((values) => { 
+          console.log("IDIDIT: ", values)
+          this.setState({feedNews: values}) 
+        });
+      }
     })
   }
  
 	render() {
-    let foundations = this.state.allFoundations
+    let allNews = this.state.feedNews
     const { navigate } = this.props.navigation
     return (
       <View style={{flex:1}}> 
         <ScrollView>
-          <List>
-            {
-              foundations!==undefined ?(
-                Object.keys(foundations).map((i)=>{
-                  let profile = foundations[i].profile             
-                  return <ListItem key={i} onPress={ ()=> navigate('FoundationProfile', { foundationID: i }) }>
-                      <Thumbnail rounded size={80} source={{ uri: foundations[i].photoUrl }} />
+         <List>
+          {
+            allNews ? (
+              allNews.map((item)=>{  //Loop of different foundation's news
+                console.log(allNews)
+                let news = item
+                return news && (
+                  Object.keys(news).map((i)=>{  //Loop of specific set
+                    let imgs = news[i].imageUrls
+                    return <ListItem key={i} onPress={ ()=> navigate('NewsView', { news: news[i] }) }>
+                      <Thumbnail rounded size={80} source={{ uri: imgs[Object.keys(imgs)[0]].url }} />
                       <Body>
-                        <Text>{foundations[i].name}</Text>
-                        <Text note>{profile && profile.description  } </Text>
+                        <Text>{news[i].title}</Text>
+                        <Text note> { news[i].description  } </Text>
                       </Body>
                     </ListItem>
-                })
-              ):(
-                <Text>No Fundaciones :( </Text>
-              )
-            }
-            </List>
-          </ScrollView>
+                  })
+                )
+              })
+            ):(
+              <Text style={{margin:10}}> No News :( </Text>
+            )
+          }
+          </List>
+        </ScrollView>
       </View>
     )
   }

@@ -44,19 +44,6 @@ function addFoundationToUser(userId, fundacionId, name, thumb){
     })
 }
 
-function fetchAllFoundationsNews(userId) {
-    // CHECK THIS PLEASE
-    let dbRef = db.ref('news');
-    let promise = dbRef.orderByChild("idFundacion").equalTo("fundation").once("value")
-    .then( (snapshot)=> {
-        return snapshot.val()
-    }) 
-    .catch(err=>{
-        console.log("Error: " + err);
-    }) 
-    return promise
-}
-
 function fetchNNews(n) {
     let dbRef = db.ref('news');
     let promise = dbRef.limitToLast(n).once("value")
@@ -73,7 +60,6 @@ const usersActions = {
     fetchAllUsers,
     createService,
     fetchByUID,
-    fetchAllFoundationsNews,
     fetchNNews,
     addFoundationToUser
 }

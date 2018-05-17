@@ -24,7 +24,7 @@ class GlobalFeed extends React.Component {
   static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-			title: 'Global'
+			title: 'Global Feed'
     }
 	}
 
@@ -36,7 +36,7 @@ class GlobalFeed extends React.Component {
         <ScrollView>
          <List>
           {
-            news!==undefined ?(
+            news ?(
               Object.keys(news).map((i)=>{
                 let imgs = news[i].imageUrls
                 return <ListItem key={i} onPress={ ()=> navigate('NewsView', { news: news[i] }) }>
@@ -48,7 +48,7 @@ class GlobalFeed extends React.Component {
                 </ListItem>
               })
             ):(
-              <Text>No News :( </Text>
+              <Text style={{margin:10}}> No News :( </Text>
             )
           }
           </List>

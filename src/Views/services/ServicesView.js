@@ -42,7 +42,7 @@ class ServicesView extends Component {
                   </ListItem>
               })
             ):(
-              <Text>No Servicios :( </Text>
+              <Text style={{margin:10}}> No Servicios :( </Text>
             )
           }
           </List>
