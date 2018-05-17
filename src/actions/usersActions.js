@@ -20,7 +20,7 @@ function fetchByUID(uid) {
         return snapshot.val()
     }) 
     .catch(err=>{
-        console.log("Error: " + error);
+        console.log("Error: " + err);
     }) 
     return promise
 }
@@ -52,7 +52,19 @@ function fetchAllFoundationsNews(userId) {
         return snapshot.val()
     }) 
     .catch(err=>{
-        console.log("Error: " + error);
+        console.log("Error: " + err);
+    }) 
+    return promise
+}
+
+function fetchNNews(n) {
+    let dbRef = db.ref('news');
+    let promise = dbRef.limitToLast(n).once("value")
+    .then( (snapshot)=> {
+        return snapshot.val()
+    }) 
+    .catch(err=>{
+        console.log("Error: " + err);
     }) 
     return promise
 }
@@ -62,6 +74,7 @@ const usersActions = {
     createService,
     fetchByUID,
     fetchAllFoundationsNews,
+    fetchNNews,
     addFoundationToUser
 }
 

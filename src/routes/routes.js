@@ -19,7 +19,8 @@ import UserProfile from '../Views/profile/user/UsersProfile'
 import ServicesView from '../Views/services/ServicesView'
 import CreateService from '../Views/services/CreateService'
 import AddNewView from '../Views/news/createNew'
-import NewsView from '../Views/news/index'
+import AllNewsView from '../Views/news/index'
+import NewsView from '../Views/news/newsView'
 
 const SignedOutRoutes = StackNavigator({
   Login: {
@@ -61,6 +62,10 @@ const AllRoutes = StackNavigator({
     path: 'foundationProfile',
     screen: FoundationProfile
   },
+  NewsView: {
+    path: 'newsView',
+    screen: NewsView
+  },
   AllUsersView: {
     path: 'usersView',
     screen: AllUsersView
@@ -69,9 +74,9 @@ const AllRoutes = StackNavigator({
     path: 'userProfile',
     screen: UserProfile
   },
-  NewsView: {
-    path: 'newsView',
-    screen: NewsView
+  AllNewsView: {
+    path: 'allNewsView',
+    screen: AllNewsView
   },
   AddPet:{
     path: 'addpet',
