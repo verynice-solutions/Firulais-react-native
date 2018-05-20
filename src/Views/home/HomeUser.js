@@ -4,10 +4,11 @@ import { Platform,	Text,	View, StyleSheet, Image, TouchableOpacity } from 'react
 import {connect} from 'react-redux'
 
 //Style
-import {Header,Left, Right,Title ,Button, Icon,Thumbnail} from 'native-base'
+import {Header, Left, Right, Title ,Button, Icon, Thumbnail, Container, Content, Card, CardItem, Body} from 'native-base'
 import { scale } from '../../lib/responsive';
 import {randomPuppers} from '../../utils/random_functions'
 import Divider from '../../Components/Divider'
+import images from '../../../assets/images'
 
 class HomeUser extends Component {
 	constructor(props) {
@@ -18,11 +19,73 @@ class HomeUser extends Component {
 		let {user} = this.props.currentUser
 		// console.log('Current user:',this.props.currentUser)
 		return (
-			<View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-				<Text style={{textAlign:'center'}}> 
-					USER HOME
-				</Text>
-			</View>
+			<Container>
+				<Content>
+
+					<View style={{flexDirection:'row',justifyContent:'center', marginLeft: 10, marginRight: 10,	marginTop: 10}}>
+						<Card>
+							<CardItem 
+								button 
+								onPress={()=>this.props.navigation.navigate('AllFoundationsView')}
+								style={{justifyContent:'center', backgroundColor: '#FFDBB9'}}>
+								<Image 
+									source={images.care_home} resizeMode= 'contain' 
+									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
+							</CardItem>
+							<CardItem					
+								style={{justifyContent:'center'}}>
+								<Text 
+									primary 
+									style={{fontWeight: 'bold', textAlign: 'center'}}>
+									Ver fundaciones
+								</Text>	
+							</CardItem>
+						</Card>	
+					</View>
+
+					<View style={{flexDirection:'row',justifyContent:'center', marginLeft: 10, marginRight: 10}}>
+						<Card>
+							<CardItem 
+								button
+								style={{justifyContent:'center', backgroundColor: '#FFA6BD'}}>
+								<Image 
+									source={images.party_kitty} resizeMode= 'contain' 
+									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
+							</CardItem>
+							<CardItem					
+								style={{justifyContent:'center'}}>
+								<Text 
+									primary 
+									style={{fontWeight: 'bold', textAlign: 'center'}}>
+									Ver noticias/eventos
+								</Text>	
+							</CardItem>
+						</Card>						
+					</View>
+
+					<View style={{flexDirection:'row',justifyContent:'center', marginLeft: 10, marginRight: 10}}>
+						<Card>
+							<CardItem 
+								button 
+								onPress={()=>this.props.navigation.navigate('MyServicesView')}
+								style={{justifyContent:'center', backgroundColor: '#AE86A9'}}>
+								<Image 
+									source={images.super_kitty} resizeMode= 'contain' 
+									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
+							</CardItem>
+							<CardItem					
+								style={{justifyContent:'center'}}>
+								<Text 
+									primary 
+									style={{fontWeight: 'bold', textAlign: 'center'}}>
+									Ver mis servicios
+								</Text>	
+							</CardItem>
+						</Card>	
+					</View>
+
+				</Content>
+			</Container>
 		)
 	}
 }
