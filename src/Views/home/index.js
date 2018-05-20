@@ -3,11 +3,13 @@ import React, { Component } from 'react'
 import { Platform,	Text,	View, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native'
 import {connect} from 'react-redux'
 import {Button, Icon} from 'native-base'
+import {HeaderBackButton} from 'react-navigation'
 import {Permissions} from 'expo'
 import drawerActions from '../../actions/drawerActions'
 import HomeFundation from './HomeFundation'
 import HomeUser from './HomeUser'
 import ChooseUser from './ChooseUser'
+import Imagess from '../../../assets/images'
 
 class Home extends Component {
 	constructor(props) {
@@ -15,11 +17,14 @@ class Home extends Component {
   }
   static navigationOptions = ({navigation}) => {
 		return{
-			title: 'Inicio',
-			headerLeft: (
-				<Button transparent onPress={()=>navigation.navigate('DrawerOpen')}>
-					<Icon name='menu' />
-				</Button>
+      title: 'Inicio',
+      
+      headerLeft: (Platform.OS==='ios'?
+        <Button transparent onPress={()=>navigation.navigate('DrawerOpen')}>
+          <Icon name='menu' />
+        </Button>
+        :
+        <HeaderBackButton buttonImage={Imagess.icon_menu} onPress={()=>navigation.navigate('DrawerOpen')} />
       )
     }
   }

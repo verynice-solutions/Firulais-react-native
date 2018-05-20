@@ -64,6 +64,7 @@ function fetchFoundationNews(uid) {
 
 const foundationsActions = {
     fetchAllFoundations,
+    fetchAllUserFoundations,
     fetchFoundationPets,
     fetchFoundationNews,
     fetchByUID

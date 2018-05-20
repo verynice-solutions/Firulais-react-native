@@ -90,6 +90,12 @@ const AllRoutes = StackNavigator({
     path: 'settings',
     screen: Settings
   }
+},{
+  navigationOptions:{
+    headerStyle:{
+      marginTop: Platform.OS === 'android'? -28:0
+    },
+  }
 })
 
 const {width} = Dimensions.get('window');

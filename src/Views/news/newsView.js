@@ -20,14 +20,14 @@ class NewsView extends React.Component {
   componentWillMount() {
     let news = this.props.navigation.state.params.news
     let imgs = news.imageUrls
-    console.log("IMGS", imgs)
+    // console.log("IMGS", imgs)
   }
   
   renderPics({item, index}) {
     let news = this.props.navigation.state.params.news
     let imgs = news.imageUrls
     let img = imgs[item].url
-    console.log("IMG: ", img)
+    // console.log("IMG: ", img)
 		return(
 			<TouchableOpacity onPress={()=> console.log("")}>
         <View style={styles.picContent}>

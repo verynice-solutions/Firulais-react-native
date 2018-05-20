@@ -26,9 +26,32 @@ function fetchByUID(uid) {
     return promise
 }
 
+function addFoundationToUser(userId, fundacionId, name, thumb){
+    let dbRef = ref.child(userId)
+    dbRef.child('fundaciones/'+fundacionId).update({
+        funId: fundacionId,
+        name: name,
+        thumbnail: thumb
+    })
+}
+
+function fetchNNews(n) {
+    let dbRef = db.ref('news');
+    let promise = dbRef.limitToLast(n).once("value")
+    .then( (snapshot)=> {
+        return snapshot.val()
+    }) 
+    .catch(err=>{
+        console.log("Error: " + err);
+    }) 
+    return promise
+}
+
 const usersActions = {
     fetchAllUsers,
-    fetchByUID
+    fetchByUID,
+    fetchNNews,
+    addFoundationToUser
 }
 
 export default usersActions

@@ -5,6 +5,7 @@ import { Platform,	View, StyleSheet, Image, TouchableOpacity,
 import {connect} from 'react-redux'
 //Accions
 import foundationsActions from '../../../actions/foundationsActions'
+import userActions from '../../../actions/usersActions'
 //Style
 import { Button, Icon, Thumbnail, Text, Item, Input, 
 					Card, CardItem, Content, Left } from 'native-base'

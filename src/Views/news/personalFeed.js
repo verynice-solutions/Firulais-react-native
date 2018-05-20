@@ -31,7 +31,7 @@ class PersonalFeed extends Component {
           promises.push(foundationsActions.fetchFoundationNews(item))
         })
         Promise.all(promises).then((values) => { 
-          console.log("IDIDIT: ", values)
+          // console.log("IDIDIT: ", values)
           this.setState({feedNews: values}) 
         });
       }
@@ -48,7 +48,7 @@ class PersonalFeed extends Component {
           {
             allNews ? (
               allNews.map((item)=>{  //Loop of different foundation's news
-                console.log(allNews)
+                // console.log(allNews)
                 let news = item
                 return news && (
                   Object.keys(news).map((i)=>{  //Loop of specific set
