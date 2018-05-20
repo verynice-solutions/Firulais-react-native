@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, ScrollView } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body } from 'native-base';
 
 import usersActions from '../../actions/usersActions'
@@ -32,25 +32,27 @@ class UsersView extends Component {
     const { navigate } = this.props.navigation
 
     return (
-      <View style={{flex:1}}> 
-        <List>
-          {
-            users!==undefined ?(
-              Object.keys(users).map((i)=>{
-                let profile = users[i].profile             
-                return <ListItem key={i} onPress={ ()=> navigate('UserProfile', { userID: i }) }>
-                  <Thumbnail square size={80} source={{ uri: users[i].photoUrl }} />
-                  <Body>
-                    <Text>{users[i].name}</Text>
-                    <Text note>{ profile && profile.description  } </Text>
-                  </Body>
-                </ListItem>
-              })
-            ):(
-              <Text>No Personas :( </Text>
-            )
-          }
-          </List>
+      <View style={{flex:1}}>
+        <ScrollView> 
+          <List>
+            {
+              users!==undefined ?(
+                Object.keys(users).map((i)=>{
+                  let profile = users[i].profile             
+                  return <ListItem key={i} onPress={ ()=> navigate('UserProfile', { userID: i }) }>
+                    <Thumbnail rounded size={80} source={{ uri: users[i].photoUrl }} />
+                    <Body>
+                      <Text>{users[i].name}</Text>
+                      <Text note>{ profile && profile.description  } </Text>
+                    </Body>
+                  </ListItem>
+                })
+              ):(
+                <Text>No Personas :( </Text>
+              )
+            }
+            </List>
+          </ScrollView>
       </View>
     )
   }

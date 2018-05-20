@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body } from 'native-base';
 
 import foundationsActions from '../../actions/foundationsActions'
@@ -32,24 +32,26 @@ class FoundationsView extends Component {
     const { navigate } = this.props.navigation
     return (
       <View style={{flex:1}}> 
-        <List>
-          {
-            foundations!==undefined ?(
-              Object.keys(foundations).map((i)=>{
-                let profile = foundations[i].profile             
-                return <ListItem key={i} onPress={ ()=> navigate('FoundationProfile', { foundationID: i }) }>
-                    <Thumbnail square size={80} source={{ uri: foundations[i].photoUrl }} />
-                    <Body>
-                      <Text>{foundations[i].name}</Text>
-                      <Text note>{profile && profile.description  } </Text>
-                    </Body>
-                  </ListItem>
-              })
-            ):(
-              <Text>No Fundaciones :( </Text>
-            )
-          }
-          </List>
+        <ScrollView>
+          <List>
+            {
+              foundations!==undefined ?(
+                Object.keys(foundations).map((i)=>{
+                  let profile = foundations[i].profile             
+                  return <ListItem key={i} onPress={ ()=> navigate('FoundationProfile', { foundationID: i }) }>
+                      <Thumbnail rounded size={80} source={{ uri: foundations[i].photoUrl }} />
+                      <Body>
+                        <Text>{foundations[i].name}</Text>
+                        <Text note>{profile && profile.description  } </Text>
+                      </Body>
+                    </ListItem>
+                })
+              ):(
+                <Text>No Fundaciones :( </Text>
+              )
+            }
+            </List>
+          </ScrollView>
       </View>
     )
   }

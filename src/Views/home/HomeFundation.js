@@ -12,8 +12,16 @@ import Divider from '../../Components/Divider'
 class HomeFundation extends Component {
 	constructor(props) {
 		super(props);
+		this._goToaddPet=this._goToaddPet.bind(this)
+		this._goToaddNew=this._goToaddNew.bind(this)
+  }
+  _goToaddPet(){
+		this.props.navigation.navigate('AddPet')
 	}
-	
+	_goToaddNew(){
+		this.props.navigation.navigate('AddNew')
+	}
+
 	render() {
 		let {user} = this.props.currentUser
 		return (
@@ -33,6 +41,12 @@ class HomeFundation extends Component {
 					<View style={{flexDirection:'row',justifyContent:'center'}}>
 						<Button bordered onPress={()=>this.props.navigation.navigate('MyServicesView',{isFoundation:true})}>
 							<Text primary>Ver Solicitudes</Text>
+						</Button>
+					</View>
+					<View style={{marginTop:40}}/>
+					<View style={{flexDirection:'row',justifyContent:'center'}}>
+						<Button bordered onPress={this._goToaddNew}>
+							<Text primary>Añadir Noticia/Evento</Text>
 						</Button>
 					</View>
 				</Content>

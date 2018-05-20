@@ -9,7 +9,18 @@ function fetchAllFoundations() {
         return snapshot.val()
     }) 
     .catch(err=>{
-        console.log("Error: " + error);
+        console.log("Error: " + err);
+    }) 
+    return promise
+}
+
+function fetchAllUserFoundations(userId) {
+    let promise = ref.child(userId+"/fundaciones").once("value")
+    .then( (snapshot)=> {
+        return snapshot.val()
+    }) 
+    .catch(err=>{
+        console.log("Error: " + err);
     }) 
     return promise
 }
@@ -21,7 +32,7 @@ function fetchFoundationPets(uid) {
         return snapshot.val()
     }) 
     .catch(err=>{
-        console.log("Error: " + error);
+        console.log("Error: " + err);
     }) 
     return promise
 }
@@ -34,7 +45,19 @@ function fetchByUID(uid) {
         return snapshot.val()
     }) 
     .catch(err=>{
-        console.log("Error: " + error);
+        console.log("Error: " + err);
+    }) 
+    return promise
+}
+
+function fetchFoundationNews(uid) {
+    let dRef = db.ref('news')
+    let promise = dRef.orderByChild("idFundacion").equalTo(uid).once("value")
+    .then( (snapshot)=> {
+        return snapshot.val()
+    }) 
+    .catch(err=>{
+        console.log("Error: " + err);
     }) 
     return promise
 }
@@ -42,6 +65,7 @@ function fetchByUID(uid) {
 const foundationsActions = {
     fetchAllFoundations,
     fetchFoundationPets,
+    fetchFoundationNews,
     fetchByUID
 }
 

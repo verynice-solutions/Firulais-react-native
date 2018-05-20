@@ -21,7 +21,7 @@ function fetchByUID(uid) {
         return snapshot.val()
     }) 
     .catch(err=>{
-        console.log("Error: " + error);
+        console.log("Error: " + err);
     }) 
     return promise
 }
