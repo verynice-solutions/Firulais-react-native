@@ -12,12 +12,8 @@ import Divider from '../../Components/Divider'
 class HomeFundation extends Component {
 	constructor(props) {
 		super(props);
-		this._goToaddPet=this._goToaddPet.bind(this)
-  }
-  _goToaddPet(){
-		this.props.navigation.navigate('AddPet')
 	}
-
+	
 	render() {
 		let {user} = this.props.currentUser
 		return (
@@ -29,13 +25,13 @@ class HomeFundation extends Component {
 					</Text>
 					<View style={{marginTop:40}}/>
 					<View style={{flexDirection:'row',justifyContent:'center'}}>
-						<Button bordered onPress={this._goToaddPet}>
+						<Button bordered onPress={()=>this.props.navigation.navigate('AddPet')}>
 							<Text primary>Añadir mascota</Text>
 						</Button>
 					</View>
 					<View style={{marginTop:40}}/>
 					<View style={{flexDirection:'row',justifyContent:'center'}}>
-						<Button bordered onPress={this._goToaddPet}>
+						<Button bordered onPress={()=>this.props.navigation.navigate('MyServicesView',{isFoundation:true})}>
 							<Text primary>Ver Solicitudes</Text>
 						</Button>
 					</View>

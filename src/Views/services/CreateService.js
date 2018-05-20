@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Button } from 'native-base';
 import DatePicker from 'react-native-datepicker'
-import userActions from '../../actions/usersActions'
+import serviceActions from '../../actions/serviceActions'
 import {_getNowDateISO, _getNextYear} from '../../utils/random_functions'
 
 class CreateService extends Component {
@@ -23,7 +23,7 @@ class CreateService extends Component {
 	static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-			title: 'Pedir Servicio'
+			title: 'Ofrecer Servicio'
     }
   }
   
@@ -85,7 +85,7 @@ class CreateService extends Component {
 	createService(object,type){
     if(type=='cuidado'){
       if(this.state.dateIni || this.state.dateFin){
-        userActions.createService(
+        serviceActions.createService(
           object.petObj.pet_fire_key, 
           object.fid, 
           object.uid, 
@@ -99,7 +99,7 @@ class CreateService extends Component {
         Alert.alert('Fechas vacías ','Recuerda llenar todos los campos 📅',)
       }
     }else{
-      userActions.createService(
+      serviceActions.createService(
         object.petObj.pet_fire_key, 
         object.fid, 
         object.uid, 
@@ -184,7 +184,7 @@ class CreateService extends Component {
     
     return (
       <View style={{ flex: 0.6, justifyContent:'center'}}> 
-
+        
         {this.renderBtns()}
         {
           this.state.selectedView === 0 ? (
@@ -193,7 +193,7 @@ class CreateService extends Component {
             this.renderCare()
           )
         }
-
+        
       </View>
     )
   }

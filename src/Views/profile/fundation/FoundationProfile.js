@@ -5,7 +5,6 @@ import { Platform,	View, StyleSheet, Image, TouchableOpacity,
 import {connect} from 'react-redux'
 //Accions
 import foundationsActions from '../../../actions/foundationsActions'
-import userActions from '../../../actions/usersActions'
 //Style
 import { Button, Icon, Thumbnail, Text, Item, Input, 
 					Card, CardItem, Content, Left } from 'native-base'
@@ -49,23 +48,19 @@ class FundationProfileView extends Component {
 			this.setState({pets: val, isFetchingPets: false})
 		})
 	}
-	createService(mascotaId, fundacionId, userId, objectMascota) {
-		userActions.createService(mascotaId, fundacionId, userId, objectMascota);
-	}
 
 	petTouched(mascotaId, fundacionId, userId,petObj) {
-		if(fundacionId !== userId) {
+		if(this.props.currentUser.type == 'user') {
 			this.props.navigation.navigate('CreateService',{toCreate:{petObj:petObj,fid:fundacionId,uid:userId}})
-			
-			// Alert.alert(
-			// 	'Ayudar mascota',
-			// 	`¿Quieres ayudar al amigo? ${fundacionId}`,
-			// 	[
-			// 		{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-			// 		{text: 'OK', onPress: () => this.createService(mascotaId, fundacionId, userId)},
-			// 	],
-			// 	{ cancelable: false }
-			// )
+		}else{
+			Alert.alert(
+				'Oops',
+				`Si quieres cuidar a una mascota tienes que ser usuario voluntario.`,
+				[
+					{text: 'OK'}
+				],
+				{ cancelable: true }
+			)
 		}
 	}
 

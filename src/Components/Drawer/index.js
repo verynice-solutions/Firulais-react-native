@@ -20,27 +20,29 @@ class Drawer extends React.Component {
     this.goToRoot = this.goToRoot.bind(this)
   }
 
-  navigateToScreen = (routeName)=> {
+  navigateToScreen = (routeName,obj)=> {
     return ()=> {
       let {navigate} = this.props.navigation
-      navigate(routeName)
+      navigate(routeName, obj)
       // this.props.navigation.dispatch(this.goToRoot(routeName))
       this.props.setDrawer(routeName)
     }
   }
-  goToRoot(root){
+  goToRoot(root, obj){
     let {navigate} = this.props.navigation
     const go = NavigationActions.reset({
       index: 0,
       actions: [
-        NavigationActions.navigate({ routeName: root})
+        NavigationActions.navigate({ 
+          routeName: root , 
+          params: obj
+        })
       ]
     })
     return go
   }
 
   render() {
-
     // let {activeItemKey} = this.props.navigation
     // console.log("activeItem: ", this.props.navigation)
     // console.log("drawerState: ",this.props.drawerState.activeView)
@@ -90,9 +92,9 @@ class Drawer extends React.Component {
                   </Ripple>
 
                   <Ripple style={[styles.drawerItem, activeView=='MyServicesView'?styles.activeItem:null]} 
-                    onPress={this.navigateToScreen('MyServicesView')}>
+                    onPress={this.navigateToScreen('MyServicesView', {isFoundation: user.type==='fundation'})}>
                     <Foundation name="guide-dog" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Servicios</Text>
+                    <Text style={styles.drawerItemText}>{user.type==='fundation'?'Solicitudes':'Servicios'}</Text>
                   </Ripple>
 
                   <Ripple style={[styles.drawerItem, activeView=='AllFoundationsView'?styles.activeItem:null]} 
