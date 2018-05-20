@@ -8,6 +8,12 @@ const images = {
 
 	//Messages 
 
+
+
+	computer_kitty: require('./images/computerKitty.png'),
+	pencil_kitty: require('./images/writingKitty.png'),
+	idea_kitty: require('./images/ideaKitty.png')
+
 };
 
 
