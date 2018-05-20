@@ -4,7 +4,8 @@ import { Platform, View, StyleSheet, Image, TouchableOpacity } from 'react-nativ
 import {connect} from 'react-redux'
 import sessionActions from '../../actions/sessionActions'
 //Style
-import {Container,Content,Button,Text} from 'native-base'
+import {Container, Content, Button, Text, Card, CardItem, Body, Header, Left, Title, Right} from 'native-base'
+import images from '../../../assets/images'
 
 class ChooseUser extends Component {
 	constructor(props) {
@@ -20,22 +21,50 @@ class ChooseUser extends Component {
 		return (
 			<Container>
 				<Content>
-					<View style={{marginTop:40}}/>
-					<Text style={styles.textDefault}> 
-						¿Qué tipo de usuario te gustaría ser?
-					</Text>
-					<View style={{marginTop:40}}/>
-					<View style={{flexDirection:'row',justifyContent:'center'}}>
-						<Button rounded onPress={()=>this._saveUserType('user')} primary>
-							<Text style={styles.textDefault}> Voluntario </Text>
-						</Button>
+					
+					<Text style={styles.textDefault}>¿Qué tipo de usuario te gustaría ser?</Text>
+					<View style={{flexDirection:'row',justifyContent:'center', marginLeft: 10, marginRight: 10}}>
+						<Card>
+							<CardItem 
+								button
+								onPress={()=>this._saveUserType('fundation')} 
+								style={{justifyContent:'center', backgroundColor: '#B7CFFF'}}>
+								<Image 
+									source={images.care_home} resizeMode= 'contain' 
+									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
+							</CardItem>
+							<CardItem					
+								style={{justifyContent:'center'}}>
+								<Text 
+									primary 
+									style={{fontWeight: 'bold', textAlign: 'center'}}>
+									Fundación
+								</Text>	
+							</CardItem>
+						</Card>						
 					</View>
-					<View style={{marginTop:20}}/>
-					<View style={{flexDirection:'row',justifyContent:'center'}}>
-						<Button rounded onPress={()=>this._saveUserType('fundation')} primary>
-							<Text style={styles.textDefault} > Fundación </Text>
-						</Button>
+
+					<View style={{flexDirection:'row',justifyContent:'center', marginLeft: 10, marginRight: 10}}>
+						<Card>
+							<CardItem 
+								button 
+								onPress={()=>this._saveUserType('user')}
+								style={{justifyContent:'center', backgroundColor: '#DDD9FC'}}>
+								<Image 
+									source={images.super_kitty} resizeMode= 'contain' 
+									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
+							</CardItem>
+							<CardItem					
+								style={{justifyContent:'center'}}>
+								<Text 
+									primary 
+									style={{fontWeight: 'bold', textAlign: 'center'}}>
+									Voluntario
+								</Text>	
+							</CardItem>
+						</Card>	
 					</View>
+
 				</Content>
 			</Container>
 		)
@@ -52,8 +81,9 @@ export default connect(mapStateToProps,{
 })(ChooseUser)
 
 const styles = StyleSheet.create({
-	textDefault:{
-		fontFamily:'Roboto-Bold', 
-		textAlign:'center'
+	textDefault:{ 
+		textAlign:'center',
+		marginTop: 10,
+		marginBottom: 10
 	}
 });

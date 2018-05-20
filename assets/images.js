@@ -16,7 +16,7 @@ const images = {
 
 	care_home: require('./images/care_home.png'),
 	party_kitty: require('./images/party_kitty.png'),
-	super_kitty: require('./images/super_kitty.png')
+	super_kitty: require('./images/angel_kitty.png')
 
 };
 
