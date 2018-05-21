@@ -105,15 +105,30 @@ class MyServicesView extends Component {
                 <Text>{this.state.serviceInModal.dateFin&&('Fin :'+this.state.serviceInModal.dateFin)}</Text>
               </View>
 
-              {this.props.currentUser.uid===this.state.serviceInModal.founId&&
-              <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-                <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'rechazado')} rounded info>
-                  <Text>Rechazar</Text>
-                </Button>
-                <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'aprobado')} rounded info>
-                  <Text>Aceptar</Text>
-                </Button>
-              </View>}
+              {
+                this.props.currentUser.uid===this.state.serviceInModal.founId && this.props.currentUser.type==='fundation' &&(
+                  this.state.serviceInModal.status === 'pendiente' ? (
+                    <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+                      <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'rechazado')} rounded info>
+                        <Text>Rechazar</Text>
+                      </Button>
+                      <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'aprobado')} rounded info>
+                        <Text>Aceptar</Text>
+                      </Button>
+                    </View>
+                  ):(
+                    <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+                      <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'progreso')} rounded info>
+                        <Text>En progreso</Text>
+                      </Button>
+                      <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'finalizado')} rounded info>
+                        <Text>Finalizado</Text>
+                      </Button>
+                    </View>
+                  )
+                )
+
+              }
   
             </View>
           </Modal>}
@@ -121,17 +136,16 @@ class MyServicesView extends Component {
             {
               services?(
                 Object.keys(services).map((i)=>{
-                  
-                  return(
-                    <ListItem key={i} onPress={()=>this._detailService(services[i])}>
-                      <Thumbnail square size={80} source={{ uri: services[i].thumbnail }} />
-                      <Body>
-                        <Text>{services[i].petInfo.tempName}</Text>
-                        <Text note> {services[i].type}</Text>
-                      </Body>
-                      <Text> {services[i].status}</Text>
-                    </ListItem>
-                  ) 
+                  return (services[i].status != 'rechazado' && services[i].status != 'finalizado') && (
+                      <ListItem key={i} onPress={()=>this._detailService(services[i])}>
+                        <Thumbnail square size={80} source={{ uri: services[i].thumbnail }} />
+                        <Body>
+                          <Text>{services[i].petInfo.tempName}</Text>
+                          <Text note> {services[i].type}</Text>
+                        </Body>
+                        <Text> {services[i].status}</Text>
+                      </ListItem>
+                    )
                   
                 })
               ):(

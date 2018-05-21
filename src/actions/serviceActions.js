@@ -62,12 +62,26 @@ function updateStatus(serviceKey,statusValue){
     })
 }
 
+function setRating(serviceKey, stars, msg) {
+    refServices.child(serviceKey).update({
+        rating: stars,
+        ratingMsg: msg
+    }).then(res=>{
+        Alert.alert('Success','Calificación subida!')
+    })
+    .catch(err=>{
+        console.log('Error Crear Servicio',err)
+        Alert.alert('Connection Error', err)
+    })
+}
+
 
 const serviciosActions = {
     updateStatus,
     fetchAllServices,
     fetchUserServices,
     createService,
+    setRating
 }
 
 export default serviciosActions

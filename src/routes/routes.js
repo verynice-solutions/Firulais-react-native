@@ -21,6 +21,8 @@ import CreateService from '../Views/services/CreateService'
 import AddNewView from '../Views/news/createNew'
 import AllNewsView from '../Views/news/index'
 import NewsView from '../Views/news/newsView'
+import HistoryView from '../Views/services/History'
+import FinishedService from '../Views/services/FinishedService'
 
 const SignedOutRoutes = StackNavigator({
   Login: {
@@ -85,6 +87,14 @@ const AllRoutes = StackNavigator({
   AddNew:{
     path: 'addNew',
     screen: AddNewView
+  },
+  HistoryView:{
+    path: 'historyView',
+    screen: HistoryView
+  },
+  FinishedService: {
+    path: 'finishedService',
+    screen: FinishedService
   },
   Settings: {
     path: 'settings',
