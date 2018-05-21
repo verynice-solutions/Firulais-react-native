@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import { TabNavigator } from 'react-navigation';
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body } from 'native-base';
-
+import { Ionicons } from '@expo/vector-icons'
 import foundationsActions from '../../actions/foundationsActions'
 import usersActions from '../../actions/usersActions'
 
@@ -22,9 +22,10 @@ class GlobalFeed extends React.Component {
   }
 
   static navigationOptions = ({navigation}) => {
-		const params = navigation.state.params || {};
+    const params = navigation.state.params || {};
 		return{
-			title: 'Global Feed'
+      title: 'Globales',
+      tabBarIcon: <Ionicons size={26} name='md-globe'/>
     }
 	}
 

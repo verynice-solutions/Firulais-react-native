@@ -7,7 +7,7 @@ import Ripple from 'react-native-material-ripple';
 import {connect} from 'react-redux'
 import {Thumbnail} from 'native-base'
 const {height, width} = Dimensions.get('window');
-import Colors from '../../utils/colors'
+import Colors from '../../utils/Colors'
 import {randomPuppers} from '../../utils/random_functions'
 import Images from '../../../assets/images'
 import {scale} from '../../lib/responsive'

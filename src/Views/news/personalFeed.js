@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import { TabNavigator } from 'react-navigation';
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body } from 'native-base';
-
+import { Ionicons } from '@expo/vector-icons'
 import foundationsActions from '../../actions/foundationsActions'
 
 
@@ -18,7 +18,8 @@ class PersonalFeed extends Component {
   static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-			title: 'Personal Feed'
+      title: 'Mis Fundaciones',
+      tabBarIcon: <Ionicons name='md-ribbon' size={26} />
     }
 	}
     

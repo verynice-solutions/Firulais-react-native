@@ -3,7 +3,6 @@ import {View,Platform, StatusBar} from 'react-native'
 import {Root} from 'native-base'
 //Screens
 import SessionWrapper from './src/Views/SessionWrapper'
-import Colors from './src/utils/colors'
 //Yellow box warnings
 import { YellowBox } from 'react-native';
 import _ from 'lodash';

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import { StyleSheet, Text, View, TextInput, Button} from 'react-native'
-import Colors from '../../utils/colors'
+import Colors from '../../utils/Colors'
 
 class ForgotPass extends Component {
 	constructor(props) {

@@ -8,7 +8,7 @@ import {connect} from 'react-redux'
 import { MaterialIcons, Entypo } from '@expo/vector-icons'
 import {Button, Icon} from 'native-base'
 
-import Colors from '../../utils/colors'
+import Colors from '../../utils/Colors'
 import versionApp from '../../utils/version'
 //Actions
 import sessionActions from '../../actions/sessionActions'

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import firebase from '../../firebase/firebaseSingleton'
 import { StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native'
-import Colors from '../../utils/colors'
+import Colors from '../../utils/Colors'
 //Redux
 import {} from '../../actions/sessionActions'
 class SignUp extends Component {
