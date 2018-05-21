@@ -8,10 +8,13 @@ import { ImagePicker } from 'expo'
 import DatePicker from 'react-native-datepicker'
 import {_getNowDateISO, _getNextYear} from '../../utils/random_functions'
 //Style
-import {Container,Content,Body,Button,Text,Icon,Form,Textarea,CheckBox,List,ListItem,Label,Input,Item} from 'native-base'
+import Modal from 'react-native-modal'
+import {Container,Content,Body,Button,Text,Icon,Form,Textarea,CheckBox,List,ListItem,Label,Input,Item, Toast} from 'native-base'
 import { scale } from '../../lib/responsive';
 import {randomPuppers} from '../../utils/random_functions'
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler'
+import Imagess from '../../../assets/images'
+import {Ionicons} from '@expo/vector-icons'
 
 class createNew extends Component {
 	constructor(props) {
@@ -24,7 +27,8 @@ class createNew extends Component {
       evento:true, noticia:null,
 
       new_fire_key: firebase.database().ref().child('news').push().key,
-      blockButton: false
+      blockButton: false,
+      isModalVisible: false
     }
 
     this._añadirNew=this._añadirNew.bind(this)
@@ -33,16 +37,28 @@ class createNew extends Component {
   static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-			title: 'Añadir Noticia/Evento',
-			headerRight: (
-			<Button transparent style={{marginTop: 8}}onPress={params.addPet}>
-				<Text primary>guardar</Text>
+			title: 'Añadir Noticia',
+      headerRight: (Platform.OS==='ios'?
+        <Button transparent onPress={params.addPet}>
+          <Text primary>Guardar</Text>
+        </Button>
+      :
+			<Button transparent style={{marginTop: 8}} onPress={params.addPet}>
+				<Text primary>Guardar</Text>
 			</Button>)
     }
   }
   componentDidMount() {
     this.props.navigation.setParams({ addPet: this._añadirNew })
   }
+
+  _toggleModal = () =>{
+    if(!this.state.blockButton){
+      this.setState({ isModalVisible: !this.state.isModalVisible })
+      this.props.navigation.goBack()
+    }
+  }
+
   renderDatePicker = () => {
     return <View style={{margin: -10}}><DatePicker
       style={{width: 200}}
@@ -91,15 +107,19 @@ class createNew extends Component {
           idFundacion: this.props.currentUser.uid,
         })
       }).then(() => {
-        Alert.alert('\u2b50 Success \u2b50','Subida con éxito',[
-          {text: 'OK', onPress: () => this.props.navigation.goBack()},
-        ],
-        { cancelable: false })
-        this.setState({blockButton: false});
+        Toast.show({
+          text:'\u2b50 Noticia subida con éxito',
+          buttonText:'YAY!',
+          duration: 4000,
+          type:'success'
+        })
+        this.setState({blockButton: false})
+
       })
       .catch((err) => {
-        console.log('Error Subiendo Fotos:', err)
-        Alert.alert('Hubo un error',' :( ')
+        this.setState({blockButton: false, isModalVisible: false})
+        console.log('Error:', err)
+        Alert.alert('Error:',' Hubo un error subiendo tu noticia.')
       })
     }
   }
@@ -177,6 +197,38 @@ class createNew extends Component {
     // console.log('petKey',this.state.new_fire_key)
 		return (
 			<Container>
+        {this.state.isModalVisible&&
+          <Modal isVisible={this.state.isModalVisible}
+          onBackButtonPress={()=>this._toggleModal()}
+          onBackdropPress={()=>this._toggleModal()}
+          >
+            <View style={styles.modalContainer}>
+          
+              {this.state.blockButton? 
+                <View style={styles.modalSpinningContainer}>
+                  <Text style={{fontFamily:'Roboto-Bold',textAlign:'center'}}>Subiendo ...     </Text>
+                  <ActivityIndicator size='large'/>
+                </View>
+              :
+              <View style={styles.modalSpinningContainer}>
+                <Text style={styles.modalTextHead}>Noticia Añadida     </Text>
+                <Ionicons name='md-checkmark-circle-outline' size={24} color='green' />
+              </View>
+              }
+
+              <Image resizeMode='contain' style={{height:140,width:null, marginVertical:20}} source={Imagess.cat_news} />
+              
+              {!this.state.blockButton&&
+                <View style={{justifyContent:'center',alignItems:'center'}}>
+                  <TouchableOpacity style={{width:250}} onPress={()=>this._toggleModal()}>
+                    <Text style={styles.modalTexButton} > Oki </Text>
+                  </TouchableOpacity>
+                </View>
+              }
+
+            </View>
+          </Modal>
+        }
 				<Content padder>
 					<View style={{marginTop:5}}/>
           {imagesPupers&&<Label>Fotos</Label>}
@@ -229,7 +281,7 @@ class createNew extends Component {
               <Label style={{paddingLeft:15}}>Noticia</Label>
             </ListItem>
         
-				</Content>
+				</Content>}
 			</Container>
 		)
 	}
@@ -247,4 +299,23 @@ const styles = StyleSheet.create({
     width:160,
     height:120
   },
+  modalContainer:{ 
+    justifyContent:'space-around',
+    backgroundColor:'white', borderRadius: 8,
+  },
+  modalSpinningContainer:{
+    flexDirection:'row', marginTop: 18,
+    justifyContent:'center', alignItems:'center', 
+  },
+  modalImgContainer:{
+    justifyContent:'center'
+  },
+  modalTextHead:{
+    fontFamily:'Roboto-Bold',fontSize:18, 
+    textAlign:'center'
+  },
+  modalTexButton:{
+    fontFamily:'Roboto-Bold',fontSize:20, marginBottom:18, 
+    textAlign:'center', color:'#3457d8'
+  }
 });

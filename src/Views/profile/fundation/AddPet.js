@@ -6,10 +6,13 @@ import {connect} from 'react-redux'
 import firebase from '../../../firebase/firebaseSingleton'
 import { ImagePicker } from 'expo'
 //Style
-import {Container,Content,Body,Button,Text,Icon,Form,Textarea,CheckBox,List,ListItem} from 'native-base'
+import Modal from 'react-native-modal'
+import {Container,Content,Button,Text,Textarea,CheckBox,ListItem,Toast} from 'native-base'
 import { scale } from '../../../lib/responsive';
 import {randomPuppers} from '../../../utils/random_functions'
 import { FlatList } from 'react-native-gesture-handler';
+import Imagess from '../../../../assets/images'
+import {Ionicons} from '@expo/vector-icons'
 
 class AddPet extends Component {
 	constructor(props) {
@@ -26,7 +29,8 @@ class AddPet extends Component {
       amigableConPersonas: true,
       amigableConOtrosPets: true,
       pet_fire_key: firebase.database().ref().child('pets').push().key,
-      blockButton: false
+      blockButton: false,
+      isModalVisible: false
     }
 
     this._añadirMascota=this._añadirMascota.bind(this)
@@ -36,22 +40,34 @@ class AddPet extends Component {
 		const params = navigation.state.params || {};
 		return{
 			title: 'Añadir mascota',
-			headerRight: (
-			<Button transparent onPress={params.addPet}>
-				<Text primary>GUARDAR</Text>
-			</Button>)
+      headerRight: (Platform.OS==='ios'?
+      <Button transparent onPress={params.addPet}>
+        <Text primary>Guardar</Text>
+      </Button>
+    :
+    <Button transparent style={{marginTop: 8}} onPress={params.addPet}>
+      <Text primary>Guardar</Text>
+    </Button>)
     }
   }
   componentDidMount() {
     this.props.navigation.setParams({ addPet: this._añadirMascota })
-	}
+  }
+
+  _toggleModal = () =>{
+    if(!this.state.blockButton){
+      this.setState({ isModalVisible: !this.state.isModalVisible })
+      this.props.navigation.goBack()
+    }
+  }
+
   _añadirMascota(){
     let valuesToSend = this._setValuesMascota(this.state)
     let petID = this.state.pet_fire_key
     if(valuesToSend===false) {
       Alert.alert('Recuerda llenar todos los campos <3')
     }else {
-      this.setState({blockButton: true})
+      this.setState({blockButton: true, isModalVisible: true})
       this._upLoadPhotos()
         .then(() => {
         let imagesInState = this.state.images
@@ -67,16 +83,18 @@ class AddPet extends Component {
           idFundacion: this.props.currentUser.uid,
         })
       }).then(() => {
-        Alert.alert('\u2b50 Success \u2b50','Mascota subida con éxito',[
-          {text: 'OK', onPress: () => this.props.navigation.goBack()},
-        ],
-        { cancelable: false })
-        this.setState({blockButton: false});
+        Toast.show({
+          text:'\u2b50 Mascota subida con éxito',
+          buttonText:'YAY!',
+          duration: 4000,
+          type:'success'
+        })
+        this.setState({blockButton: false})
       })
       .catch((err) => {
-        console.log('Error Subiendo Fotos:', err)
-        Alert.alert('Hubo un error',' :( ')
-        this.setState({blockButton: false})
+        this.setState({blockButton: false, isModalVisible: false})
+        console.log('Error:', err)
+        Alert.alert('Error:','Hubo un error subiendo tu mascota.')
       })
     }
   }
@@ -154,6 +172,38 @@ class AddPet extends Component {
     // console.log('petKey',this.state.pet_fire_key)
 		return (
 			<Container>
+        {this.state.isModalVisible&&
+          <Modal isVisible={this.state.isModalVisible}
+          onBackButtonPress={()=>this._toggleModal()}
+          onBackdropPress={()=>this._toggleModal()}
+          >
+            <View style={styles.modalContainer}>
+          
+              {this.state.blockButton? 
+                <View style={styles.modalSpinningContainer}>
+                  <Text style={{fontFamily:'Roboto-Bold',textAlign:'center'}}>Subiendo ...     </Text>
+                  <ActivityIndicator size='large'/>
+                </View>
+              :
+              <View style={styles.modalSpinningContainer}>
+                <Text style={styles.modalTextHead}>Éxito     </Text>
+                <Ionicons name='md-done-all' size={24} color='green' />
+              </View>
+              }
+
+              <Image resizeMode='contain' style={{height:140,width:null, marginVertical:20}} source={Imagess.cat_selfi} />
+              
+              {!this.state.blockButton&&
+                <View style={{justifyContent:'center',alignItems:'center'}}>
+                  <TouchableOpacity style={{width:250}} onPress={()=>this._toggleModal()}>
+                    <Text style={styles.modalTexButton} > Oki </Text>
+                  </TouchableOpacity>
+                </View>
+              }
+
+            </View>
+          </Modal>
+        }
 				<Content padder>
 					<View style={{marginTop:5}}/>
           {imagesPupers?<Text style={styles.textHeaders}>Fotos:</Text>:null}
@@ -257,4 +307,23 @@ const styles = StyleSheet.create({
     width:160,
     height:120
   },
+  modalContainer:{ 
+    justifyContent:'space-around',
+    backgroundColor:'white', borderRadius: 8,
+  },
+  modalSpinningContainer:{
+    flexDirection:'row', marginTop: 18,
+    justifyContent:'center', alignItems:'center', 
+  },
+  modalImgContainer:{
+    justifyContent:'center'
+  },
+  modalTextHead:{
+    fontFamily:'Roboto-Bold',fontSize:18, 
+    textAlign:'center'
+  },
+  modalTexButton:{
+    fontFamily:'Roboto-Bold',fontSize:20, marginBottom:18, 
+    textAlign:'center', color:'#3457d8'
+  }
 });
