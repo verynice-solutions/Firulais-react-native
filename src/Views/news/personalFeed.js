@@ -18,7 +18,7 @@ class PersonalFeed extends Component {
   static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-      title: 'Mis Fundaciones',
+      title: 'Mis noticias',
       tabBarIcon: <Ionicons name='md-ribbon' size={26} />
     }
 	}

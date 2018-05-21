@@ -24,7 +24,7 @@ class GlobalFeed extends React.Component {
   static navigationOptions = ({navigation}) => {
     const params = navigation.state.params || {};
 		return{
-      title: 'Globales',
+      title: 'Noticias',
       tabBarIcon: <Ionicons size={26} name='md-globe'/>
     }
 	}
