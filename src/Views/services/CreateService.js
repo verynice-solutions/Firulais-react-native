@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native'
-import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Button } from 'native-base';
+import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Button,Item, Label, Input } from 'native-base';
 import DatePicker from 'react-native-datepicker'
 import serviceActions from '../../actions/serviceActions'
 import {_getNowDateISO, _getNextYear} from '../../utils/random_functions'
@@ -14,6 +14,8 @@ class CreateService extends Component {
       dateIni: null,
       dateFin: null,
       infoObject: this.props.navigation.getParam('toCreate'),
+      carePhone: null,
+      adoptPhone: null
 
     }
     this.toggleAdopt = this.toggleAdopt.bind(this)
@@ -64,7 +66,10 @@ class CreateService extends Component {
     let object = this.state.infoObject
     return(
       <View style={styles.subcontainer}>
-        <Text> Adopt me, you pretty face :3 </Text>
+        <Item style={{width:'80%'}} stackedLabel>
+          <Label> Teléfono </Label>
+          <Input keyboardType='numeric' onChangeText={(text)=> this.setState({adoptPhone: text})} />
+        </Item>
         <View>
           <Button rounded success onPress={()=>Alert.alert(
             `Adoptar a ${object.petObj.tempName}`,
@@ -84,7 +89,7 @@ class CreateService extends Component {
 
 	createService(object,type){
     if(type=='cuidado'){
-      if(this.state.dateIni || this.state.dateFin){
+      if(this.state.dateIni && this.state.dateFin && this.state.carePhone){
         serviceActions.createService(
           object.petObj.pet_fire_key, 
           object.fid, 
@@ -92,22 +97,29 @@ class CreateService extends Component {
           object.petObj,
           type,
           this.state.dateIni,
-          this.state.dateFin
+          this.state.dateFin,
+          this.state.carePhone
         )
         this.props.navigation.goBack()
       }else{
-        Alert.alert('Fechas vacías ','Recuerda llenar todos los campos 📅',)
+        Alert.alert('Campos vacíos ','Recuerda llenar todos los campos 📅',)
       }
     }else{
-      serviceActions.createService(
-        object.petObj.pet_fire_key, 
-        object.fid, 
-        object.uid, 
-        object.petObj,
-        type,
-        null,null
-      )
-      this.props.navigation.goBack()
+      if(this.state.adoptPhone){
+        serviceActions.createService(
+          object.petObj.pet_fire_key, 
+          object.fid, 
+          object.uid, 
+          object.petObj,
+          type,
+          null,null,
+          this.state.adoptPhone
+        )
+        this.props.navigation.goBack()
+      }else{
+        Alert.alert('Campo vacío ','Recuerda darnos tu telefono',)
+      }
+
     }
   }
   
@@ -115,9 +127,12 @@ class CreateService extends Component {
     let object = this.state.infoObject
     return(
       <View style={styles.subcontainer}>
-        <Text> Or wanna take care of my ass :D </Text>
         {this.renderDatePickerIni()}
         {this.renderDatePickerFin()}
+        <Item style={{width:'80%'}} stackedLabel>
+          <Label> Teléfono </Label>
+          <Input keyboardType='numeric' onChangeText={(text)=> this.setState({carePhone: text})} />
+        </Item>
         <View>
           <Button rounded info onPress={()=>this.createService(object,'cuidado')}>
             <Text>Programar cuidado</Text>
@@ -183,7 +198,7 @@ class CreateService extends Component {
 	render() {
     
     return (
-      <View style={{ flex: 0.6, justifyContent:'center'}}> 
+      <View style={{ flex: 1, justifyContent:'center'}}> 
         
         {this.renderBtns()}
         {
