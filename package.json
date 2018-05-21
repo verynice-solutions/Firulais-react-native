@@ -31,6 +31,7 @@
     "react-native-easy-grid": "^0.1.17",
     "react-native-material-ripple": "^0.8.0",
     "react-native-modal": "^6.0.0",
+    "react-native-star-rating": "^1.0.9",
     "react-navigation": "^1.5.11",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",

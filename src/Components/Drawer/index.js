@@ -109,8 +109,8 @@ class Drawer extends React.Component {
                     <Text style={styles.drawerItemText}>Personas</Text>
                   </Ripple>
 
-                  <Ripple style={[styles.drawerItem, activeView=='CalendarView'?styles.activeItem:null]} 
-                    onPress={this.navigateToScreen('CalendarView')}>
+                  <Ripple style={[styles.drawerItem, activeView=='HistoryView'?styles.activeItem:null]} 
+                    onPress={this.navigateToScreen('HistoryView')}>
                     <MaterialIcons name="stars" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Historial</Text>
                   </Ripple>
