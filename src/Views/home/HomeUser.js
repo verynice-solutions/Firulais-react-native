@@ -27,7 +27,7 @@ class HomeUser extends Component {
 							<CardItem 
 								button 
 								onPress={()=>this.props.navigation.navigate('AllFoundationsView')}
-								style={{justifyContent:'center', backgroundColor: '#FFDBB9'}}>
+								style={{justifyContent:'center', backgroundColor: '#AE86A9'}}>
 								<Image 
 									source={images.care_home} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
@@ -68,7 +68,7 @@ class HomeUser extends Component {
 							<CardItem 
 								button 
 								onPress={()=>this.props.navigation.navigate('MyServicesView')}
-								style={{justifyContent:'center', backgroundColor: '#AE86A9'}}>
+								style={{justifyContent:'center', backgroundColor: '#FFDBB9'}}>
 								<Image 
 									source={images.super_kitty} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>

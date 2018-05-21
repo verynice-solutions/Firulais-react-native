@@ -7,10 +7,11 @@ import {connect} from 'react-redux'
 import foundationsActions from '../../../actions/foundationsActions'
 //Style
 import { Button, Icon, Thumbnail, Text, Item, Input, 
-					Card, CardItem, Content, Left } from 'native-base'
+					Card, CardItem, Content, Left, ListItem, Body,
+					Right} from 'native-base'
 import firebase from '../../../firebase/firebaseSingleton'
 import CreateService from '../../services/CreateService'
-
+import images from '../../../../assets/images'
 
 class FundationProfileView extends Component {
 	constructor(props) {
@@ -84,13 +85,14 @@ class FundationProfileView extends Component {
 		return(
 			<TouchableOpacity onPress={()=>this.petTouched(item, pets[item].idFundacion, this.props.currentUser.uid, pets[item])}>
 				<Card key={item} style={styles.petCard}>
-						<CardItem>
-								<View style={styles.petCardContent}>
-								<Thumbnail circle large source={{ uri: imgURL}}/> 
-									<Text note> {pets[item].edad} años </Text>
-								</View>
-						</CardItem>
+					<CardItem>
+							<View style={styles.petCardContent}>
+							<Thumbnail circle large source={{ uri: imgURL}}/> 
+								<Text note> {pets[item].edad} años </Text>
+							</View>
+					</CardItem>
 				</Card>
+
 			</TouchableOpacity>
 		)
 	}
@@ -101,7 +103,7 @@ class FundationProfileView extends Component {
 		let news = null
 		let profile = info.profile
 		return (
-			<View style={{flex:1}}>
+			<ScrollView style={{flex:1}}>
 				<View style={{flexDirection:'column'}}>
 					{
 						this.state.isFetchingData?(
@@ -109,9 +111,13 @@ class FundationProfileView extends Component {
 								<ActivityIndicator size='large' />
 							</View>
 						):(
-							<View>
+							<View style={{backgroundColor: '#AE86A9'}}>
 								<View style={styles.thumbContainer}>
-									<Thumbnail circle large source={{ uri: info.photoUrl }}/>
+									<Thumbnail 
+										circle 
+										large 
+										source={{ uri: info.photoUrl }}
+										style={{borderColor: '#FFFFFF59', borderWidth:5, marginTop: 15}}/>
 									<Text style={styles.nameField}> 
 										{info.name}
 									</Text>
@@ -120,11 +126,37 @@ class FundationProfileView extends Component {
 								<View style={styles.infoContainer}>
 									<Text style={styles.infoField}> {profile && profile.description  }  </Text>
 								</View>
+								{
+									this.props.currentUser.type === 'user' &&(
+										<View style={{marginHorizontal: 10, marginBottom: 10}}> 											
+											<Card style={{ borderRadius:25}}> 
+												<CardItem
+													button
+													onPress={this.addVoluntario}
+													style={{backgroundColor: '#E8D6E6'}}>
+													<Left>
+														<Thumbnail source={images.medal}/>
+														<Body>
+															<Text style={{fontWeight: 'bold'}}>¡Quiero ser voluntario!</Text>
+															<Text note>Apuntarme</Text>
+														</Body>
+													</Left>
+												</CardItem>
+											</Card>
+										</View>
+									)	
+								}
 							</View>
 						)
 					}
 					<View>
-						<View style={styles.subtitle}><Text> Mascotas </Text></View>
+
+						<View style={styles.subtitle}>
+							<ListItem itemDivider>
+								<Left><Text style={styles.dividerText}>Mascotas</Text></Left>
+								<Right><Text style={styles.dividerText}>Ver más...</Text></Right>
+							</ListItem> 
+						</View>
 						{
 							this.state.isFetchingPets ? (
 								<View style={styles.infoContainer}>
@@ -148,46 +180,43 @@ class FundationProfileView extends Component {
 										</Text>
 									</View>
 									}
-										<TouchableOpacity>
-											<Text style={styles.verMas} primary> Ver más... </Text>
-										</TouchableOpacity>
 								</View>
 							)
 						}
 					</View>
 
 					<View>
-						<View style={styles.subtitle}><Text> Noticias </Text></View>
+						<View style={styles.subtitle}>
+							<ListItem itemDivider>
+								<Left><Text style={styles.dividerText}>Noticias</Text></Left>
+								<Right><Text style={styles.dividerText}>Ver más...</Text></Right>
+							</ListItem> 
+						</View>
 						{
 							news ? (
 								<View style={styles.cardsContainer}>
 	
 								</View>
 							):(
-								<View style={styles.infoContainer}>
-										<Text style={styles.infoField}>
-										No hay Noticias :(
-										</Text>
+								<View>
+									<ListItem>
+										<Body> 
+											<Text style={{color: '#2a2a2a'}}>No hay noticias :(</Text>
+										</Body>
+										<Right>
+											<Thumbnail square size={80} 
+												source={images.wonder_kitty}/>
+										</Right>
+									</ListItem>
 								</View>
 							)
-						}
+						}					
 					</View>
 
-					{
-						this.props.currentUser.type === 'user' &&(
-							<View style={styles.infoContainer}>
-								<View>
-									<Button iconLeft rounded onPress={this.addVoluntario}>
-										<Icon name='paw'/>
-										<Text> Se un voluntario! </Text>
-									</Button>
-								</View>
-							</View>
-						)	
-					}
 
-			</View>
-		</View>
+
+				</View>
+			</ScrollView>
 	)}
 }
 
@@ -210,19 +239,23 @@ const styles = StyleSheet.create({
 		flexDirection:'column',
 		justifyContent:'center',
 		alignItems: 'center',
-		marginBottom: 10
 	},
 	nameField: {
 		textAlign:'center',
-		marginTop: 5
+		fontWeight: 'bold',
+		color: '#ffffff',
+		marginTop: 15,
 	},
 	infoField: {
 		textAlign:'center', 
-		width:'80%'
+		width:'80%',
+		color: '#ffffff',
+		marginBottom: 30,
 	},
 	cardsContainer: {
 		alignItems:'center', 
-		paddingVertical: 5  
+		paddingVertical: 5,
+		marginBottom: 5  
 	},
 	petCard: {
 		flex: 0,
@@ -243,6 +276,9 @@ const styles = StyleSheet.create({
 		margin: 5,
 		fontFamily: 'Roboto-Bold',
 		fontSize: 14
-	}
-
+	},
+	dividerText: {
+		fontWeight: 'bold',
+		color: '#2a2a2a'
+	} 
 });
