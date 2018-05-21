@@ -216,7 +216,7 @@ class createNew extends Component {
               </View>
               }
 
-              <Image resizeMode='contain' style={{height:140,width:null, marginVertical:20}} source={Imagess.cat_news} />
+              <Image resizeMode='contain' style={{height:140,width:null, marginVertical:20}} source={Imagess.computer_kitty} />
               
               {!this.state.blockButton&&
                 <View style={{justifyContent:'center',alignItems:'center'}}>

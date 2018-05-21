@@ -70,7 +70,7 @@ class HomeUser extends Component {
 								onPress={()=>this.props.navigation.navigate('MyServicesView')}
 								style={{justifyContent:'center', backgroundColor: '#FFDBB9'}}>
 								<Image 
-									source={images.super_kitty} resizeMode= 'contain' 
+									source={images.angel_kitty} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
 							</CardItem>
 							<CardItem					

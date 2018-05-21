@@ -5,7 +5,7 @@ const images = {
 	//Add pet
 	cat_selfi: require('./images/kitty_selfie.png'),
 	//Add news
-	cat_news: require('./images/kitty_thinking.png'),
+	thinking_kitty: require('./images/kitty_thinking.png'),
 	//Drawer
 	firulais_logo: require('./images/logo_firulais_op.png'),
 
@@ -22,7 +22,7 @@ const images = {
 	medal: require('./images/medal.png'),
 	care_home: require('./images/care_home.png'),
 	party_kitty: require('./images/party_kitty.png'),
-	super_kitty: require('./images/angel_kitty.png')
+	angel_kitty: require('./images/angel_kitty.png')
 
 };
 

@@ -51,7 +51,7 @@ class ChooseUser extends Component {
 								onPress={()=>this._saveUserType('user')}
 								style={{justifyContent:'center', backgroundColor: '#DDD9FC'}}>
 								<Image 
-									source={images.super_kitty} resizeMode= 'contain' 
+									source={images.angel_kitty} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
 							</CardItem>
 							<CardItem					
