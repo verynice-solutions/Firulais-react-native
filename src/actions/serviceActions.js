@@ -26,7 +26,7 @@ function fetchUserServices(userId) {
     return promise
 }
 
-function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dateFin){
+function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dateFin,phone){
   let images = petObj.imageUrls
   let imgURL = images[Object.keys(images)[0]].url
   let key = refServices.push().key
@@ -40,7 +40,8 @@ function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dat
       status: 'pendiente',
       thumbnail: imgURL,
       dateIni: dateIni,
-      dateFin: dateFin
+      dateFin: dateFin,
+      phone: phone
   }).then(res=>{
       Alert.alert('Success','Se creó un servicio con éxito')
   })
