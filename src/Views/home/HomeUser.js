@@ -5,7 +5,6 @@ import {connect} from 'react-redux'
 
 //Style
 import {Header, Left, Right, Title ,Button, Icon, Thumbnail, Container, Content, Card, CardItem, Body} from 'native-base'
-import { scale } from '../../lib/responsive';
 import {randomPuppers} from '../../utils/random_functions'
 import Divider from '../../Components/Divider'
 import images from '../../../assets/images'
@@ -47,6 +46,7 @@ class HomeUser extends Component {
 						<Card>
 							<CardItem 
 								button
+								onPress={()=>this.props.navigation.navigate('AllNewsView')}
 								style={{justifyContent:'center', backgroundColor: '#FFA6BD'}}>
 								<Image 
 									source={images.party_kitty} resizeMode= 'contain' 

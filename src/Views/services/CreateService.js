@@ -30,7 +30,10 @@ class CreateService extends Component {
   }
   
   componentDidMount() {
-
+    this.setState({
+      carePhone: this.props.currentUser.user.profile.phone,
+      adoptPhone: this.props.currentUser.user.profile.phone
+    })
   }
   
   toggleAdopt() {
@@ -68,7 +71,8 @@ class CreateService extends Component {
       <View style={styles.subcontainer}>
         <Item style={{width:'80%'}} stackedLabel>
           <Label> Teléfono </Label>
-          <Input keyboardType='numeric' onChangeText={(text)=> this.setState({adoptPhone: text})} />
+          <Input keyboardType='numeric' 
+          value={this.state.adoptPhone} onChangeText={(text)=> this.setState({adoptPhone: text})} />
         </Item>
         <View>
           <Button rounded success onPress={()=>Alert.alert(
@@ -141,7 +145,8 @@ class CreateService extends Component {
         {this.renderDatePickerFin()}
         <Item style={{width:'80%'}} stackedLabel>
           <Label> Teléfono </Label>
-          <Input keyboardType='numeric' onChangeText={(text)=> this.setState({carePhone: text})} />
+          <Input keyboardType='numeric' 
+          value={this.state.carePhone} onChangeText={(text)=> this.setState({carePhone: text})} />
         </Item>
         <View>
           <Button rounded info onPress={()=>this.createService(object,'cuidado')}>

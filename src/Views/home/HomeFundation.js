@@ -6,7 +6,6 @@ import NavigationService from '../../routes/NavigationService'
 //Style
 import {Container,Content,Header,Left, Right,Title ,Button,Text, Icon,Thumbnail} from 'native-base'
 import {Card, CardItem, Body } from 'native-base'
-import { scale } from '../../lib/responsive';
 import {randomPuppers} from '../../utils/random_functions'
 import Divider from '../../Components/Divider'
 import images from '../../../assets/images'
