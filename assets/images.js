@@ -10,7 +10,7 @@ const images = {
 	firulais_logo: require('./images/logo_firulais_op.png'),
 
 	//Icon images
-	icon_menu: require('./icons/menu.png')
+	icon_menu: require('./icons/menu.png'),
 
 
 
