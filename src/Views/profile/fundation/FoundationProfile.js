@@ -20,10 +20,13 @@ class FundationProfileView extends Component {
 		this.state={
 			data: [],
 			pets: [],
+			news: [],
 			isFetchingData: true,
-			isFetchingPets: true
+			isFetchingPets: true,
+			isFetchingNews: true
 		}
 		this.renderPets = this.renderPets.bind(this)
+		this.renderNews = this.renderNews.bind(this)
 		this.petTouched = this.petTouched.bind(this)
 		this.addVoluntario = this.addVoluntario.bind(this)
 	}
@@ -49,6 +52,10 @@ class FundationProfileView extends Component {
 		let promise2 = await foundationsActions.fetchFoundationPets(params.foundationID).then((val)=>{
 			// console.log('PETVALUES',val)
 			this.setState({pets: val, isFetchingPets: false})
+		})
+		let promise3 = await foundationsActions.fetchFoundationNews(params.foundationID).then((val)=>{
+			// console.log('NEWSVALUES',val)
+			this.setState({news: val, isFetchingNews: false})
 		})
 	}
 
@@ -97,11 +104,30 @@ class FundationProfileView extends Component {
 			</TouchableOpacity>
 		)
 	}
+	renderNews({item, index}) {
+		console.log("OH HI MARK")
+		let { navigate } = this.props.navigation
+		let news = this.state.news
+		let images = news[item].imageUrls
+		let imgURL = images[Object.keys(images)[0]].url
+		return(
+			<TouchableOpacity onPress={()=> navigate('NewsView', { news: news[item] })}>
+				<Card key={item} style={styles.petCard}>
+					<CardItem>
+							<View style={styles.petCardContent}>
+							<Thumbnail circle large source={{ uri: imgURL}}/> 
+								<Text note> {news[item].title}</Text>
+							</View>
+					</CardItem>
+				</Card>
+
+			</TouchableOpacity>
+		)
+	}
 	render() {
 		let info = this.state.data
 		let pets = this.state.pets
-		// console.log('info',info)
-		let news = null
+		let news = this.state.news
 		let profile = info.profile
 		return (
 			<ScrollView style={{flex:1}}>
@@ -194,23 +220,35 @@ class FundationProfileView extends Component {
 							</ListItem> 
 						</View>
 						{
-							news ? (
-								<View style={styles.cardsContainer}>
-	
-								</View>
-							):(
-								<View>
-									<ListItem>
-										<Body> 
-											<Text style={{color: '#2a2a2a'}}>No hay noticias :(</Text>
-										</Body>
-										<Right>
-											<Thumbnail square size={80} 
-												source={images.wonder_kitty}/>
-										</Right>
-									</ListItem>
-								</View>
-							)
+								this.state.isFetchingNews ? (
+									<View style={styles.infoContainer}>
+										<ActivityIndicator size='large' />
+									</View>
+								):(
+									news ? (
+										<View style={styles.cardsContainer}>
+											<FlatList data={Object.keys(news)}
+												horizontal
+												showsHorizontalScrollIndicator={false}
+												bounces={true}
+												renderItem={this.renderNews}
+												keyExtractor={ (item, index) => {return `${index}` } }
+											/>
+										</View>
+									):(
+										<View>
+											<ListItem>
+												<Body> 
+													<Text style={{color: '#2a2a2a'}}>No hay noticias :(</Text>
+												</Body>
+												<Right>
+													<Thumbnail square size={80} 
+														source={images.wonder_kitty}/>
+												</Right>
+											</ListItem>
+										</View>
+									)
+								)
 						}					
 					</View>
 
