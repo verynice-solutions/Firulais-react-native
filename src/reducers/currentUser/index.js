@@ -12,7 +12,6 @@ export default function currentUser(state = initialState, action) {
       return {
         ...state,
         user: action.user
-
       }
     default:
       return state;

@@ -20,8 +20,8 @@ class AddPet extends Component {
     this.state={
       images:[],
       fetchingImages:false,
-      tempName:'Firulais',
-      description:'test',
+      tempName:'',
+      description:'',
       dog:true, cat:null,
       pequeño:true, mediano:null, grande:null,
       hembra:true, macho:null,
@@ -46,7 +46,7 @@ class AddPet extends Component {
       </Button>
     :
     <Button transparent style={{marginTop: 8}} onPress={params.addPet}>
-      <Text primary>Guardar</Text>
+      <Text primary style={{fontSize:16}} >Guardar</Text>
     </Button>)
     }
   }
@@ -65,7 +65,12 @@ class AddPet extends Component {
     let valuesToSend = this._setValuesMascota(this.state)
     let petID = this.state.pet_fire_key
     if(valuesToSend===false) {
-      Alert.alert('Recuerda llenar todos los campos <3')
+      Toast.show({
+        text:'Recuerda llenar todos los campos \u2661',
+        buttonText:'Ok',
+        duration: 4000,
+        type:'warning'
+      })
     }else {
       this.setState({blockButton: true, isModalVisible: true})
       this._upLoadPhotos()
@@ -84,7 +89,7 @@ class AddPet extends Component {
         })
       }).then(() => {
         Toast.show({
-          text:'\u2b50 Mascota subida con éxito',
+          text:'Mascota subida con éxito \u2b50',
           buttonText:'YAY!',
           duration: 4000,
           type:'success'

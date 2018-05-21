@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
-import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Textarea } from 'native-base';
+import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Textarea, Toast } from 'native-base';
 import StarRating from 'react-native-star-rating';
 import serviceActions from '../../actions/serviceActions'
 
@@ -31,7 +31,12 @@ class FinishedService extends Component {
     if(this.state.starSelected && this.state.ratingDesc){
       serviceActions.setRating(this.props.navigation.state.params.serviceKey, this.state.starSelected, this.state.ratingDesc)
     }else{
-      Alert.alert('Oh no','Olvidas algun campo!')
+      Toast.show({
+        text:'Recuerda llenar todos los campos \u2661',
+        buttonText:'Ok',
+        duration: 4000,
+        type:'warning'
+      })
     }
   }
 	render() {

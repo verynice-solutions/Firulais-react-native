@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native'
-import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Button,Item, Label, Input } from 'native-base';
+import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Button,Item, Label, Input, Toast } from 'native-base';
 import DatePicker from 'react-native-datepicker'
 import serviceActions from '../../actions/serviceActions'
 import {_getNowDateISO, _getNextYear} from '../../utils/random_functions'
@@ -73,7 +73,7 @@ class CreateService extends Component {
         <View>
           <Button rounded success onPress={()=>Alert.alert(
             `Adoptar a ${object.petObj.tempName}`,
-            'Lo quiero for ever <3',
+            'Lo quiero for ever \u2661',
             [
               {text: 'NO', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
               {text: 'SI', onPress: () => this.createService(object,'adoptar')},
@@ -102,7 +102,12 @@ class CreateService extends Component {
         )
         this.props.navigation.goBack()
       }else{
-        Alert.alert('Campos vacíos ','Recuerda llenar todos los campos 📅',)
+        Toast.show({
+          text:'Recuerda llenar todos los campos \u2661',
+          buttonText:'Ok',
+          duration: 4000,
+          type:'warning'
+        })
       }
     }else{
       if(this.state.adoptPhone){
@@ -117,7 +122,12 @@ class CreateService extends Component {
         )
         this.props.navigation.goBack()
       }else{
-        Alert.alert('Campo vacío ','Recuerda darnos tu telefono',)
+        Toast.show({
+          text:'Recuerda darnos tu teléfono \u2661',
+          buttonText:'Ok',
+          duration: 4000,
+          type:'warning'
+        })
       }
 
     }

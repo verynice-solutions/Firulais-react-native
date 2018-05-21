@@ -29,7 +29,7 @@ class UsersProfile extends Component {
 	static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-			title: 'Perfil'
+			title: 'Perfil: Voluntario'
     }
 	}
 

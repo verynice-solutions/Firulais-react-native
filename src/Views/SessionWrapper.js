@@ -47,7 +47,7 @@ class SessionWrapper extends Component {
       )
     }else{
       // console.log('USER:',this.props.currentUser)
-      if (this.props.currentUser.user.email) {
+      if (this.props.currentUser.uid) {
         welcomeContainer = <SignedInRoutes/>
       } else {
         welcomeContainer = <SignedOutRoutes/>

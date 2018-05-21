@@ -44,7 +44,7 @@ class createNew extends Component {
         </Button>
       :
 			<Button transparent style={{marginTop: 8}} onPress={params.addPet}>
-				<Text primary>Guardar</Text>
+				<Text primary style={{fontSize:16}} >Guardar</Text>
 			</Button>)
     }
   }
@@ -89,7 +89,12 @@ class createNew extends Component {
     let valuesToSend = this._setValuesNew(this.state)
     let newID = this.state.new_fire_key
     if(valuesToSend===false) {
-      Alert.alert('Recuerda llenar todos los campos <3')
+      Toast.show({
+        text:'Recuerda llenar todos los campos \u2661',
+        buttonText:'Ok',
+        duration: 4000,
+        type:'warning'
+      })
     }else {
       this.setState({blockButton: true})
       this._upLoadPhotos()
@@ -108,8 +113,8 @@ class createNew extends Component {
         })
       }).then(() => {
         Toast.show({
-          text:'\u2b50 Noticia subida con éxito',
-          buttonText:'YAY!',
+          text:'Noticia subida con éxito  \u2661',
+          buttonText:'Ok',
           duration: 4000,
           type:'success'
         })
@@ -263,7 +268,7 @@ class createNew extends Component {
           </Item>
           <View style={{marginTop:20}}/>
           <Label> Descripcion </Label>
-          <Textarea bordered placeholder='Best. Doggo. Party. Ever... No cates allowed'
+          <Textarea bordered placeholder='Best. Doggo. Party. Ever...'
           autoCorrect={true}
           value={this.state.description}
           onChangeText={(text)=> this.setState({description: text})} 
@@ -281,7 +286,7 @@ class createNew extends Component {
               <Label style={{paddingLeft:15}}>Noticia</Label>
             </ListItem>
         
-				</Content>}
+				</Content>
 			</Container>
 		)
 	}

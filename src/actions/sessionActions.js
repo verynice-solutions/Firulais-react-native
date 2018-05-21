@@ -9,12 +9,20 @@ function setCurrentUser( currentUser ) {
   }
 }
 
-function setSignInData( user ) {
-  return {
-    type: SET_SIGN_IN_DATA,
-    user: user,
+function setUserInfo( user_info ) {
+  return (dispatch, getState)=>{
+    let old_user = getState().currentUser
+    let new_user = {
+      ...old_user,
+      user:{
+        ...old_user.user,
+        profile:{...user_info}
+      }
+    }
+    dispatch( storeCurrentUser(new_user) )
   }
 }
+
 function updateUserDB(userId, object) {
   return  dispatch => {  
     firebase.database().ref('users/').child(userId).once('value')
@@ -78,7 +86,7 @@ function rehydrateCurrentUser() {
 
 const sessionActions = {
   setCurrentUser,
-  setSignInData,
+  setUserInfo,
   signOut,
   storeCurrentUser,
   rehydrateCurrentUser,

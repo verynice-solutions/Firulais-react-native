@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import firebase from '../../firebase/firebaseSingleton'
+import {Toast} from 'native-base'
 import { StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native'
 import Colors from '../../utils/Colors'
 //Redux
@@ -15,7 +16,12 @@ class SignUp extends Component {
 	}
 	onSignIn= () => {
 		if(this.state.password !== this.state.passwordConfirm){
-			Alert.alert('Las contraseñas deben ser iguales')
+			Toast.show({
+				text:'Las contraseñas deben ser iguales',
+				buttonText:'Ok',
+				duration: 3000,
+				type:'danger'
+			})
 		}
 		firebase.auth().createUserWithEmailAndPassword(this.state.email,this.state.password)
 			.then(() => {

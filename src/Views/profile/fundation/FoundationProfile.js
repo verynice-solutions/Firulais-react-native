@@ -9,7 +9,7 @@ import userActions from '../../../actions/usersActions'
 //Style
 import { Button, Icon, Thumbnail, Text, Item, Input, 
 					Card, CardItem, Content, Left, ListItem, Body,
-					Right} from 'native-base'
+					Right,Toast} from 'native-base'
 import firebase from '../../../firebase/firebaseSingleton'
 import CreateService from '../../services/CreateService'
 import images from '../../../../assets/images'
@@ -34,7 +34,7 @@ class FundationProfileView extends Component {
 	static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-			title: 'Perfil'
+			title: 'Perfil: Fundación'
     }
 	}
 		
@@ -63,14 +63,12 @@ class FundationProfileView extends Component {
 		if(this.props.currentUser.type == 'user') {
 			this.props.navigation.navigate('CreateService',{toCreate:{petObj:petObj,fid:fundacionId,uid:userId}})
 		}else{
-			Alert.alert(
-				'Oops',
-				`Si quieres cuidar a una mascota tienes que ser usuario voluntario.`,
-				[
-					{text: 'OK'}
-				],
-				{ cancelable: true }
-			)
+			Toast.show({
+				text:'Solo usuarios voluntario pueden cuidar mascotas',
+				buttonText:'Ok',
+				duration: 4000,
+				type:'warning'
+			})
 		}
 	}
 

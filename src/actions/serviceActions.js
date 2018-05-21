@@ -1,29 +1,30 @@
 import firebase from '../firebase/firebaseSingleton'
 import {Alert} from 'react-native'
+import {Toast} from 'native-base'
 
 let db = firebase.database();
 let refServices = db.ref('services');
 
 function fetchAllServices(userId) {
-    let promise = refServices.orderByChild("founId").equalTo(userId).once("value")
-    .then( (snapshot)=> {
-        return snapshot.val()
-    }) 
-    .catch(err=>{
-        console.log("Error: " + error);
-    }) 
-    return promise
+  let promise = refServices.orderByChild("founId").equalTo(userId).once("value")
+  .then( (snapshot)=> {
+    return snapshot.val()
+  }) 
+  .catch(err=>{
+    console.log("Error: " + error);
+  }) 
+  return promise
 }
 
 function fetchUserServices(userId) {
-    let promise = refServices.orderByChild("userId").equalTo(userId).once("value")
-    .then( (snapshot)=> {
-        return snapshot.val()
-    }) 
-    .catch(err=>{
-        console.log("Error: " + error);
-    }) 
-    return promise
+  let promise = refServices.orderByChild("userId").equalTo(userId).once("value")
+  .then( (snapshot)=> {
+    return snapshot.val()
+  }) 
+  .catch(err=>{
+    console.log("Error: " + error);
+  }) 
+  return promise
 }
 
 function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dateFin,phone){
@@ -31,58 +32,73 @@ function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dat
   let imgURL = images[Object.keys(images)[0]].url
   let key = refServices.push().key
   refServices.child(key).update({
-      servId:key,
-      type: type,
-      petId: mascotaId,
-      petInfo: petObj,
-      founId: fundacionId,
-      userId: userId,
-      status: 'pendiente',
-      thumbnail: imgURL,
-      dateIni: dateIni,
-      dateFin: dateFin,
-      phone: phone
+    servId:key,
+    type: type,
+    petId: mascotaId,
+    petInfo: petObj,
+    founId: fundacionId,
+    userId: userId,
+    status: 'pendiente',
+    thumbnail: imgURL,
+    dateIni: dateIni,
+    dateFin: dateFin,
+    phone: phone
   }).then(res=>{
-      Alert.alert('Success','Se creó un servicio con éxito')
+    Toast.show({
+      text:'Se creó un servicio con éxito \u2b50',
+      buttonText:'Ok',
+      duration: 4000,
+      type:'success'
+    })
   })
   .catch(err=>{
-      console.log('Error Crear Servicio',err)
-      Alert.alert('Connection Error','No se pudo crear el servicio')
+    console.log('Error Crear Servicio',err)
+    Alert.alert('Connection Error','No se pudo crear el servicio')
   })
 }
 
 function updateStatus(serviceKey,statusValue){
-    refServices.child(serviceKey).update({
-        status: statusValue,
-    }).then(res=>{
-        Alert.alert('Success','nuevo estado del servicio: '+statusValue)
+  refServices.child(serviceKey).update({
+    status: statusValue,
+  }).then(res=>{
+    Toast.show({
+      text:'Nuevo estado del servicio: '+statusValue,
+      buttonText:'Ok',
+      duration: 4000,
+      type:'success'
     })
-    .catch(err=>{
-        console.log('Error Crear Servicio',err)
-        Alert.alert('Connection Error', err)
-    })
+  })
+  .catch(err=>{
+    console.log('Error Crear Servicio',err)
+    Alert.alert('Connection Error', err)
+  })
 }
 
 function setRating(serviceKey, stars, msg) {
-    refServices.child(serviceKey).update({
-        rating: stars,
-        ratingMsg: msg
-    }).then(res=>{
-        Alert.alert('Success','Calificación subida!')
+  refServices.child(serviceKey).update({
+    rating: stars,
+    ratingMsg: msg
+  }).then(res=>{
+    Toast.show({
+      text:'Calificación subida! ',
+      buttonText:'YAY',
+      duration: 4000,
+      type:'success'
     })
-    .catch(err=>{
-        console.log('Error Crear Servicio',err)
-        Alert.alert('Connection Error', err)
-    })
+  })
+  .catch(err=>{
+    console.log('Error Crear Servicio',err)
+    Alert.alert('Connection Error', err)
+  })
 }
 
 
 const serviciosActions = {
-    updateStatus,
-    fetchAllServices,
-    fetchUserServices,
-    createService,
-    setRating
+  updateStatus,
+  fetchAllServices,
+  fetchUserServices,
+  createService,
+  setRating
 }
 
 export default serviciosActions
