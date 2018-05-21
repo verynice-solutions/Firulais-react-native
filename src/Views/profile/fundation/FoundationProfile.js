@@ -105,7 +105,6 @@ class FundationProfileView extends Component {
 		)
 	}
 	renderNews({item, index}) {
-		console.log("OH HI MARK")
 		let { navigate } = this.props.navigation
 		let news = this.state.news
 		let images = news[item].imageUrls
