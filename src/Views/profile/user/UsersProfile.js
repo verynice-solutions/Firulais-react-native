@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import { Platform,	View, StyleSheet, Image, TouchableOpacity, 
-	Alert, ActivityIndicator, ScrollView, FlatList} from 'react-native'
+	Alert, ActivityIndicator, ScrollView, FlatList, ImageBackground} from 'react-native'
 import {connect} from 'react-redux'
 import foundationsActions from '../../../actions/foundationsActions'
 import userActions from '../../../actions/usersActions'
@@ -11,6 +11,7 @@ import { Button, Icon, Thumbnail, Text, Item, Input,
 				Card, CardItem, Content, Left, ListItem, Body,
 				Right} from 'native-base'
 import firebase from '../../../firebase/firebaseSingleton'
+import images from '../../../../assets/images'
 
 class UsersProfile extends Component {
 	constructor(props) {
@@ -101,78 +102,103 @@ class UsersProfile extends Component {
 					{
 						info ?(
 							<View>
-								<View style={styles.thumbContainer}>
-									<Thumbnail circle large source={{ uri: info.photoUrl }}/>
-									<Text style={styles.nameField}> 
-										{info.name}
-									</Text>
+								<View>
+									<ImageBackground
+										style={{
+											backgroundColor: '#ccc',
+											flex: 1,
+											position: 'absolute',
+											width: '100%',
+											height: '100%',
+											justifyContent: 'center',
+										}}
+										source={images.purple_gradient}>
+									</ImageBackground>		
+
+									<View style={styles.thumbContainer}>
+										<Thumbnail 
+											circle 
+											large 
+											source={{ uri: info.photoUrl }}
+											style={{borderColor: '#FFFFFF59', borderWidth:5, marginTop: 15}}/>
+										<Text style={styles.nameField}> 
+											{info.name}
+										</Text>
+									</View>
+
+									{profile&&<View style={styles.infoContainer}>
+										<Text style={styles.infoField}> {profile.description}  </Text>
+									</View>}										
 								</View>
 
-								<View style={styles.infoContainer}>
-									<Text style={styles.infoField}> {profile && profile.description  }  </Text>
+								<View style={styles.subtitle}>
+									<ListItem itemDivider>
+										<Left><Text style={styles.dividerText}>Fundaciones</Text></Left>
+									</ListItem> 
 								</View>
-						<View style={styles.subtitle}>
-							<ListItem itemDivider>
-								<Left><Text style={styles.dividerText}>Fundaciones</Text></Left>
-							</ListItem> 
-						</View>
-						{
-							this.state.isFetchingFoundations ? (
-								<View style={styles.infoContainer}>
-									<ActivityIndicator size='large' />
+								{
+									this.state.isFetchingFoundations ? (
+										<View style={styles.infoContainer}>
+											<ActivityIndicator size='large' />
+										</View>
+									):(
+										<View style={styles.cardsContainer}>
+											{
+												foundations?
+														<FlatList data={Object.keys(foundations)}
+															horizontal
+															showsHorizontalScrollIndicator={false}
+															bounces={true}
+															renderItem={this.renderFoundations}
+															keyExtractor={ (item, index) => {return `${index}` } }
+														/>
+												:
+													<View style={styles.infoContainer}>
+														<Text style={styles.infoField}>
+														No fundaciones suscritas :(
+														</Text>
+													</View>
+											}
+										</View>
+									)
+								}
+								<View style={styles.subtitle}>
+									<ListItem itemDivider>
+										<Left><Text style={styles.dividerText}>Últimos Servicios</Text></Left>
+									</ListItem> 
 								</View>
-							):(
-								<View style={styles.cardsContainer}>
-									{
-										foundations?
-												<FlatList data={Object.keys(foundations)}
-													horizontal
-													showsHorizontalScrollIndicator={false}
-													bounces={true}
-													renderItem={this.renderFoundations}
-													keyExtractor={ (item, index) => {return `${index}` } }
-												/>
-										:
-											<View style={styles.infoContainer}>
-												<Text style={styles.infoField}>
-												No fundaciones suscritas :(
-												</Text>
-											</View>
-									}
-								</View>
-							)
-						}
-						<View style={styles.subtitle}>
-							<ListItem itemDivider>
-								<Left><Text style={styles.dividerText}>Últimos Servicios</Text></Left>
-							</ListItem> 
-						</View>
-						{
-							this.state.isFetchingServices ? (
-								<View style={styles.infoContainer}>
-									<ActivityIndicator size='large' />
-								</View>
-							):(
-								<View style={styles.cardsContainer}>
-									{
-										services?
-												<FlatList data={Object.keys(services)}
-													horizontal
-													showsHorizontalScrollIndicator={false}
-													bounces={true}
-													renderItem={this.renderServices}
-													keyExtractor={ (item, index) => {return `${index}` } }
-												/>
-										:
-											<View style={styles.infoContainer}>
-												<Text style={styles.infoField}>
-												No servicios realizados :(
-												</Text>
-											</View>
-									}
-								</View>
-							)
-						}
+								{
+									this.state.isFetchingServices ? (
+										<View style={styles.infoContainer}>
+											<ActivityIndicator size='large' />
+										</View>
+									):(							
+										services? (
+											<View style={styles.cardsContainer}>
+											<FlatList data={Object.keys(services)}
+												horizontal
+												showsHorizontalScrollIndicator={false}
+												bounces={true}
+												renderItem={this.renderServices}
+												keyExtractor={ (item, index) => {return `${index}` } }
+											/>		
+											</View>											
+										):(
+											<View>
+												<ListItem>
+													<Body> 
+														<Text style={{color: '#2a2a2a'}}>No hay servicios todavía :(</Text>
+													</Body>
+													<Right>
+														<Thumbnail square size={80} 
+															source={images.wonder_kitty}/>
+													</Right>
+												</ListItem>
+											</View>											
+										)
+
+									)
+								}
 
 							</View>
 						):(
@@ -213,13 +239,14 @@ const styles = StyleSheet.create({
 	nameField: {
 		textAlign:'center',
 		fontWeight: 'bold',
-		color: 'black',
+		color: '#ffffff',
 		marginTop: 15,
+		fontSize: 20
 	},
 	infoField: {
 		textAlign:'center', 
 		width:'80%',
-		color: 'black',
+		color: '#ffffff',
 		marginBottom: 30,
 	},
 	cardsContainer: {
