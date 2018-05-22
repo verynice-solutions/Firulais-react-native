@@ -22,8 +22,13 @@ const images = {
 	medal: require('./images/medal.png'),
 	care_home: require('./images/care_home.png'),
 	party_kitty: require('./images/party_kitty.png'),
-	angel_kitty: require('./images/angel_kitty.png')
+	angel_kitty: require('./images/angel_kitty.png'),
 
+	purple_gradient: require('./images/gradient.png'),
+	vaccination: require('./images/vaccination.png'),
+	record: require('./images/medical_record.png'),
+
+	calendar: require('./images/calendar.png'),
 };
 
 

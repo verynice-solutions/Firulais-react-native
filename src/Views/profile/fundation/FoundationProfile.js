@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import { Platform,	View, StyleSheet, Image, TouchableOpacity, 
-					Alert, ActivityIndicator, ScrollView, FlatList} from 'react-native'
+					Alert, ActivityIndicator, ScrollView, FlatList, ImageBackground} from 'react-native'
 import {connect} from 'react-redux'
 //Accions
 import foundationsActions from '../../../actions/foundationsActions'
@@ -136,6 +136,17 @@ class FundationProfileView extends Component {
 							</View>
 						):(
 							<View style={{backgroundColor: '#AE86A9'}}>
+								<ImageBackground
+									style={{
+										backgroundColor: '#ccc',
+										flex: 1,
+										position: 'absolute',
+										width: '100%',
+										height: '100%',
+										justifyContent: 'center',
+									}}
+									source={images.purple_gradient}>
+								</ImageBackground>	
 								<View style={styles.thumbContainer}>
 									<Thumbnail 
 										circle 
@@ -281,6 +292,7 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		color: '#ffffff',
 		marginTop: 15,
+		fontSize: 20
 	},
 	infoField: {
 		textAlign:'center', 

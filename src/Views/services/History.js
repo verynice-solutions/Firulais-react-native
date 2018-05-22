@@ -71,12 +71,12 @@ class MyServicesView extends Component {
                 Object.keys(services).map((i)=>{
                   return (services[i].status == 'rechazado' || services[i].status == 'finalizado') && (
                       <ListItem key={i} onPress={ ()=> navigate('FinishedService', { serviceKey:i, serviceInModal: services[i] }) }>
-                        <Thumbnail square size={80} source={{ uri: services[i].thumbnail }} />
+                        <Thumbnail rounded size={80} source={{ uri: services[i].thumbnail }} />
                         <Body>
                           <Text>{services[i].petInfo.tempName}</Text>
-                          <Text note> {services[i].type}</Text>
+                          <Text note>{services[i].type}</Text>
                         </Body>
-                        <Text> {services[i].status}</Text>
+                        <Text>{services[i].status}</Text>
                       </ListItem>
                     )
                   
