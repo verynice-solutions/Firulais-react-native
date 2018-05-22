@@ -4,10 +4,10 @@ import React, { Component } from 'react'
 import { Platform, View, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
 import {connect} from 'react-redux'
 import firebase from '../../../firebase/firebaseSingleton'
-import { ImagePicker } from 'expo'
+import { ImagePicker, ImageManipulator } from 'expo'
 //Style
 import Modal from 'react-native-modal'
-import {Container,Content,Button,Text,Textarea,CheckBox,ListItem,Toast} from 'native-base'
+import {Container,Content,Button,Text,Textarea,CheckBox,ListItem,Toast,Card} from 'native-base'
 import { scale } from '../../../lib/responsive';
 import {randomPuppers} from '../../../utils/random_functions'
 import { FlatList } from 'react-native-gesture-handler';
@@ -162,12 +162,31 @@ class AddPet extends Component {
       this.setState({ fetchingImages: false })
     }
   }
+  _deletePhoto = (uri) =>{
+    this.setState({fetchingImages: true})
+    let arrayImages = this.state.images.slice()
+    // console.log('images in state: ',arrayImages)
+    // console.log('uri key',uri)
+    // console.log('indexOF',arrayImages.indexOf(uri))
+    let index = arrayImages.indexOf(uri)
+    arrayImages.splice(index,1)
+    // console.log('new images: ', arrayImages)
+    setTimeout(() => {
+      this.setState({
+        images: arrayImages, fetchingImages: false
+      })
+    }, 1000);
+  }
 
   renderImageItem({item}){
     return (
-      <View>
+      <Card style={{flex: 1}}>
         <Image resizeMode='contain' style={styles.petImage} source={{uri: item}}/>
-      </View>
+        <TouchableOpacity style={{flexDirection:'row', justifyContent:'center',padding:5}} onPress={()=>this._deletePhoto(item)}>
+          <Text> Quitar   </Text>
+          <Ionicons name='md-close' size={20}/>
+        </TouchableOpacity>
+      </Card>
     )
   }
 
@@ -227,9 +246,9 @@ class AddPet extends Component {
 						<Button bordered onPress={this._onGalery}>
 							<Text primary>Galería +</Text>
 						</Button>
-            {/* <Button bordered onPress={this._onCamera}>
+            <Button bordered onPress={this._onCamera}>
 							<Text primary>Cámara +</Text>
-						</Button> */}
+						</Button>
 					</View>
           <View style={{marginTop:20}}/>
           <Text> Cómo lo llamas? </Text>

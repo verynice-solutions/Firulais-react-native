@@ -93,7 +93,7 @@ class FundationProfileView extends Component {
 					<CardItem>
 							<View style={styles.petCardContent}>
 							<Thumbnail circle large source={{ uri: imgURL}}/> 
-								<Text note> {pets[item].edad} años </Text>
+								<Text numberOfLines={1} note> {pets[item].edad} años </Text>
 							</View>
 					</CardItem>
 				</Card>
@@ -112,7 +112,7 @@ class FundationProfileView extends Component {
 					<CardItem>
 							<View style={styles.petCardContent}>
 							<Thumbnail circle large source={{ uri: imgURL}}/> 
-								<Text note> {news[item].title}</Text>
+								<Text numberOfLines={1} note> {news[item].title}</Text>
 							</View>
 					</CardItem>
 				</Card>

@@ -244,7 +244,7 @@ class MyServicesView extends Component {
                   <Image source={images.thinking_kitty} resizeMode= 'contain' 
                     style={{height: 180, width: 180}}/>
                   <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold',fontSize:18,marginTop:18}}>Aún no
-                  {user.type==='fundation'?' te han enviado solicitudes.':' te has ofrecido voluntario?'} </Text>
+                  {user.type==='fundation'?' te han enviado solicitudes.':' te has ofrecido como voluntario?'} </Text>
                 </View>
               )
             }
@@ -254,14 +254,6 @@ class MyServicesView extends Component {
     }
   }
 }
-{/*
-  <ListItem key={i}>
-<Thumbnail square size={80} source={{ uri: services[i].thumbnail }} />
-<Body>
-  <Text>HI</Text>
-  <Text note> {services[i].petId}</Text>
-</Body>
-</ListItem> */}
 function mapStateToProps({currentUser}) {
   return {
     currentUser: currentUser,

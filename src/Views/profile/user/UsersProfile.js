@@ -57,7 +57,7 @@ class UsersProfile extends Component {
 					<CardItem>
 							<View style={styles.petCardContent}>
 							<Thumbnail circle large source={{ uri: imgURL}}/> 
-								<Text style={{textAlign:'center'}} note> {foundation[item].givenName ? 
+								<Text style={{textAlign:'center'}} numberOfLines={1} note> {foundation[item].givenName ? 
 									foundation[item].givenName : foundation[item].name}</Text>
 							</View>
 					</CardItem>
