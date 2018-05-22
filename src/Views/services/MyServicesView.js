@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator,ScrollView } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator,ScrollView, Image } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Left, Icon } from 'native-base';
 import Modal from 'react-native-modal'
 import serviceActions from '../../actions/serviceActions'
@@ -196,7 +196,7 @@ class MyServicesView extends Component {
               </List>
 
               {
-                this.props.currentUser.uid===this.state.serviceInModal.founId && this.props.currentUser.type==='fundation' &&(
+                user.uid===this.state.serviceInModal.founId && user.type==='fundation' &&(
                   this.state.serviceInModal.status === 'pendiente' ? (
                     <View style={{flexDirection:'row',justifyContent:'space-around', marginBottom:10,marginTop:10}}>
                       <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'rechazado')} rounded info>
@@ -239,7 +239,12 @@ class MyServicesView extends Component {
                   
                 })
               ):(
-                <Text>No Servicios :( </Text>
+                <View style={{paddingTop:100,justifyContent:'center',alignItems:'center'}}>
+                  <Image source={images.thinking_kitty} resizeMode= 'contain' 
+                    style={{height: 180, width: 180}}/>
+                  <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold',fontSize:18,marginTop:18}}>Aún no
+                  {user.type==='fundation'?' te han enviado solicitudes':' te has ofrecido voluntario?'} </Text>
+                </View>
               )
             }
           </List>
