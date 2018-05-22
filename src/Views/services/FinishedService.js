@@ -5,13 +5,15 @@ import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Righ
 import StarRating from 'react-native-star-rating';
 import serviceActions from '../../actions/serviceActions'
 import images from '../../../assets/images'
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 class FinishedService extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
       starSelected: null,
-      ratingDesc: ''
+      ratingDesc: '',
+      serviceInModal: this.props.navigation.state.params.serviceInModal
     }
   }
   
@@ -27,7 +29,14 @@ class FinishedService extends Component {
     //Set Rating
     this.setState({starSelected: rating})
   }
-
+    _goToUserProfile = ()=>{
+      this.props.navigation.navigate(
+        'UserProfile', { userID: this.state.serviceInModal.userId })
+    }
+    _goToFundProfile = ()=>{
+      this.props.navigation.navigate(
+        'FoundationProfile', {foundationID: this.state.serviceInModal.founId })
+    }
   _rateVolunteer() {
     if(this.state.starSelected && this.state.ratingDesc){
       serviceActions.setRating(this.props.navigation.state.params.serviceKey, this.state.starSelected, this.state.ratingDesc)
@@ -35,13 +44,13 @@ class FinishedService extends Component {
       Toast.show({
         text:'Recuerda llenar todos los campos \u2661',
         buttonText:'Ok',
-        duration: 4000,
+        duration: 3000,
         type:'warning'
       })
     }
   }
 	render() {
-    let serviceInModal = this.props.navigation.state.params.serviceInModal
+    let serviceInModal = this.state.serviceInModal
 		return (
 			<ScrollView>
         <View>
@@ -49,15 +58,42 @@ class FinishedService extends Component {
             <Left><Text style={styles.dividerText}>Información del voluntario</Text></Left>
           </ListItem>               
         </View>
-        <ListItem avatar noBorder>
+
+        <ListItem button noBorder avatar onPress={()=>this._goToUserProfile()}>
           <Left>
-            <Thumbnail source={images.cat_selfi} />
+            <Thumbnail size={40} source={{uri: serviceInModal.userInfo.photoUrl}} />
           </Left>
           <Body>
-            <Text>Nombre del Voluntario</Text>
-            <Text note>Info del voluntario</Text>
+            <Text>{serviceInModal.userInfo.givenName}</Text>
+            <Text note>{serviceInModal.userInfo.email}</Text>
           </Body>
         </ListItem>
+
+        <ListItem noBorder>
+          <Ionicons name='md-checkmark-circle-outline' size={40} style={{paddingLeft:10,paddingRight:20}} color='green'/>
+          <Body>
+            <Text>{serviceInModal.phone}</Text>
+            <Text note>Teléfono</Text>
+          </Body>
+        </ListItem>
+
+        <View>
+          <ListItem itemDivider>
+            <Left><Text style={styles.dividerText}>Información 
+            de la fundación</Text></Left>
+          </ListItem>               
+        </View>
+
+        <ListItem button noBorder avatar onPress={()=>this._goToFundProfile()}>
+          <Left>
+            <Thumbnail size={40} source={{uri: serviceInModal.fundInfo.photoUrl}} />
+          </Left>
+          <Body>
+            <Text>{serviceInModal.fundInfo.givenName}</Text>
+            <Text note>{serviceInModal.fundInfo.email}</Text>
+          </Body>
+        </ListItem>
+
         <ListItem itemDivider>
           <Left><Text style={styles.dividerText}>Mascota</Text></Left>
         </ListItem> 

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Textarea } from 'native-base';
 import Modal from 'react-native-modal'
 import StarRating from 'react-native-star-rating';
 import serviceActions from '../../actions/serviceActions'
+import images from '../../../assets/images'
 
 class MyServicesView extends Component {
 	constructor(props) {
@@ -56,6 +57,7 @@ class MyServicesView extends Component {
 	render() {
     const { navigate } = this.props.navigation
     let services = this.state.allServices
+    let user = this.props.currentUser
     if(this.state.fetching){
       return(
         <View style={{ flex:1, justifyContent: 'center' }} >
@@ -82,7 +84,12 @@ class MyServicesView extends Component {
                   
                 })
               ):(
-                <Text>No Servicios :( </Text>
+                <View style={{paddingTop:100,justifyContent:'center',alignItems:'center'}}>
+                  <Image source={images.thinking_kitty} resizeMode= 'contain' 
+                    style={{height: 180, width: 180}}/>
+                  <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold',fontSize:18,marginTop:18}}> Todavia no tienes 
+                  {user.type==='fundation'?' solicitudes finalizadas.':' servicios finalizados.'} </Text>
+                </View>
               )
             }
           </List>

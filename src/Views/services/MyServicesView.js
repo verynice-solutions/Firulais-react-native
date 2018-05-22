@@ -82,7 +82,8 @@ class MyServicesView extends Component {
         </View>
       )
     }else{
-      // console.log('service',this.state.serviceInModal)
+      // console.log('serviceINMODAL',this.state.serviceInModal)
+      // console.log('SERVICES', services)
       return (
         <View style={{flex:1}}> 
           {this.state.serviceInModal&&
