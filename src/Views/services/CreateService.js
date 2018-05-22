@@ -100,9 +100,7 @@ class CreateService extends Component {
 	createService(object,type){
     let info_user = {}
     if(this.props.currentUser.user){
-      if (this.props.currentUser.user.profile) {
-        info_user = this.props.currentUser.user.profile
-      }
+      info_user = this.props.currentUser.user
     }
     if(type=='cuidado'){
       if(this.state.dateIni && this.state.dateFin && this.state.carePhone){
@@ -115,7 +113,8 @@ class CreateService extends Component {
           this.state.dateIni,
           this.state.dateFin,
           this.state.carePhone,
-          info_user||null
+          info_user||null,
+          object.fundObj
         )
         this.props.navigation.goBack()
       }else{
@@ -136,7 +135,8 @@ class CreateService extends Component {
           type,
           null,null,
           this.state.adoptPhone,
-          info_user||null
+          info_user||null,
+          object.fundObj
         )
         this.props.navigation.goBack()
       }else{
@@ -153,6 +153,7 @@ class CreateService extends Component {
   
   renderCare = ()=>{
     let object = this.state.infoObject
+    // console.log('infoObject',object)
     return(
       <View style={styles.subcontainer}>
         {this.renderDatePickerIni()}

@@ -81,9 +81,9 @@ class EditProfileView extends Component {
 			)
 		}else{
 		return (
-			<ScrollView style={{flex:1}}>
+			<ScrollView>
 				<View style={{marginTop:25}}/>
-				<KeyboardAvoidingView   behavior="padding" style={{ flexDirection:'column'}}>
+				<KeyboardAvoidingView behavior={Platform.OS==='ios'?'position':null}  style={{ flex:1, flexDirection:'column'}}>
 					<View style={{flexDirection:'row',justifyContent:'center'}}>
 						<Thumbnail square large source={{uri:user.photoUrl}}/>
 					</View>
@@ -122,6 +122,7 @@ class EditProfileView extends Component {
 							<Input placeholder='Cra 72 # 9...' autoCorrect 
 							value={this.state.direction} onChangeText={(text)=> this.setState({direction: text})} />
 						</Item>
+						<View style={{marginBottom:(Platform.OS==='ios'?85:25)}}/>
 					</View>
 				</KeyboardAvoidingView>
 			</ScrollView>

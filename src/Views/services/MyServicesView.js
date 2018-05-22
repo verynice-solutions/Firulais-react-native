@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
-import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Left } from 'native-base';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator,ScrollView } from 'react-native'
+import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Left, Icon } from 'native-base';
 import Modal from 'react-native-modal'
 import serviceActions from '../../actions/serviceActions'
 import images from '../../../assets/images'
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 class MyServicesView extends Component {
 	constructor(props) {
@@ -61,9 +62,19 @@ class MyServicesView extends Component {
       this._toggleModal()
     }
   }
-
+  _goToUserProfile = ()=>{
+    this.props.navigation.navigate(
+      'UserProfile', { userID: this.state.serviceInModal.userId })
+    this._toggleModal()
+  }
+  _goToFundProfile = ()=>{
+    this.props.navigation.navigate(
+      'FoundationProfile', {foundationID: this.state.serviceInModal.founId })
+    this._toggleModal()
+  }
 	render() {
     let services = this.state.allServices
+    let user = this.props.currentUser
     if(this.state.fetching){
       return(
         <View style={{ flex:1, justifyContent: 'center' }} >
@@ -71,6 +82,7 @@ class MyServicesView extends Component {
         </View>
       )
     }else{
+      // console.log('service',this.state.serviceInModal)
       return (
         <View style={{flex:1}}> 
           {this.state.serviceInModal&&
@@ -80,20 +92,49 @@ class MyServicesView extends Component {
 
             <View>
               <ListItem itemDivider>
-                <Left><Text style={styles.dividerText}>Información del voluntario</Text></Left>
+                <Left><Text style={styles.dividerText}>Información 
+                {user.type==='user'?' de la fundación':' del voluntario'}</Text></Left>
+                <Right>
+                  <TouchableOpacity style={{padding:2,paddingLeft:25}} onPress={()=>this._toggleModal()}>
+                    <Ionicons name='md-close' size={20}/>
+                  </TouchableOpacity>
+                </Right>
               </ListItem>               
             </View>
             <View style={styles.ModalContainer}>
-
-              <ListItem avatar noBorder>
+              {user.type==='fundation'?
+              <ListItem button noBorder avatar onPress={()=>this._goToUserProfile()}>
                 <Left>
-                  <Thumbnail source={images.cat_selfi} />
+                  <Thumbnail size={40} source={{uri: this.state.serviceInModal.userInfo.photoUrl}} />
                 </Left>
                 <Body>
-                  <Text>Nombre del Voluntario</Text>
-                  <Text note>Info del voluntario</Text>
+                  <Text>{this.state.serviceInModal.userInfo.givenName}</Text>
+                  <Text note>{this.state.serviceInModal.userInfo.email}</Text>
                 </Body>
               </ListItem>
+              :
+              <ListItem button noBorder avatar onPress={()=>this._goToFundProfile()}>
+                <Left>
+                  <Thumbnail size={40} source={{uri: this.state.serviceInModal.fundInfo.photoUrl}} />
+                </Left>
+                <Body>
+                  <Text>{this.state.serviceInModal.fundInfo.givenName}</Text>
+                  <Text note>{this.state.serviceInModal.fundInfo.email}</Text>
+                </Body>
+              </ListItem>
+              }
+              {user.type==='fundation'?
+              (this.state.serviceInModal.userInfo.profile && this.state.serviceInModal.status !== 'pendiente' &&
+              <ListItem noBorder>
+                <Ionicons name='md-checkmark-circle-outline' size={40} style={{paddingLeft:10,paddingRight:20}} color='green'/>
+                <Body>
+                  <Text>{this.state.serviceInModal.phone}</Text>
+                  <Text note>Teléfono</Text>
+                </Body>
+              </ListItem>)
+              :
+                null
+              }
 
               <ListItem itemDivider>
                 <Left><Text style={styles.dividerText}>Mascota</Text></Left>
@@ -154,15 +195,10 @@ class MyServicesView extends Component {
 
               </List>
 
-              <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-                <Text>{this.state.serviceInModal.dateIni&&('Inicia :'+this.state.serviceInModal.dateIni)}</Text>
-                <Text>{this.state.serviceInModal.dateFin&&('Fin :'+this.state.serviceInModal.dateFin)}</Text>
-              </View>
-
               {
                 this.props.currentUser.uid===this.state.serviceInModal.founId && this.props.currentUser.type==='fundation' &&(
                   this.state.serviceInModal.status === 'pendiente' ? (
-                    <View style={{flexDirection:'row',justifyContent:'space-around', marginBottom:10}}>
+                    <View style={{flexDirection:'row',justifyContent:'space-around', marginBottom:10,marginTop:10}}>
                       <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'rechazado')} rounded info>
                         <Text>Rechazar</Text>
                       </Button>
@@ -171,7 +207,7 @@ class MyServicesView extends Component {
                       </Button>
                     </View>
                   ):(
-                    <View style={{flexDirection:'row',justifyContent:'space-around', marginBottom:10}}>
+                    <View style={{flexDirection:'row',justifyContent:'space-around', marginBottom:10,marginTop:10}}>
                       <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'progreso')} rounded info>
                         <Text>En progreso</Text>
                       </Button>
@@ -183,7 +219,7 @@ class MyServicesView extends Component {
                 )
 
               }
-  
+
             </View>
           </Modal>}
           <List>
@@ -229,7 +265,7 @@ export default connect(mapStateToProps)(MyServicesView)
 
 const styles = StyleSheet.create({
   ModalContainer:{
-    flex: 0.8,
+    flex:0.9,
     flexDirection:'column', 
     backgroundColor:'white',
     justifyContent:'space-around'

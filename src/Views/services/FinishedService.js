@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, ScrollView, KeyboardAvoidingView } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Textarea, Toast, Left } from 'native-base';
 import StarRating from 'react-native-star-rating';
 import serviceActions from '../../actions/serviceActions'
@@ -127,7 +127,7 @@ class FinishedService extends Component {
                 <Text style={{textAlign: 'center'}}>{serviceInModal.ratingMsg ? serviceInModal.ratingMsg : 'No hay calificación aún'}</Text>
                 </View>
             ):( 
-              <KeyboardAvoidingView behavior='padding' style={{flex:1, flexDirection:'column', justifyContent:'center'}}>
+              <KeyboardAvoidingView behavior={Platform.OS==='ios'?'padding':null} style={{flex:1, flexDirection:'column', justifyContent:'center'}}>
                 <ListItem itemDivider>
                   <Left><Text style={styles.dividerText}>Da tu opinión...</Text></Left>
                 </ListItem> 
@@ -148,10 +148,11 @@ class FinishedService extends Component {
                     onChangeText={(text)=> this.setState({ratingDesc: text})} />
                 </View>
 
-
+                <View style={{marginBottom:15}}/>
                 <View style={{flexDirection:'row',justifyContent:'space-around'}}><Button onPress={()=>this._rateVolunteer()} rounded info>
                   <Text>  Calificar  </Text>
                 </Button></View>
+                <View style={{marginBottom:15}}/>
               </KeyboardAvoidingView>
             )
           )

@@ -11,7 +11,6 @@ import { Button, Icon, Thumbnail, Text, Item, Input,
 					Card, CardItem, Content, Left, ListItem, Body,
 					Right,Toast} from 'native-base'
 import firebase from '../../../firebase/firebaseSingleton'
-import CreateService from '../../services/CreateService'
 import images from '../../../../assets/images'
 
 class FundationProfileView extends Component {
@@ -60,8 +59,8 @@ class FundationProfileView extends Component {
 	}
 
 	petTouched(mascotaId, fundacionId, userId,petObj) {
-		if(this.props.currentUser.type == 'user') {
-			this.props.navigation.navigate('CreateService',{toCreate:{petObj:petObj,fid:fundacionId,uid:userId}})
+		if(this.props.currentUser.type == 'user' && this.state.data) {
+			this.props.navigation.navigate('CreateService',{toCreate:{petObj:petObj,fid:fundacionId,uid:userId,fundObj:this.state.data}})
 		}else{
 			Toast.show({
 				text:'Solo usuarios voluntario pueden cuidar mascotas',
@@ -158,9 +157,9 @@ class FundationProfileView extends Component {
 									</Text>
 								</View>
 
-								<View style={styles.infoContainer}>
-									<Text style={styles.infoField}> {profile && profile.description  }  </Text>
-								</View>
+								{profile&&<View style={styles.infoContainer}>
+									<Text style={styles.infoField}> { profile.description  }  </Text>
+								</View>}
 								{
 									this.props.currentUser.type === 'user' &&(
 										<View style={{marginHorizontal: 10, marginBottom: 10}}> 											
