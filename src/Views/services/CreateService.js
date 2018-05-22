@@ -97,7 +97,28 @@ class CreateService extends Component {
     )
   }
 
-	createService(object,type){
+  createService(object,type) {
+    serviceActions.fetchUserServices(this.props.currentUser.uid).then((val)=>{
+      let validate = false
+      Object.keys(val).map((item, index)=>{
+        if(val[item].petId == object.petObj.pet_fire_key && val[item].status!='finalizado'){
+          validate = true
+        }
+      })
+      if (validate){
+        Toast.show({
+          text:'Ya existe un servicio \u2661',
+          buttonText:'Ok',
+          duration: 4000,
+          type:'warning'
+        })
+      }else{
+        this.newService(object,type)
+      }
+    })
+  }
+
+	newService(object,type){
     let iniDate = new Date(this.state.dateIni)
     let finDate = new Date(this.state.dateFin)
     let validDate = true

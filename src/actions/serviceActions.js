@@ -94,7 +94,6 @@ function setRating(serviceKey, stars, msg) {
   })
 }
 
-
 const serviciosActions = {
   updateStatus,
   fetchAllServices,

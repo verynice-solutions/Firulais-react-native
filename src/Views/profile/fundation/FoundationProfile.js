@@ -208,10 +208,16 @@ class FundationProfileView extends Component {
 										keyExtractor={ (item, index) => {return `${index}` } }
 									/>
 									:
-									<View style={styles.infoContainer}>
-										<Text style={styles.infoField}>
-											{info.givenName} no tiene mascotas todavía :(
-										</Text>
+									<View>
+										<ListItem>
+											<Left>
+												<Thumbnail square size={80} 
+													source={images.wonder_kitty}/>
+											</Left>
+											<Body> 
+												<Text style={{color: '#2a2a2a'}}>{info.givenName} no tiene mascotas todavía :(</Text>
+											</Body>
+										</ListItem>
 									</View>
 									}
 								</View>
@@ -296,7 +302,7 @@ const styles = StyleSheet.create({
 	infoField: {
 		textAlign:'center', 
 		width:'80%',
-		color: '#ffffff',
+		color: 'black',
 		marginBottom: 30,
 	},
 	cardsContainer: {
