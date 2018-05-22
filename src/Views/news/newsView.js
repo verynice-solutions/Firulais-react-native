@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import { View, StyleSheet, TouchableOpacity, ScrollView, FlatList } from 'react-native'
-import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Input, Item, Label } from 'native-base';
+import { View, StyleSheet, TouchableOpacity, ScrollView, FlatList, Image, ImageBackground } from 'react-native'
+import { Container, Header, Content, Left, List, ListItem, Thumbnail, Text, Body, Input, Item, Label, Card, CardItem
+ } from 'native-base';
+ import images from '../../../assets/images'
 
 class NewsView extends React.Component {
   
@@ -29,11 +31,9 @@ class NewsView extends React.Component {
     let img = imgs[item].url
     // console.log("IMG: ", img)
 		return(
-			<TouchableOpacity onPress={()=> console.log("")}>
-        <View style={styles.picContent}>
-          <Thumbnail circle large source={{ uri: img}}/> 
-        </View>
-			</TouchableOpacity>
+      <View style={styles.picContent}>
+        <Image source={{uri: img}} resizeMode='contain' style={{height: 300, width: 300, flex: 1}}/>
+      </View>
 		)
   }
 
@@ -42,30 +42,48 @@ class NewsView extends React.Component {
     let imgs = news.imageUrls
 
     return (
-      <View style={{flex:1}}>
-        <View style={styles.container}>
-          <FlatList data={Object.keys(imgs)}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            bounces={true}
-            renderItem={this.renderPics}
-            keyExtractor={ (item, index) => {return `${index}` } }
-          />
-        </View>
-        <View style={styles.infoContainer}>
-          <Item>
-            <Text style={styles.titleField}> {news.title} </Text>
-          </Item>
-          <Item>
-            <Text style={styles.infoField}> {news.description} </Text>
-          </Item>
-          <Text style={styles.infoField}>{news.date}</Text>
-        </View>
-      
-      </View>
+      <ScrollView style={{flex:1}}>
+
+        <CardItem>
+          <Left>
+            <Body>
+              <View style={styles.container}>
+                <FlatList data={Object.keys(imgs)}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  bounces={true}
+                  renderItem={this.renderPics}
+                  keyExtractor={ (item, index) => {return `${index}` } }/>
+              </View>
+              
+              <Text style={styles.titleField}>{news.title}</Text>
+              <Text note style={{textAlign:'justify', marginTop:5}}>{news.date}</Text>
+              <Text style={{textAlign:'justify', minHeight:50, marginTop:5}}>{news.description}</Text>
+            </Body>
+          </Left>
+        </CardItem>
+
+      	<ListItem itemDivider>
+          <Left><Text style={styles.dividerText}>Autor</Text></Left>
+        </ListItem> 
+        <CardItem>
+          <Left>
+            <Thumbnail source={images.login_hero} />
+            <Body>
+              <Text>NativeBase</Text>
+              <Text note>GeekyAnts</Text>
+            </Body>
+          </Left>
+        </CardItem>
+
+
+
+
+      </ScrollView>
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   infoContainer: {
@@ -75,27 +93,27 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   infoField: {
-		textAlign:'center', 
+		textAlign:'justify', 
     width: '80%',
     margin: 10
   },
   titleField:{ 
     textAlign:'center', 
     fontSize: 25,
-    margin: 10
+    margin: 10,
+    fontWeight: 'bold',
+    color: '#2a2a2a'
   },
 	picContent: {
 		flex: 1,
     width: '100%',
-    padding: 10,
 		flexDirection: 'column',
 		justifyContent:'center',
 		alignItems: 'center'
   },
   container: {
-    flex: 0.3,
+    flex: 0.4,
     alignItems:'center', 
-		paddingVertical: 5  
 	},
 });
 
