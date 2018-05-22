@@ -100,11 +100,13 @@ class CreateService extends Component {
   createService(object,type) {
     serviceActions.fetchUserServices(this.props.currentUser.uid).then((val)=>{
       let validate = false
-      Object.keys(val).map((item, index)=>{
-        if(val[item].petId == object.petObj.pet_fire_key && val[item].status!='finalizado'){
-          validate = true
-        }
-      })
+      if(val){
+        Object.keys(val).map((item, index)=>{
+          if(val[item].petId == object.petObj.pet_fire_key && val[item].status!='finalizado'){
+            validate = true
+          }
+        })
+      }
       if (validate){
         Toast.show({
           text:'Ya existe un servicio \u2661',
