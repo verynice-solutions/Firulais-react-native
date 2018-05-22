@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import firebase from '../../firebase/firebaseSingleton'
-import {Toast} from 'native-base'
-import { StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native'
+import {Item,Input,Label,Toast,Button} from 'native-base'
+import { StyleSheet, Text, View, Alert} from 'react-native'
 import Colors from '../../utils/Colors'
 //Redux
 import {} from '../../actions/sessionActions'
@@ -35,7 +35,9 @@ class SignUp extends Component {
 		return (
 			<View style={{flex:1, flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
 				<Text style={styles.text}> SIGN IN VIEW </Text>
-				<TextInput style={styles.textBox}
+				<Item rounded>
+				<Input
+					placeholder='e-mail'
 					autoCapitalize='none'
 					autoCorrect={false}
 					keyboardType='email-address'
@@ -43,31 +45,36 @@ class SignUp extends Component {
 					value={this.state.email}
 					onChangeText={(text)=> this.setState({email: text})}
 				/>
-				<TextInput style={styles.textBox}
-					autoCapitalize='none'
-					autoCorrect={false}
-					secureTextEntry
-					value={this.state.password}
-					onChangeText={(text)=> this.setState({password: text})}
-				/>
-				<TextInput style={styles.textBox}
-					autoCapitalize='none'
-					autoCorrect={false}
-					secureTextEntry
-					value={this.state.passwordConfirm}
-					onChangeText={(text)=> this.setState({passwordConfirm: text})}
-				/>
-				<Button title='Crear cuenta' onPress={this.onSignIn}/>
-				<Button title='volver' color={Colors.grey} onPress={()=>this.props.navigation.goBack()}/>
+				</Item>
+				<Item rounded>
+					<Input
+						placeholder='contraseña'
+						autoCapitalize='none'
+						autoCorrect={false}
+						secureTextEntry
+						value={this.state.password}
+						onChangeText={(text)=> this.setState({password: text})}
+					/>
+				</Item>
+				<Item rounded>
+					<Input
+						placeholder='repita contraseña'
+						autoCapitalize='none'
+						autoCorrect={false}
+						secureTextEntry
+						value={this.state.passwordConfirm}
+						onChangeText={(text)=> this.setState({passwordConfirm: text})}
+					/>
+				</Item>
+				{/* <Button title='Crear cuenta' onPress={this.onSignIn}/>
+				<Button title='volver' color={Colors.grey} onPress={()=>this.props.navigation.goBack()}/> */}
 			</View>
 		)
 	}
 }
 const styles = StyleSheet.create({
   textBox: {
-		width:200,
-		height:40,
-		borderWidth:1
+		paddingHorizontal:80
 	},
 	text: {
     fontFamily:'Roboto-Bold',

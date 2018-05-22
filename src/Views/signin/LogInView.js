@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, TextInput, Alert, ActivityIndicator,Image, Dimensions, StatusBar} from 'react-native'
+import { StyleSheet, View, Alert, ActivityIndicator,Image, Dimensions, StatusBar, KeyboardAvoidingView,ScrollView} from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
 import {Google,Constants} from 'expo'
 import {connect} from 'react-redux'
-import { Button, Text, Toast,Icon } from 'native-base'
+import { Text, Toast,Icon, Item, Input, Button } from 'native-base'
 import firebase from '../../firebase/firebaseSingleton'
-
+import Modal from 'react-native-modal'
 
 import Images from '../../../assets/images'
 import {scale, scaleModerate, scaleVertical} from '../../lib/responsive'
@@ -35,6 +35,7 @@ class LogInView extends Component {
 			password:'',
 			fetching:false,
 			showToast: false,
+			isModalVisible: false,
 		}
 	}
 
@@ -45,7 +46,13 @@ class LogInView extends Component {
 				// console.log('RESULT MANUAL LOGIN:',result)
 				this.props.storeCurrentUser({ user: result })
 			},(error) => {
-				Alert.alert(error.message)
+				Toast.show({
+					text:'Este medio es solo para cuentas autorizadas.',
+					buttonText:'OK',
+					duration: 3000,
+					type:'success'
+				})
+				this._toggleModal()
 			});
 	}
 	onLoginWithGoogle = () => {
@@ -79,13 +86,15 @@ class LogInView extends Component {
 				Toast.show({
 					text:'Inicio de sessión cancelado',
 					buttonText:'OK',
-					duration: 6000,
+					duration: 3000,
 					type:'danger'
 				})
 				this.setState({fetching:false})
 			})
 		}, 1000);
 	}
+	_toggleModal = () =>
+	this.setState({ isModalVisible: !this.state.isModalVisible });
 	
 	render() {
 		// console.log('USER:',this.props.currentUser)
@@ -97,46 +106,78 @@ class LogInView extends Component {
 			)
 		}else{
 			return (
-				<View style={{flex:1, flexDirection:'column', alignItems:'center', backgroundColor:'white'}}>
+				<ScrollView contentContainerStyle={{alignItems:'center'}}  style={{flex:1, flexDirection:'column', backgroundColor:'white'}}>
 
 					<StatusBar backgroundColor='#6c46b3' />
 
 					<Image style={{width:Dimensions.get('window').width}} source={Images.login_hero}/>
-					<View style={{marginTop:40}}/>
-					<View style={{flexDirection:'column', alignItems:'center', justifyContent:'space-around'}}>
+					<View style={{marginTop:15}}/>
+					<Text style={styles.titleText}>    Inicia sessión con    </Text>
+					<View style={{marginTop:15}}/>
+					<View style={{justifyContent:'center'}}>	
 						<Button onPress={this.onLoginWithGoogle} rounded danger >
 							<Icon name="logo-google" />
-							<Text> Google + </Text>
+							<Text>Google +   </Text>
 						</Button>
-						<View style={{marginTop:40}}/>
-						{/* <TextInput style={styles.textBox}
-							autoCapitalize='none'
-							autoCorrect={false}
-							value={this.state.email}
-							keyboardType='email-address'
-							onChangeText={(text)=> this.setState({email: text})}
-						/>
-						<TextInput style={styles.textBox}
-							autoCapitalize='none'
-							autoCorrect={false}
-							secureTextEntry
-							value={this.state.password}
-							onChangeText={(text)=> this.setState({password: text})}
-						/>
-						<Button title='Entrar' onPress={this.onLogin}/>
-						<Button title='Crear cuenta' onPress={()=>this.props.navigation.navigate('SignUp')}/>
-						<Button title='¡ oh no !' color={Colors.grey} onPress={()=>this.props.navigation.navigate('Forgot')}/> */}
 					</View>
-				</View>
+					<View style={{marginTop:15}}/>
+					<Text>    ó    </Text>
+					<View style={{marginTop:15}}/>
+					<View style={{justifyContent:'space-around'}}>	
+						<Button light rounded onPress={()=>this._toggleModal()}>
+							<Text> Cuenta Firulais </Text>
+						</Button>
+					</View>
+					{this.state.isModalVisible&&<View style={{marginTop:25}}/>}
+					{this.state.isModalVisible&&
+						<Item rounded style={styles.textBox}>
+							<Input
+								placeholder='e-mail'
+								autoCapitalize='none'
+								autoCorrect={false}
+								value={this.state.email}
+								keyboardType='email-address'
+								onChangeText={(text)=> this.setState({email: text})}
+							/>
+						</Item>}
+					{this.state.isModalVisible&&	
+						<Item rounded style={styles.textBox}>
+							<Input 
+								placeholder='contraseña'
+								autoCapitalize='none'
+								autoCorrect={false}
+								secureTextEntry
+								value={this.state.password}
+								onChangeText={(text)=> this.setState({password: text})}
+							/>
+						</Item>}
+					{this.state.isModalVisible&&
+						<View style={{justifyContent:'space-around'}}>	
+							<Button light rounded onPress={this.onLogin}>
+								<Text>       Entrar       </Text>
+							</Button>
+						</View>}
+					{/* <Button title='Crear cuenta' primary onPress={()=>this.props.navigation.navigate('SignUp')}>
+					</Button>
+					<Button title='¡ oh no !' primary onPress={()=>this.props.navigation.navigate('Forgot')}>
+					</Button> */}
+					<View style={{marginBottom:40}}/>
+				</ScrollView>
 			)
 		}
 	}
 }
 const styles = StyleSheet.create({
   textBox: {
-		width:scale(200),
-		height:scale(40),
-		borderWidth:1
+		paddingHorizontal:25,
+		marginBottom: 20,
+		marginLeft: 55,
+		marginRight: 55
+	},
+	titleText:{
+		fontFamily:'Roboto-Bold',
+		fontSize:16, 
+		color:'#2A2A2A'
 	},
 	text: {
     fontFamily:'Roboto-Bold',
