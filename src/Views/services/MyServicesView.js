@@ -84,6 +84,7 @@ class MyServicesView extends Component {
     }else{
       // console.log('serviceINMODAL',this.state.serviceInModal)
       // console.log('SERVICES', services)
+      // console.log('user', user)
       return (
         <View style={{flex:1}}> 
           {this.state.serviceInModal&&
@@ -124,17 +125,15 @@ class MyServicesView extends Component {
                 </Body>
               </ListItem>
               }
-              {user.type==='fundation'?
-              (this.state.serviceInModal.userInfo.profile && this.state.serviceInModal.status !== 'pendiente' &&
+              {(user.type==='fundation'&&this.state.serviceInModal.status !== 'pendiente')?
               <ListItem noBorder>
                 <Ionicons name='md-checkmark-circle-outline' size={40} style={{paddingLeft:10,paddingRight:20}} color='green'/>
                 <Body>
                   <Text>{this.state.serviceInModal.phone}</Text>
                   <Text note>Teléfono</Text>
                 </Body>
-              </ListItem>)
-              :
-                null
+              </ListItem>
+              :null
               }
 
               <ListItem itemDivider>

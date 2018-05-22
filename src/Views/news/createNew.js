@@ -96,7 +96,7 @@ class createNew extends Component {
         type:'warning'
       })
     }else {
-      this.setState({blockButton: true})
+      this.setState({blockButton: true, isModalVisible: true})
       this._upLoadPhotos()
         .then(() => {
         let imagesInState = this.state.images
