@@ -117,6 +117,7 @@ class UsersProfile extends Component {
 	}
 
 	render() {
+		const { navigate } = this.props.navigation
 		let info = this.state.data
 		let foundations = this.state.foundations
 		let services = this.state.services 
@@ -159,7 +160,11 @@ class UsersProfile extends Component {
 								<View style={styles.subtitle}>
 									<ListItem itemDivider>
 										<Left><Text style={styles.dividerText}>Fundaciones</Text></Left>
+										<Right><TouchableOpacity onPress={ ()=> navigate('AllFoundationsView') }>
+											<Text style={styles.dividerText}> Ver más...</Text>
+										</TouchableOpacity></Right>
 									</ListItem> 
+									
 								</View>
 								{
 									this.state.isFetchingFoundations ? (
@@ -271,7 +276,7 @@ const styles = StyleSheet.create({
 	infoField: {
 		textAlign:'center', 
 		width:'80%',
-		color: '#ffffff',
+		color: '#2a2a2a',
 		marginBottom: 30,
 	},
 	cardsContainer: {

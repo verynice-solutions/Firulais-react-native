@@ -39,6 +39,8 @@ function fetchUserServices(userId) {
 }
 
 function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dateFin,phone,userInfo,fundInfo){
+  // let offset = -8;
+  // let now = new Date( new Date().getTime() + offset * 3600 * 1000).toUTCString().replace( / GMT$/, "" )
   let images = petObj.imageUrls
   let imgURL = images[Object.keys(images)[0]].url
   let key = refServices.push().key
@@ -55,7 +57,8 @@ function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dat
     dateFin: dateFin,
     phone: phone,
     userInfo: userInfo,
-    fundInfo: fundInfo
+    fundInfo: fundInfo,
+    creationTime: new Date()
   }).then(res=>{
     Toast.show({
       text:'Se envió tu solicitud a la fundación. ',
@@ -71,9 +74,19 @@ function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dat
 }
 
 function updateStatus(serviceKey,statusValue){
-  refServices.child(serviceKey).update({
-    status: statusValue,
-  }).then(res=>{
+  let estado = {}
+  estado.status = statusValue
+  if(statusValue == 'aprobado' || statusValue == 'rechazado'){
+    estado.aprobacionTime= new Date()
+  }else{
+    if(statusValue == 'finalizado'){
+      estado.finalTime = new Date()
+
+    }else if(statusValue=='progreso'){
+      estado.inicioTime = new Date()
+    }
+  }
+  refServices.child(serviceKey).update(estado).then(res=>{
     Toast.show({
       text:'Nuevo estado del servicio: '+statusValue,
       buttonText:'Ok',
@@ -90,7 +103,8 @@ function updateStatus(serviceKey,statusValue){
 function setRating(serviceKey, stars, msg) {
   refServices.child(serviceKey).update({
     rating: stars,
-    ratingMsg: msg
+    ratingMsg: msg,
+    ratingDate: new Date()
   }).then(res=>{
     Toast.show({
       text:'Calificación subida \u2b50 ',
@@ -104,7 +118,6 @@ function setRating(serviceKey, stars, msg) {
     Alert.alert('Connection Error', err)
   })
 }
-
 
 const serviciosActions = {
   updateStatus,

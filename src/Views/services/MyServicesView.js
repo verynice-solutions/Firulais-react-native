@@ -208,14 +208,19 @@ class MyServicesView extends Component {
                       </Button>
                     </View>
                   ):(
-                    <View style={{flexDirection:'row',justifyContent:'space-around', marginBottom:10,marginTop:10}}>
-                      <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'progreso')} rounded info>
-                        <Text>En progreso</Text>
-                      </Button>
-                      <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'finalizado')} rounded info>
-                        <Text>Finalizado</Text>
-                      </Button>
-                    </View>
+                    this.state.serviceInModal.status == 'progreso' ? (
+                      <View style={{flexDirection:'row',justifyContent:'space-around', marginBottom:10,marginTop:10}}>
+                        <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'finalizado')} rounded info>
+                          <Text>Finalizar</Text>
+                        </Button>
+                      </View>
+                    ):(
+                      <View style={{flexDirection:'row',justifyContent:'space-around', marginBottom:10,marginTop:10}}>
+                        <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'progreso')} rounded info>
+                          <Text>Iniciar</Text>
+                        </Button>
+                      </View>
+                    )
                   )
                 )
 

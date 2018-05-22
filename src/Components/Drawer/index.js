@@ -85,6 +85,22 @@ class Drawer extends React.Component {
                     <Text style={styles.drawerItemText}>Home</Text>
                   </Ripple>
 
+                  {
+                    this.props.currentUser.type === 'user' ? (
+                        <Ripple style={[styles.drawerItem, activeView=='UserProfile'?styles.activeItem:null]} 
+                        onPress={this.navigateToScreen('UserProfile',{ userID: this.props.currentUser.uid }) }>
+                        <Ionicons name="md-person" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                        <Text style={styles.drawerItemText}>Mi Perfil</Text>
+                      </Ripple>
+                    ):(
+                      <Ripple style={[styles.drawerItem, activeView=='FoundationProfile'?styles.activeItem:null]} 
+                        onPress={this.navigateToScreen('FoundationProfile',{ foundationID: this.props.currentUser.uid }) }>
+                        <Ionicons name="md-person" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                        <Text style={styles.drawerItemText}>Mi Perfil</Text>
+                      </Ripple>
+                    )
+                  }
+
                   <Ripple style={[styles.drawerItem, activeView=='AllNewsView'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('AllNewsView')}>
                     <Ionicons name="md-paper" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
