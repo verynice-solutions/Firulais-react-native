@@ -96,7 +96,7 @@ class EditProfileView extends Component {
 						<Text style={{textAlign:'center'}}> -Información- </Text>
 						<Item stackedLabel>
 							<Label> Descripción </Label>
-							<Input placeholder='Somos una fundación dedicada a ...'
+							<Input placeholder='Aquí va mi descripción... '
 							autoCorrect={true}
 							value={this.state.description}
 							onChangeText={(text)=> this.setState({description: text})} 
@@ -110,7 +110,7 @@ class EditProfileView extends Component {
 							onChangeText={(text)=> this.setState({ciudad: text})} 
 							/>
 						</Item>
-						<View style={{marginTop:25}}/>
+						<View style={{marginTop: 25}}/>
 						<Text style={{textAlign:'center'}}> -Contacto- </Text>
 						<Item stackedLabel>
 							<Label> Móvil </Label>

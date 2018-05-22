@@ -1,6 +1,8 @@
 {
   "expo": {
-    "name":"Firulais doggo love",
+    "name":"Firulais app",
+    "slug": "firulais",
+    "version": "1.0.0",
     "sdkVersion": "26.0.0",
     "privacy":"public",
     "loading": {
@@ -9,6 +11,12 @@
     },
     "androidStatusBar": {
       "backgroundColor": "#000000"
-    }
+    },
+    "ios": {
+			"bundleIdentifier": "com.verynicesolutions.firulais"
+		},
+		"android": {
+			"package": "com.verynicesolutions.firulais"
+		}
   }
 }

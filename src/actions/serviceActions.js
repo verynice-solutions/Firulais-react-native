@@ -27,7 +27,7 @@ function fetchUserServices(userId) {
   return promise
 }
 
-function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dateFin,phone){
+function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dateFin,phone,userInfo){
   let images = petObj.imageUrls
   let imgURL = images[Object.keys(images)[0]].url
   let key = refServices.push().key
@@ -42,7 +42,8 @@ function createService(mascotaId, fundacionId, userId, petObj, type, dateIni,dat
     thumbnail: imgURL,
     dateIni: dateIni,
     dateFin: dateFin,
-    phone: phone
+    phone: phone,
+    userInfo: userInfo
   }).then(res=>{
     Toast.show({
       text:'Se creó un servicio con éxito \u2b50',

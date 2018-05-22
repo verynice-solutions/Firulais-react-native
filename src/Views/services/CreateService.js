@@ -30,10 +30,16 @@ class CreateService extends Component {
   }
   
   componentDidMount() {
-    this.setState({
-      carePhone: this.props.currentUser.user.profile.phone,
-      adoptPhone: this.props.currentUser.user.profile.phone
-    })
+    if(this.props.currentUser.user){
+      if(this.props.currentUser.user.profile){
+        if(this.props.currentUser.user.profile.phone){
+          this.setState({
+            carePhone: this.props.currentUser.user.profile.phone||null,
+            adoptPhone: this.props.currentUser.user.profile.phone||null,
+          })
+        }
+      }
+    }
   }
   
   toggleAdopt() {
@@ -92,6 +98,12 @@ class CreateService extends Component {
   }
 
 	createService(object,type){
+    let info_user = {}
+    if(this.props.currentUser.user){
+      if (this.props.currentUser.user.profile) {
+        info_user = this.props.currentUser.user.profile
+      }
+    }
     if(type=='cuidado'){
       if(this.state.dateIni && this.state.dateFin && this.state.carePhone){
         serviceActions.createService(
@@ -102,7 +114,8 @@ class CreateService extends Component {
           type,
           this.state.dateIni,
           this.state.dateFin,
-          this.state.carePhone
+          this.state.carePhone,
+          info_user||null
         )
         this.props.navigation.goBack()
       }else{
@@ -122,7 +135,8 @@ class CreateService extends Component {
           object.petObj,
           type,
           null,null,
-          this.state.adoptPhone
+          this.state.adoptPhone,
+          info_user||null
         )
         this.props.navigation.goBack()
       }else{
