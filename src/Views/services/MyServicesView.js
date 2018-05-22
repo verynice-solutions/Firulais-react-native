@@ -136,7 +136,8 @@ class MyServicesView extends Component {
                     <Text>{(this.state.serviceInModal.status||'').toUpperCase()}</Text>
                   </Body>
                 </ListItem>
-                {this.state.serviceInModal.dateIni&&
+                {
+                  this.state.serviceInModal.dateIni&&
                   <ListItem avatar style={{marginTop: 5}}>
                     <Left>
                       <Thumbnail square size={80} source={images.calendar} />
