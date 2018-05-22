@@ -9,7 +9,7 @@ import userActions from '../../../actions/usersActions'
 //Style
 import { Button, Icon, Thumbnail, Text, Item, Input, 
 				Card, CardItem, Content, Left, ListItem, Body,
-				Right} from 'native-base'
+				Right, Label} from 'native-base'
 import firebase from '../../../firebase/firebaseSingleton'
 import images from '../../../../assets/images'
 
@@ -70,21 +70,46 @@ class UsersProfile extends Component {
 	renderServices({item, index}) {
 		// let { navigate } = this.props.navigation
 		let service = this.state.services
+		let data = service[item]
 		let imgURL = service[item].thumbnail
 		if(service[item].status === 'finalizado'){
 			return(
-				<TouchableOpacity>
-					<Card key={item} style={styles.serviceCard}>
-						<CardItem>
-							<View style={styles.petCardContent}>
-								<Thumbnail circle large source={{ uri: imgURL}}/> 
-								<Text style={{textAlign:'center'}} note>{service[item].dateFin? 'Finalizado en' + service[item].dateFin : ''} </Text>
-							</View>
-						</CardItem>
-					</Card>
-	
-				</TouchableOpacity>
-			)
+					// <Card key={item} style={styles.serviceCard}>
+					// 	<CardItem>
+					// 		<View style={styles.petCardContent}>
+					// 			<Thumbnail circle large source={{ uri: imgURL}}/> 
+					// 			<Text style={{textAlign:'center'}} note>{service[item].rating? service[item].rating+'\u2b50' : ''} </Text>
+					// 		</View>
+					// 	</CardItem>
+					// </Card>
+					<Card style={{flex: 1}}>
+            <ListItem avatar>
+              <Left>
+                <Thumbnail source={{uri: data.fundInfo.photoUrl}} />
+              </Left>
+								<Body>
+                  <Text>{data.fundInfo.name}</Text>
+                  <Text note>{data.type.toUpperCase()}</Text>
+                </Body>
+							<Right>
+								<Text note>
+									{data.rating? data.rating+'\u2b50' : ''} 
+								</Text>
+							</Right>
+            </ListItem>
+            <ListItem>
+							<Left>
+								<Thumbnail large source={{uri: imgURL}}/>
+							</Left>
+							<Body style={{flexDirection: 'column'}}>
+								<Label> Comentario </Label>
+								<Text numberOfLines={3} note>
+									{data.ratingMsg}
+								</Text>
+							</Body>
+            </ListItem>
+          </Card>
+				)
 		}else {
 			return null
 		}
@@ -174,9 +199,9 @@ class UsersProfile extends Component {
 										</View>
 									):(							
 										services? (
-											<View style={styles.cardsContainer}>
+											<View >
 											<FlatList data={Object.keys(services)}
-												horizontal
+												vertical
 												showsHorizontalScrollIndicator={false}
 												bounces={true}
 												renderItem={this.renderServices}
