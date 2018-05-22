@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
 	infoField: {
 		textAlign:'center', 
 		width:'80%',
-		color: '#ffffff',
+		color: '#2a2a2a',
 		marginBottom: 30,
 	},
 	cardsContainer: {
