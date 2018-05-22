@@ -98,6 +98,13 @@ class CreateService extends Component {
   }
 
 	createService(object,type){
+    let iniDate = new Date(this.state.dateIni)
+    let finDate = new Date(this.state.dateFin)
+    let validDate = true
+    if(iniDate.getTime()>finDate.getTime()){
+      validDate = false
+    }
+
     let info_user = {}
     if(this.props.currentUser.user){
       info_user = this.props.currentUser.user
@@ -118,12 +125,22 @@ class CreateService extends Component {
         )
         this.props.navigation.goBack()
       }else{
-        Toast.show({
-          text:'Recuerda llenar todos los campos \u2661',
-          buttonText:'Ok',
-          duration: 4000,
-          type:'warning'
-        })
+        if(!this.state.dateIni || !this.state.dateFin || !validDate){
+          Toast.show({
+            text:'Asigna una fecha válida \u2661',
+            buttonText:'Ok',
+            duration: 4000,
+            type:'warning'
+          })
+        }else{
+          Toast.show({
+            text:'Recuerda llenar todos los campos \u2661',
+            buttonText:'Ok',
+            duration: 4000,
+            type:'warning'
+          })
+        }
+
       }
     }else{
       if(this.state.adoptPhone){
