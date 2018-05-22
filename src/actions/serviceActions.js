@@ -16,6 +16,17 @@ function fetchAllServices(userId) {
   return promise
 }
 
+function fetchAService(serviceId) {
+  let promise = refServices.child(serviceId).once("value")
+  .then( (snapshot)=> {
+    return snapshot.val()
+  }) 
+  .catch(err=>{
+    console.log("Error: " + error);
+  }) 
+  return promise
+}
+
 function fetchUserServices(userId) {
   let promise = refServices.orderByChild("userId").equalTo(userId).once("value")
   .then( (snapshot)=> {
@@ -82,7 +93,7 @@ function setRating(serviceKey, stars, msg) {
     ratingMsg: msg
   }).then(res=>{
     Toast.show({
-      text:'Calificación subida! ',
+      text:'Calificación subida \u2b50 ',
       buttonText:'YAY',
       duration: 4000,
       type:'success'
@@ -97,6 +108,7 @@ function setRating(serviceKey, stars, msg) {
 
 const serviciosActions = {
   updateStatus,
+  fetchAService,
   fetchAllServices,
   fetchUserServices,
   createService,
