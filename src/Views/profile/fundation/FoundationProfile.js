@@ -121,6 +121,7 @@ class FundationProfileView extends Component {
 		)
 	}
 	render() {
+		const { navigate } = this.props.navigation
 		let info = this.state.data
 		let pets = this.state.pets
 		let news = this.state.news
@@ -188,7 +189,7 @@ class FundationProfileView extends Component {
 						<View style={styles.subtitle}>
 							<ListItem itemDivider>
 								<Left><Text style={styles.dividerText}>Mascotas</Text></Left>
-								<Right><Text style={styles.dividerText}>Ver más...</Text></Right>
+								{/* <Right><Text style={styles.dividerText}>Ver más...</Text></Right> */}
 							</ListItem> 
 						</View>
 						{
@@ -229,7 +230,9 @@ class FundationProfileView extends Component {
 						<View style={styles.subtitle}>
 							<ListItem itemDivider>
 								<Left><Text style={styles.dividerText}>Noticias</Text></Left>
-								<Right><Text style={styles.dividerText}>Ver más...</Text></Right>
+								<Right><TouchableOpacity onPress={ ()=> navigate('AllNewsView') }>
+									<Text style={styles.dividerText}> Ver más...</Text>
+								</TouchableOpacity></Right>
 							</ListItem> 
 						</View>
 						{
