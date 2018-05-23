@@ -32,13 +32,29 @@ class FundationProfileView extends Component {
 
 	static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
-		return{
-			title: 'Perfil: Fundación'
-    }
+		if(params.myperfil){
+			return{
+				title: 'Mi Fundación',
+				headerRight: (Platform.OS==='ios'?
+					<Button transparent onPress={()=>navigation.navigate('EditProfile')}>
+						<Text primary>Editar</Text>
+					</Button>
+				:
+				<Button transparent style={{marginTop: 8}} onPress={()=>navigation.navigate('EditProfile')}>
+					<Text primary style={{fontSize:16}} >Editar</Text>
+				</Button>)
+			}
+		}else{
+			return{
+				title:'Fundación'
+			}
+		}
+
 	}
 		
 	componentDidMount() {
 		let params = this.props.navigation.state.params
+		if(this.props.currentUser.uid===params.foundationID){this.props.navigation.setParams({ myperfil: true })}
 		this.setState({isFetchingData: true, isFetchingData: true})
 		this.fetchEverything(params)
 	}
@@ -228,11 +244,11 @@ class FundationProfileView extends Component {
 
 					<View>
 						<View style={styles.subtitle}>
-							<ListItem itemDivider>
-								<Left><Text style={styles.dividerText}>Noticias</Text></Left>
-								<Right><TouchableOpacity onPress={ ()=> navigate('AllNewsView') }>
+							<ListItem itemDivider style={{justifyContent:'space-between'}}>
+								<Text style={styles.dividerText}>Noticias</Text>
+								<TouchableOpacity onPress={ ()=> navigate('AllNewsView') }>
 									<Text style={styles.dividerText}> Ver más...</Text>
-								</TouchableOpacity></Right>
+								</TouchableOpacity>
 							</ListItem> 
 						</View>
 						{
@@ -298,14 +314,15 @@ const styles = StyleSheet.create({
 	nameField: {
 		textAlign:'center',
 		fontWeight: 'bold',
-		color: '#ffffff',
+		color: '#2a2a2a',
 		marginTop: 15,
 		fontSize: 20
 	},
 	infoField: {
 		textAlign:'center', 
 		width:'80%',
-		color: '#2a2a2a',
+
+		color: '#ffffff',
 		marginBottom: 30,
 	},
 	cardsContainer: {

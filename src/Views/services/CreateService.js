@@ -102,8 +102,10 @@ class CreateService extends Component {
       let validate = false
       if(val){
         Object.keys(val).map((item, index)=>{
-          if(val[item].petId == object.petObj.pet_fire_key && val[item].status!='finalizado'){
-            validate = true
+          if(val[item].petId == object.petObj.pet_fire_key){
+            if(val[item].status!='finalizado' && val[item].status!='rechazado'){
+              validate = true
+            }
           }
         })
       }

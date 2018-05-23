@@ -7,6 +7,7 @@ import { Button, Text ,Icon,Thumbnail ,Item, Input,Label, Toast} from 'native-ba
 import firebase from '../../firebase/firebaseSingleton'
 import { ScrollView } from 'react-native-gesture-handler';
 import sessionActions from '../../actions/sessionActions'
+import NavigationService from '../../routes/NavigationService'
 
 class EditProfileView extends Component {
 	constructor(props) {
@@ -56,7 +57,7 @@ class EditProfileView extends Component {
 			// console.log('state',this.state)
 			this.props.setUserInfo({ ...this.state ,fetching: false })
 
-			this.props.navigation.goBack()
+			this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
 			Toast.show({
 				text:'Perfil guardado con éxito  \u2b50 ',
 				buttonText:'OK',

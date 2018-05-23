@@ -1,24 +1,37 @@
 import { NavigationActions } from 'react-navigation';
 
-let _navigator;
+// let _navigator;
 
-function setTopLevelNavigator(navigatorRef) {
-  _navigator = navigatorRef;
-}
+// function setTopLevelNavigator(navigatorRef) {
+//   _navigator = navigatorRef;
+// }
 
-function navigate(routeName, params) {
-  _navigator.dispatch(
+function navigateTo(routeName, params) {
+  let _navigator = NavigationActions.dispatch(
     NavigationActions.navigate({
       type: NavigationActions.NAVIGATE,
       routeName,
       params,
     })
   );
+  return _navigator
 }
-
+function navigateToRoot(root,obj){ 
+ let go = NavigationActions.reset({
+    index: 0,
+    actions: [
+      NavigationActions.navigate({ 
+        routeName: root , 
+        params: obj
+      })
+    ]
+  })
+  return go
+}
 // add other navigation functions that you need and export them
 
 export default {
-  navigate,
-  setTopLevelNavigator,
+  navigateTo,
+  // setTopLevelNavigator,
+  navigateToRoot
 };

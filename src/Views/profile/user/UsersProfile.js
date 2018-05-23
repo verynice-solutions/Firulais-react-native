@@ -29,13 +29,28 @@ class UsersProfile extends Component {
 
 	static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
-		return{
-			title: 'Perfil: Voluntario'
-    }
+		if(params.myperfil){
+			return{
+				title: 'Voluntario: Mi perfil',
+				headerRight: (Platform.OS==='ios'?
+					<Button transparent onPress={()=>navigation.navigate('EditProfile')}>
+						<Text primary>Editar</Text>
+					</Button>
+				:
+				<Button transparent style={{marginTop: 8}} onPress={()=>navigation.navigate('EditProfile')}>
+					<Text primary style={{fontSize:16}} >Editar</Text>
+				</Button>)
+			}
+		}else{
+			return{
+				title:'Voluntario'
+			}
+		}
 	}
 
 	componentWillMount() {
 		let params = this.props.navigation.state.params
+		if(this.props.currentUser.uid===params.userID){this.props.navigation.setParams({ myperfil: true })}
 		let promise1 = foundationsActions.fetchByUID(params.userID).then((val)=>{
 			this.setState({data: val})
 		})
@@ -158,11 +173,11 @@ class UsersProfile extends Component {
 								</View>
 
 								<View style={styles.subtitle}>
-									<ListItem itemDivider>
-										<Left><Text style={styles.dividerText}>Fundaciones</Text></Left>
-										<Right><TouchableOpacity onPress={ ()=> navigate('AllFoundationsView') }>
+									<ListItem itemDivider style={{justifyContent:'space-between'}}>
+										<Text style={styles.dividerText}>Fundaciones</Text>
+										<TouchableOpacity onPress={ ()=> navigate('AllFoundationsView') }>
 											<Text style={styles.dividerText}> Ver más...</Text>
-										</TouchableOpacity></Right>
+										</TouchableOpacity>
 									</ListItem> 
 									
 								</View>
@@ -269,14 +284,14 @@ const styles = StyleSheet.create({
 	nameField: {
 		textAlign:'center',
 		fontWeight: 'bold',
-		color: '#ffffff',
+		color: '#2a2a2a',
 		marginTop: 15,
 		fontSize: 20
 	},
 	infoField: {
 		textAlign:'center', 
 		width:'80%',
-		color: '#2a2a2a',
+		color: '#ffffff',
 		marginBottom: 30,
 	},
 	cardsContainer: {

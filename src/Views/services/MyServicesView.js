@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator,ScrollView, Image } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Left, Icon } from 'native-base';
 import Modal from 'react-native-modal'
+import Ripple from 'react-native-material-ripple';
 import serviceActions from '../../actions/serviceActions'
 import images from '../../../assets/images'
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -63,14 +64,18 @@ class MyServicesView extends Component {
     }
   }
   _goToUserProfile = ()=>{
-    this.props.navigation.navigate(
-      'UserProfile', { userID: this.state.serviceInModal.userId })
-    this._toggleModal()
+    this.setState({ isDetailVisible: false })
+    setTimeout(() => {
+      this.props.navigation.navigate(
+        'UserProfile', { userID: this.state.serviceInModal.userId })
+    }, 300);
   }
   _goToFundProfile = ()=>{
-    this.props.navigation.navigate(
-      'FoundationProfile', {foundationID: this.state.serviceInModal.founId })
-    this._toggleModal()
+    this.setState({ isDetailVisible: false })
+    setTimeout(() => {
+      this.props.navigation.navigate(
+        'FoundationProfile', {foundationID: this.state.serviceInModal.founId })
+    }, 300);
   }
 	render() {
     let services = this.state.allServices
@@ -105,27 +110,31 @@ class MyServicesView extends Component {
             </View>
             <View style={styles.ModalContainer}>
               {user.type==='fundation'?
-              <ListItem button noBorder avatar onPress={()=>this._goToUserProfile()}>
-                <Left>
-                  <Thumbnail size={40} source={{uri: this.state.serviceInModal.userInfo.photoUrl}} />
-                </Left>
-                <Body>
-                  <Text>{this.state.serviceInModal.userInfo.givenName}</Text>
-                  <Text note>{this.state.serviceInModal.userInfo.email}</Text>
-                </Body>
-              </ListItem>
+              <Ripple onPress={()=>this._goToUserProfile()}>
+                <ListItem avatar>
+                  <Left>
+                    <Thumbnail size={40} source={{uri: this.state.serviceInModal.userInfo.photoUrl}} />
+                  </Left>
+                  <Body>
+                    <Text>{this.state.serviceInModal.userInfo.givenName}</Text>
+                    <Text note>{this.state.serviceInModal.userInfo.email}</Text>
+                  </Body>
+                </ListItem>
+              </Ripple>
               :
-              <ListItem button noBorder avatar onPress={()=>this._goToFundProfile()}>
-                <Left>
-                  <Thumbnail size={40} source={{uri: this.state.serviceInModal.fundInfo.photoUrl}} />
-                </Left>
-                <Body>
-                  <Text>{this.state.serviceInModal.fundInfo.givenName}</Text>
-                  <Text note>{this.state.serviceInModal.fundInfo.email}</Text>
-                </Body>
-              </ListItem>
+              <Ripple onPress={()=>this._goToFundProfile()}>
+                <ListItem avatar >
+                  <Left>
+                    <Thumbnail size={40} source={{uri: this.state.serviceInModal.fundInfo.photoUrl}} />
+                  </Left>
+                  <Body>
+                    <Text>{this.state.serviceInModal.fundInfo.givenName}</Text>
+                    <Text note>{this.state.serviceInModal.fundInfo.email}</Text>
+                  </Body>
+                </ListItem>
+              </Ripple>
               }
-              {(user.type==='fundation'&&this.state.serviceInModal.status !== 'pendiente')?
+              {(user.type==='fundation' && this.state.serviceInModal.status !== 'pendiente')?
               <ListItem noBorder>
                 <Ionicons name='md-checkmark-circle-outline' size={40} style={{paddingLeft:10,paddingRight:20}} color='green'/>
                 <Body>

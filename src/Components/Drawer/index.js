@@ -41,7 +41,13 @@ class Drawer extends React.Component {
     })
     return go
   }
-
+  goToProfile=(fund)=>{
+    if(fund){
+      this.navigateToScreen('UserProfile',{ userID: this.props.currentUser.uid })
+    }else{
+      this.navigateToScreen('FoundationProfile',{ foundationID: this.props.currentUser.uid })
+    }
+  }
   render() {
     // let {activeItemKey} = this.props.navigation
     // console.log("activeItem: ", this.props.navigation)
@@ -49,7 +55,10 @@ class Drawer extends React.Component {
     let {activeView} = this.props.drawerState
     let {user} = this.props.currentUser
     return (<Grid style={styles.drawerContainer}>
-              <Ripple onPress={this.navigateToScreen('EditProfile')}>
+              <Ripple onPress={this.props.currentUser.type==='user'?
+                this.navigateToScreen('UserProfile',{ userID: this.props.currentUser.uid }):
+                this.navigateToScreen('FoundationProfile',{ foundationID: this.props.currentUser.uid })
+                }>
                 <ListItem avatar
                   style={{backgroundColor:'white',borderBottomWidth: 0,paddingTop:30}}
                   itemDivider
@@ -72,35 +81,8 @@ class Drawer extends React.Component {
                 </ListItem> 
               </Ripple> 
               <Divider/>
-              {/* <Row style={styles.header}>
-                <Col style={{}}>
-
-                  <View style={{flexDirection: 'row', justifyContent: 'flex-start', paddingBottom:moderateScale(8)}}>
-                    <TouchableOpacity style={{flex:0.4,flexDirection:'row',justifyContent: 'flex-start',alignItems:'flex-end'}} 
-                      onPress={this.navigateToScreen('EditProfile')}>
-                      <Thumbnail source={{uri: user.photoUrl||randomPuppers()}} />
-                    </TouchableOpacity>
-                    <View style={{flex:1,flexDirection:'row',justifyContent: 'flex-end', alignItems:'flex-start'}} >
-                      <Image resizeMode="contain" style={{height:moderateScale(100),width:moderateScale(120)}} source={Images.firulais_logo}/>
-                    </View>
-                  </View>
-
-                 
-                  <TouchableOpacity style={{flexDirection: 'row'}} 
-                    onPress={this.navigateToScreen('EditProfile')}>
-                    <View style={{flex:1,flexDirection: 'column'}}>
-                      <Text style={{fontSize: moderateScale(14), fontFamily:'Roboto-Medium', color: Colors.purple, backgroundColor: 'transparent', opacity: 0.95, paddingBottom:moderateScale(1)}}>
-                        {user.name||'Firulais'}</Text>
-                      <Text style={{ fontSize: moderateScale(14), fontFamily:'Roboto', color: Colors.light_purple, backgroundColor: 'transparent', opacity: 0.95}}> 
-                        {user.email}    </Text>
-                    </View>
-                    <View style={{flex:0.1,flexDirection: 'row',justifyContent:'flex-end',alignItems:'flex-end'}}>
-                      <MaterialIcons name="edit" size={moderateScale(22)} color={Colors.purple} />
-                    </View>
-                  </TouchableOpacity>
-
-                </Col>
-              </Row> */}
+              
+              {/* <Image resizeMode="contain" style={{height:moderateScale(100),width:moderateScale(120)}} source={Images.firulais_logo}/> */}
 
               <Row style={styles.drawerContent}>
                 <Col>
@@ -110,21 +92,6 @@ class Drawer extends React.Component {
                     <Text style={styles.drawerItemText}>Home</Text>
                   </Ripple>
 
-                  {
-                    this.props.currentUser.type === 'user' ? (
-                        <Ripple style={[styles.drawerItem, activeView=='UserProfile'?styles.activeItem:null]} 
-                        onPress={this.navigateToScreen('UserProfile',{ userID: this.props.currentUser.uid }) }>
-                        <Ionicons name="md-person" size={moderateScale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                        <Text style={styles.drawerItemText}>Mi Perfil</Text>
-                      </Ripple>
-                    ):(
-                      <Ripple style={[styles.drawerItem, activeView=='FoundationProfile'?styles.activeItem:null]} 
-                        onPress={this.navigateToScreen('FoundationProfile',{ foundationID: this.props.currentUser.uid }) }>
-                        <Ionicons name="md-person" size={moderateScale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                        <Text style={styles.drawerItemText}>Mi Perfil</Text>
-                      </Ripple>
-                    )
-                  }
                   <Ripple style={[styles.drawerItem, activeView=='AllUsersView'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('AllUsersView')}>
                     <Ionicons name="md-people" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
