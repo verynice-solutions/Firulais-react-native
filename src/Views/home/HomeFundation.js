@@ -39,7 +39,9 @@ class HomeFundation extends Component {
 									source={images.pencil_kitty} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
 							</CardItem>
-							<CardItem					
+							<CardItem
+								button 
+								onPress={()=>this.props.navigation.navigate('AddPet')} 					
 								style={{justifyContent:'center'}}>
 								<Text 
 									primary 
@@ -60,7 +62,9 @@ class HomeFundation extends Component {
 									source={images.idea_kitty} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
 							</CardItem>
-							<CardItem					
+							<CardItem
+								button
+								onPress={()=>this.props.navigation.navigate('MyServicesView',{isFoundation:true})}	 				
 								style={{justifyContent:'center'}}>
 								<Text 
 									primary 
@@ -81,7 +85,9 @@ class HomeFundation extends Component {
 									source={images.computer_kitty} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
 							</CardItem>
-							<CardItem					
+							<CardItem
+								button
+								onPress={this._goToaddNew}					
 								style={{justifyContent:'center'}}>
 								<Text 
 									primary 
@@ -91,7 +97,7 @@ class HomeFundation extends Component {
 							</CardItem>
 						</Card>	
 					</View>
-
+					<View style={{marginBottom:10}}/>
 				</Content>
 			</Container>
 		)

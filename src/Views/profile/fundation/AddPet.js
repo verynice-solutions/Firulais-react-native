@@ -8,7 +8,6 @@ import { ImagePicker, ImageManipulator } from 'expo'
 //Style
 import Modal from 'react-native-modal'
 import {Container,Content,Button,Text,Textarea,CheckBox,ListItem,Toast,Card} from 'native-base'
-import { scale } from '../../../lib/responsive';
 import {randomPuppers} from '../../../utils/random_functions'
 import { FlatList } from 'react-native-gesture-handler';
 import Imagess from '../../../../assets/images'

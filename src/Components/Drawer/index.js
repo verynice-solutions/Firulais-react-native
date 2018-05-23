@@ -1,16 +1,16 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, Dimensions, Platform, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Image, Dimensions, Platform, TouchableOpacity } from 'react-native'
 import {NavigationActions} from 'react-navigation';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { Entypo, FontAwesome, MaterialIcons, Foundation, Ionicons } from '@expo/vector-icons';
 import Ripple from 'react-native-material-ripple';
 import {connect} from 'react-redux'
-import {Thumbnail} from 'native-base'
+import {Thumbnail,ListItem,Left,Right,Body,Text} from 'native-base'
 const {height, width} = Dimensions.get('window');
 import Colors from '../../utils/Colors'
 import {randomPuppers} from '../../utils/random_functions'
 import Images from '../../../assets/images'
-import {scale} from '../../lib/responsive'
+import {moderateScale} from '../../lib/responsive'
 import drawerActions from '../../actions/drawerActions'
 import Divider from '../Divider'
 class Drawer extends React.Component {
@@ -49,39 +49,64 @@ class Drawer extends React.Component {
     let {activeView} = this.props.drawerState
     let {user} = this.props.currentUser
     return (<Grid style={styles.drawerContainer}>
-              <Row style={styles.header}>
+              <Ripple onPress={this.navigateToScreen('EditProfile')}>
+                <ListItem avatar
+                  style={{backgroundColor:'white',borderBottomWidth: 0,paddingTop:30}}
+                  itemDivider
+                  >
+                  
+                  <Left>
+                    <Thumbnail source={{uri: user.photoUrl||randomPuppers()}} />
+                  </Left>
+                  <Body style={{borderBottomWidth: 0}}>
+                    <Text style={{fontSize: moderateScale(14), fontFamily:'Roboto-Medium', color: Colors.purple}}>
+                      {user.name||'Firulais'}
+                    </Text>
+                    <Text note style={{ fontSize: moderateScale(14), fontFamily:'Roboto', color: Colors.light_purple }}> 
+                      {user.email}    </Text>
+                  </Body>
+                  <Right style={{borderBottomWidth: 0}}>
+                    <MaterialIcons name="edit" size={moderateScale(22)} color={Colors.purple} />
+                  </Right>
+
+                </ListItem> 
+              </Ripple> 
+              <Divider/>
+              {/* <Row style={styles.header}>
                 <Col style={{}}>
-                  <View style={{flexDirection: 'row', justifyContent: 'flex-start', paddingBottom:scale(8)}}>
+
+                  <View style={{flexDirection: 'row', justifyContent: 'flex-start', paddingBottom:moderateScale(8)}}>
                     <TouchableOpacity style={{flex:0.4,flexDirection:'row',justifyContent: 'flex-start',alignItems:'flex-end'}} 
                       onPress={this.navigateToScreen('EditProfile')}>
                       <Thumbnail source={{uri: user.photoUrl||randomPuppers()}} />
                     </TouchableOpacity>
                     <View style={{flex:1,flexDirection:'row',justifyContent: 'flex-end', alignItems:'flex-start'}} >
-                      {/* <Image resizeMode="contain" style={{height:scale(100),width:scale(120)}} source={Images.firulais_logo}/> */}
+                      <Image resizeMode="contain" style={{height:moderateScale(100),width:moderateScale(120)}} source={Images.firulais_logo}/>
                     </View>
                   </View>
+
+                 
                   <TouchableOpacity style={{flexDirection: 'row'}} 
                     onPress={this.navigateToScreen('EditProfile')}>
                     <View style={{flex:1,flexDirection: 'column'}}>
-                      <Text style={{fontSize: scale(14), fontFamily:'Roboto-Medium', color: Colors.purple, backgroundColor: 'transparent', opacity: 0.95, paddingBottom:scale(1)}}>
+                      <Text style={{fontSize: moderateScale(14), fontFamily:'Roboto-Medium', color: Colors.purple, backgroundColor: 'transparent', opacity: 0.95, paddingBottom:moderateScale(1)}}>
                         {user.name||'Firulais'}</Text>
-                      <Text style={{ fontSize: scale(14), fontFamily:'Roboto', color: Colors.light_purple, backgroundColor: 'transparent', opacity: 0.95}}> 
+                      <Text style={{ fontSize: moderateScale(14), fontFamily:'Roboto', color: Colors.light_purple, backgroundColor: 'transparent', opacity: 0.95}}> 
                         {user.email}    </Text>
                     </View>
-                    <View style={{flex:0.1,flexDirection: 'column',justifyContent:'flex-end',alignItems:'flex-end'}}>
-                      <MaterialIcons name="edit" size={scale(22)} color={Colors.purple} />
+                    <View style={{flex:0.1,flexDirection: 'row',justifyContent:'flex-end',alignItems:'flex-end'}}>
+                      <MaterialIcons name="edit" size={moderateScale(22)} color={Colors.purple} />
                     </View>
                   </TouchableOpacity>
 
                 </Col>
-              </Row>
-              <Divider />
-              <Divider />
+              </Row> */}
+
               <Row style={styles.drawerContent}>
                 <Col>
                   <Ripple style={[styles.drawerItem, activeView=='Home'?styles.activeItem:null ]} 
                     onPress={this.navigateToScreen('Home')} >
-                    <Entypo name="home" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Entypo name="home" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Home</Text>
                   </Ripple>
 
@@ -89,45 +114,44 @@ class Drawer extends React.Component {
                     this.props.currentUser.type === 'user' ? (
                         <Ripple style={[styles.drawerItem, activeView=='UserProfile'?styles.activeItem:null]} 
                         onPress={this.navigateToScreen('UserProfile',{ userID: this.props.currentUser.uid }) }>
-                        <Ionicons name="md-person" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                        <Ionicons name="md-person" size={moderateScale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                         <Text style={styles.drawerItemText}>Mi Perfil</Text>
                       </Ripple>
                     ):(
                       <Ripple style={[styles.drawerItem, activeView=='FoundationProfile'?styles.activeItem:null]} 
                         onPress={this.navigateToScreen('FoundationProfile',{ foundationID: this.props.currentUser.uid }) }>
-                        <Ionicons name="md-person" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                        <Ionicons name="md-person" size={moderateScale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                         <Text style={styles.drawerItemText}>Mi Perfil</Text>
                       </Ripple>
                     )
                   }
-
-                  <Ripple style={[styles.drawerItem, activeView=='AllNewsView'?styles.activeItem:null]} 
-                    onPress={this.navigateToScreen('AllNewsView')}>
-                    <Ionicons name="md-paper" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Eventos</Text>
-                  </Ripple>
-
-                  <Ripple style={[styles.drawerItem, activeView=='MyServicesView'?styles.activeItem:null]} 
-                    onPress={this.navigateToScreen('MyServicesView', {isFoundation: user.type==='fundation'})}>
-                    <Foundation name="guide-dog" size={scale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>{user.type==='fundation'?'Solicitudes':'Servicios'}</Text>
+                  <Ripple style={[styles.drawerItem, activeView=='AllUsersView'?styles.activeItem:null]} 
+                    onPress={this.navigateToScreen('AllUsersView')}>
+                    <Ionicons name="md-people" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>Personas</Text>
                   </Ripple>
 
                   <Ripple style={[styles.drawerItem, activeView=='AllFoundationsView'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('AllFoundationsView')}>
-                    <Ionicons name="md-paw" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Ionicons name="md-hand" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Fundaciones</Text>
                   </Ripple>
+                  
+                  <Ripple style={[styles.drawerItem, activeView=='MyServicesView'?styles.activeItem:null]} 
+                    onPress={this.navigateToScreen('MyServicesView', {isFoundation: user.type==='fundation'})}>
+                    <Ionicons name="md-paw" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>{user.type==='fundation'?'Solicitudes':'Servicios'}</Text>
+                  </Ripple>
 
-                  <Ripple style={[styles.drawerItem, activeView=='AllUsersView'?styles.activeItem:null]} 
-                    onPress={this.navigateToScreen('AllUsersView')}>
-                    <Ionicons name="md-people" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Personas</Text>
+                  <Ripple style={[styles.drawerItem, activeView=='AllNewsView'?styles.activeItem:null]} 
+                    onPress={this.navigateToScreen('AllNewsView')}>
+                    <Ionicons name="md-paper" size={moderateScale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>Eventos</Text>
                   </Ripple>
 
                   <Ripple style={[styles.drawerItem, activeView=='HistoryView'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('HistoryView')}>
-                    <MaterialIcons name="stars" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <MaterialIcons name="stars" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Historial</Text>
                   </Ripple>
 
@@ -137,8 +161,8 @@ class Drawer extends React.Component {
                 <Col>
                   <Ripple style={[styles.drawerItem,activeView=='Settings'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('Settings')}>
-                    <MaterialIcons name="settings" size={scale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Settings</Text>
+                    <MaterialIcons name="settings" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>Opciones</Text>
                   </Ripple>
                 </Col>
               </Row>
@@ -162,24 +186,24 @@ export default connect(mapStateToProps,{
 const drawerWidth = width * 0.87
 
 if (Platform.OS === 'ios') {
-  drawerWidth = scale(300)
+  drawerWidth = moderateScale(300)
 }
 
 const styles = {
   header: {
     backgroundColor: '#f8f8ff',
     alignItems:'flex-end',
-    height: scale(140),
-    paddingHorizontal: scale(16),
+    height: moderateScale(140),
+    paddingHorizontal: moderateScale(16),
     paddingTop: 24,
-    marginBottom: scale(6)
+    marginBottom: moderateScale(6)
   },
   drawerContent: {
-    backgroundColor: '#fafafa',
-    marginTop: scale(6),
+    backgroundColor: '#f8f8ff',
   },
   drawerFooter: {
-    height: scale(80)
+    backgroundColor: '#f8f8ff',
+    height: moderateScale(80)
   },
   drawerContainer: {
     width: drawerWidth,
@@ -187,20 +211,20 @@ const styles = {
     backgroundColor: "#fafafa",
   },
   drawerItem: {
-    height: scale(54),
+    height: moderateScale(54),
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingHorizontal: scale(16)
+    paddingHorizontal: moderateScale(16)
   },
   drawerItemIcon: {
     flex:0.15,
-    marginRight: scale(36)
+    marginRight: moderateScale(36)
   },
   drawerItemText: {
     flex:1,
     fontFamily:'Roboto-Medium',
-    fontSize: scale(14),
+    fontSize: moderateScale(14),
     textAlign: 'left'
   },
   activeItem: {

@@ -5,8 +5,10 @@
     "version": "1.0.0",
     "sdkVersion": "26.0.0",
     "privacy":"public",
+    "icon":"./assets/images/super_kitty.png",
+    "primaryColor":"#6C46B3",
     "loading": {
-      "icon": "./assets/images/logo_firulais_op@2x.png",
+      "icon": "./assets/images/logo_firulais_op_loading.png",
       "hideExponentText": false
     },
     "androidStatusBar": {

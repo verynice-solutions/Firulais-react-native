@@ -8,7 +8,6 @@ import firebase from '../../firebase/firebaseSingleton'
 import Modal from 'react-native-modal'
 
 import Images from '../../../assets/images'
-import {scale, scaleModerate, scaleVertical} from '../../lib/responsive'
 import {updateUserDB} from '../../firebase/functions'
 import OAuth from '../../config/OAuth'
 import sessionActions from '../../actions/sessionActions'
@@ -73,7 +72,7 @@ class LogInView extends Component {
 							Toast.show({
 								text:'Inicio de sessión exitoso!',
 								buttonText:'OK',
-								duration: 6000,
+								duration: 3000,
 								type:'success'
 							})
 						}, 1000);
@@ -183,9 +182,6 @@ const styles = StyleSheet.create({
     fontFamily:'Roboto-Bold',
     fontSize: 16,
     textAlign: 'center'
-	},
-	buttonStyle:{
-		padding:scale(10)
 	}
 });
 function mapStateToProps({currentUser}) {

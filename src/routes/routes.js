@@ -3,7 +3,7 @@ import {Platform, Dimensions} from 'react-native'
 import { StackNavigator, TabNavigator, DrawerNavigator} from 'react-navigation'
 
 //Screens
-import {scale} from '../lib/responsive'
+import {moderateScale} from '../lib/responsive'
 import HomeView from '../Views/home'
 import EditProfileView from '../Views/profile/EditProfile'
 import LogInView from '../Views/signin/LogInView'
@@ -112,7 +112,7 @@ const {width} = Dimensions.get('window');
 const drawerWidth = width * 0.87
 
 if (Platform.OS === 'ios') {
-  drawerWidth = scale(300)
+  drawerWidth = moderateScale(300)
 }
 
 const SignedInRoutes = DrawerNavigator({

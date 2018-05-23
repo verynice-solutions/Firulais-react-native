@@ -10,7 +10,6 @@ import {_getNowDateISO, _getNextYear} from '../../utils/random_functions'
 //Style
 import Modal from 'react-native-modal'
 import {Container,Content,Card,Body,Button,Text,Icon,Form,Textarea,CheckBox,List,ListItem,Label,Input,Item, Toast} from 'native-base'
-import { scale } from '../../lib/responsive';
 import {randomPuppers} from '../../utils/random_functions'
 import { FlatList } from 'react-native-gesture-handler'
 import Imagess from '../../../assets/images'
