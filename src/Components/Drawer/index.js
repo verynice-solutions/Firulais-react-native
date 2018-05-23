@@ -41,13 +41,7 @@ class Drawer extends React.Component {
     })
     return go
   }
-  goToProfile=(fund)=>{
-    if(fund){
-      this.navigateToScreen('UserProfile',{ userID: this.props.currentUser.uid })
-    }else{
-      this.navigateToScreen('FoundationProfile',{ foundationID: this.props.currentUser.uid })
-    }
-  }
+  
   render() {
     // let {activeItemKey} = this.props.navigation
     // console.log("activeItem: ", this.props.navigation)
@@ -81,7 +75,7 @@ class Drawer extends React.Component {
                 </ListItem> 
               </Ripple> 
               <Divider/>
-              
+
               {/* <Image resizeMode="contain" style={{height:moderateScale(100),width:moderateScale(120)}} source={Images.firulais_logo}/> */}
 
               <Row style={styles.drawerContent}>
