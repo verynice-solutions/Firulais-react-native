@@ -3,15 +3,16 @@ import React, { Component } from 'react'
 
 import { Platform, View, StyleSheet, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
 import {connect} from 'react-redux'
-import firebase from '../../../firebase/firebaseSingleton'
-import { ImagePicker, ImageManipulator } from 'expo'
+import firebase from '../../firebase/firebaseSingleton'
+import { ImagePicker } from 'expo'
 //Style
 import Modal from 'react-native-modal'
 import {Container,Content,Button,Text,Textarea,CheckBox,ListItem,Toast,Card} from 'native-base'
-import {randomPuppers} from '../../../utils/random_functions'
+import {randomPuppers} from '../../utils/random_functions'
 import { FlatList } from 'react-native-gesture-handler';
-import Imagess from '../../../../assets/images'
+import Imagess from '../../../assets/images'
 import {Ionicons} from '@expo/vector-icons'
+import photoActions from '../../actions/photoActions'
 
 class AddPet extends Component {
 	constructor(props) {
@@ -108,18 +109,11 @@ class AddPet extends Component {
     imagesInState.forEach( (img,count)=>{
       let petID = this.state.pet_fire_key
       let fileName = `P-${count}`
-      PromisesImages.push( this._uploadImage( img, petID, fileName) )
+      PromisesImages.push( photoActions._uploadImage( img, petID, fileName ) )
     })
     return Promise.all(PromisesImages);
   }
-  _uploadImage = async (uri,fundId,fotoName) => {
-    // console.log('uploadImage:',uri,fotoName)
-    const response = await fetch(uri)
-    const blop = await response.blob()
-    let storage_ref = `images/pets/${fundId}/${fotoName}`
-    var ref = firebase.storage().ref().child(storage_ref)
-    return ref.put(blop)
-  }
+  // aqui iba _uploadImages (merge proof)
   
   _setValuesMascota(values){
     // console.log(values)
@@ -137,7 +131,7 @@ class AddPet extends Component {
 
   _onCamera = async () => {
     this.setState({fetchingImages:true})
-    let result = await ImagePicker.launchCameraAsync()
+    let result = await ImagePicker.launchCameraAsync({allowsEditing:true})
     // console.log('RESULT ',result)
     if(!result.cancelled){
       this.setState({
@@ -150,7 +144,7 @@ class AddPet extends Component {
   }
   _onGalery = async () => {
     this.setState({fetchingImages:true})
-    let result = await ImagePicker.launchImageLibraryAsync()
+    let result = await ImagePicker.launchImageLibraryAsync({mediaTypes:"Images",allowsEditing:true})
     // console.log('RESULT ',result)
     if(!result.cancelled){
       this.setState({

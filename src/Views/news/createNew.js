@@ -14,6 +14,7 @@ import {randomPuppers} from '../../utils/random_functions'
 import { FlatList } from 'react-native-gesture-handler'
 import Imagess from '../../../assets/images'
 import {Ionicons} from '@expo/vector-icons'
+import photoActions from '../../actions/photoActions'
 
 class createNew extends Component {
 	constructor(props) {
@@ -133,18 +134,11 @@ class createNew extends Component {
     imagesInState.forEach( (img,count)=>{
       let newID = this.state.new_fire_key
       let fileName = `P-${count}`
-      PromisesImages.push( this._uploadImage( img, newID, fileName) )
+      PromisesImages.push( photoActions._uploadImage( img, newID, fileName) )
     })
     return Promise.all(PromisesImages);
   }
-  _uploadImage = async (uri,fundId,fotoName) => {
-    // console.log('uploadImage:',uri,fotoName)
-    const response = await fetch(uri)
-    const blop = await response.blob()
-    let storage_ref = `images/news/${fundId}/${fotoName}`
-    var ref = firebase.storage().ref().child(storage_ref)
-    return ref.put(blop)
-  }
+  // aqui iba _uploadImages (merge proof)
   
   _setValuesNew(values){
     // console.log(values)
@@ -162,7 +156,7 @@ class createNew extends Component {
 
   _onCamera = async () => {
     this.setState({fetchingImages:true})
-    let result = await ImagePicker.launchCameraAsync()
+    let result = await ImagePicker.launchCameraAsync({allowsEditing:true})
     // console.log('RESULT ',result)
     if(!result.cancelled){
       this.setState({
@@ -175,7 +169,7 @@ class createNew extends Component {
   }
   _onGalery = async () => {
     this.setState({fetchingImages:true})
-    let result = await ImagePicker.launchImageLibraryAsync()
+    let result = await ImagePicker.launchImageLibraryAsync({mediaTypes:"Images",allowsEditing:true})
     // console.log('RESULT ',result)
     if(!result.cancelled){
       this.setState({

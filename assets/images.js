@@ -6,6 +6,7 @@ const images = {
 	cat_selfi: require('./images/kitty_selfie.png'),
 	//Add news
 	thinking_kitty: require('./images/kitty_thinking.png'),
+	sherlock_kitty: require('./images/sherlock_kitty.png'),
 	//Drawer
 	firulais_logo: require('./images/logo_firulais_op.png'),
 

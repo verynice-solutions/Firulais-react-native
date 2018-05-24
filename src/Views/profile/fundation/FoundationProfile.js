@@ -79,7 +79,7 @@ class FundationProfileView extends Component {
 			this.props.navigation.navigate('CreateService',{toCreate:{petObj:petObj,fid:fundacionId,uid:userId,fundObj:this.state.data}})
 		}else{
 			Toast.show({
-				text:'Solo usuarios voluntario pueden cuidar mascotas',
+				text:'Solo los voluntarios pueden cuidar mascotas.',
 				buttonText:'Ok',
 				duration: 4000,
 				type:'warning'
