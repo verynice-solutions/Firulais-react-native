@@ -20,9 +20,10 @@ class MyServicesView extends Component {
 
   static navigationOptions = ({navigation}) => {
     const params = navigation.state.params || {};
-    let titleTop = 'Historial'
+    let titleTop = params.isFoundation?'Solicitudes':'Servicios'
 		return{
-			title: titleTop
+      title: titleTop,
+      tabBarLabel: 'Historial'
     }
   }
   
@@ -85,9 +86,9 @@ class MyServicesView extends Component {
                 })
               ):(
                 <View style={{paddingTop:100,justifyContent:'center',alignItems:'center'}}>
-                  <Image source={images.thinking_kitty} resizeMode= 'contain' 
+                  <Image source={images.sherlock_kitty} resizeMode= 'contain' 
                     style={{height: 180, width: 180}}/>
-                  <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold',fontSize:18,marginTop:18}}> Aún no tienes 
+                  <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold',fontSize:18,marginTop:18}}> No tienes 
                   {user.type==='fundation'?' solicitudes finalizadas.':' servicios finalizados.'} </Text>
                 </View>
               )

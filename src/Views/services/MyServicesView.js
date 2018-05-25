@@ -25,7 +25,8 @@ class MyServicesView extends Component {
     const params = navigation.state.params || {};
     let titleTop = params.isFoundation?'Solicitudes':'Servicios'
 		return{
-			title: titleTop
+      title: titleTop,
+      tabBarLabel: params.isFoundation?'Activas':'Activos'
     }
   }
   

@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { TabNavigator, TabBarTop } from 'react-navigation';
-import GlobalFeed from './globalFeed'
-import PersonalFeed from './personalFeed'
 import Colors from '../../utils/Colors'
+
+import MyServices from './MyServicesView'
+import Historial from './History'
 
 const tabBarStyle = {
   tabBarPosition: 'bottom',
@@ -31,11 +32,11 @@ const tabBarStyle = {
 }
 
 const TabNav = TabNavigator({
-    GlobalFeed: {
-      screen: GlobalFeed
+    Activos: {
+      screen: MyServices
     },
-    PersonalFeed: {
-      screen: PersonalFeed
+    Historial: {
+      screen: Historial
     }
   },tabBarStyle
 );
