@@ -103,7 +103,7 @@ class EditProfileView extends Component {
 
 					<View style={{flexDirection:'column',justifyContent:'space-around'}}>
 						
-						<ListItem itemDivider>
+						<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
 							<Text style={{textAlign:'center', fontWeight:'bold'}}> INFORMACIÓN </Text>
 						</ListItem> 
 						
@@ -125,7 +125,7 @@ class EditProfileView extends Component {
 						</Item>
 						<View style={{marginTop: 25}}/>
 
-						<ListItem itemDivider>
+						<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
 							<Text style={{textAlign:'center', fontWeight:'bold'}}> CONTACTO </Text>
 						</ListItem> 
 

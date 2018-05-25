@@ -5,9 +5,10 @@ import {connect} from 'react-redux'
 
 //Style
 import { Button, Icon, Thumbnail, Text, Item, Input, 
-				Card, CardItem, Content, Left, ListItem, Body,
+				Card, CardItem, Content, Left, ListItem, Body, List,
 				Right, Label} from 'native-base'
 import images from '../../../assets/images'
+import { Ionicons } from '@expo/vector-icons';
 
 class PetProfile extends Component {
 	constructor(props) {
@@ -49,7 +50,91 @@ class PetProfile extends Component {
 		return (
 			<ScrollView style={{flex:1}}>
 				<View style={{ flexDirection:'column'}}>
-
+					<View style={{backgroundColor:'#ffffff'}}>
+						<View style={{marginTop:20}}/>	
+						<ListItem avatar noBorder>
+							<Left>
+								<Thumbnail 
+								style={{borderColor: '#2a2a2a59', borderWidth:5, marginTop: 15}} 
+								rounded large source={images.angel_kitty}/>
+							</Left>
+							<Body>
+								<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>Nombre del perrito</Text>
+								<Text note>
+									<Ionicons name="md-paw" size={(15)} color="rgb(75, 75, 73)"/> Perro o gato
+								</Text>
+								<Text note>
+									<Ionicons name="md-sunny" size={(15)} color="rgb(75, 75, 73)"/> Macho o hembra
+								</Text>								
+								<Text note>
+									<Ionicons name="md-cloudy-night" size={(15)} color="rgb(75, 75, 73)"/> Edad
+								</Text>
+								<Text note>
+									<Ionicons name="md-shirt" size={(15)} color="rgb(75, 75, 73)"/> Tamaño
+								</Text>
+							</Body>
+						</ListItem>
+						<View style={{marginTop:30}}/>
+						<View style={{marginHorizontal: 10, marginBottom: 10}}> 											
+							<Card> 
+								<CardItem
+									button
+									onPress={this.addVoluntario}
+									style={{backgroundColor: '#FFFFFF'}}>
+									<Left>
+										<Thumbnail source={images.medal}/>
+										<Body>
+											<Text note>¡Quiero ofrecerme como voluntari@!</Text>
+											<Text style={{fontWeight: 'bold'}}>Enviar Solicitud</Text>
+										</Body>
+									</Left>
+								</CardItem>
+							</Card>
+						</View>
+					</View>
+					<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+						<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>PERSONALIDAD</Text></Left>
+					</ListItem>
+					<View style={{margin: 20}}>
+						<Text style={{textAlign: 'justify'}}>
+							Espacio para describir la personalidad de la mascota.
+						</Text>
+					</View>
+					<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+						<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>CUIDADOS ESPECIALES</Text></Left>
+					</ListItem>
+					<View style={{margin: 20}}>
+						<Text style={{textAlign: 'justify'}}>
+							Espacio para escribir los cuidados especiales que tiene la mascota.
+						</Text>
+					</View>
+					<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+						<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>REQUERIMIENTOS</Text></Left>
+					</ListItem>
+					<List>
+            <ListItem>
+              <Thumbnail square size={80} source={images.wonder_kitty} />
+              <Body>
+                <Text note>Tipo de hogar</Text>
+                <Text>Descripcion del tipo de hogar que se requiere</Text>
+              </Body>
+            </ListItem>
+						<ListItem>
+              <Thumbnail square size={80} source={images.wonder_kitty} />
+              <Body>
+                <Text note>Tiempo minimo de cuidado</Text>
+                <Text>Una semana</Text>
+              </Body>
+            </ListItem>
+          </List>
+					<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+						<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>FOTOS</Text></Left>
+					</ListItem>
+					<View style={{margin: 20}}>
+						<Text style={{textAlign: 'justify'}}>
+							Espacio para poner las fotos de la mascota / estilo las que salen en noticias.
+						</Text>
+					</View>
 				</View>
 			</ScrollView>
 		)
