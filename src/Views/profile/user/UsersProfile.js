@@ -48,7 +48,7 @@ class UsersProfile extends Component {
 		}
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		let params = this.props.navigation.state.params
 		if(this.props.currentUser.uid===params.userID){this.props.navigation.setParams({ myperfil: true })}
 		let promise1 = foundationsActions.fetchByUID(params.userID).then((val)=>{

@@ -23,6 +23,7 @@ import AllNewsView from '../Views/news/index'
 import NewsView from '../Views/news/newsView'
 import HistoryView from '../Views/services/History'
 import FinishedService from '../Views/services/FinishedService'
+import PetProfile from '../Views/pets/PetProfile'
 
 const SignedOutRoutes = StackNavigator({
   Login: {
@@ -79,6 +80,10 @@ const AllRoutes = StackNavigator({
   AllNewsView: {
     path: 'allNewsView',
     screen: AllNewsView
+  },  
+  PetProfile: {
+    path: 'petprofile',
+    screen: PetProfile
   },
   AddPet:{
     path: 'addpet',
@@ -99,7 +104,7 @@ const AllRoutes = StackNavigator({
   Settings: {
     path: 'settings',
     screen: Settings
-  }
+  },
 },{
   navigationOptions:{
     headerStyle:{

@@ -75,16 +75,17 @@ class FundationProfileView extends Component {
 	}
 
 	petTouched(mascotaId, fundacionId, userId,petObj) {
-		if(this.props.currentUser.type == 'user' && this.state.data) {
-			this.props.navigation.navigate('CreateService',{toCreate:{petObj:petObj,fid:fundacionId,uid:userId,fundObj:this.state.data}})
-		}else{
-			Toast.show({
-				text:'Solo los voluntarios pueden cuidar mascotas.',
-				buttonText:'Ok',
-				duration: 4000,
-				type:'warning'
-			})
-		}
+		this.props.navigation.navigate('PetProfile')
+		// if(this.props.currentUser.type == 'user' && this.state.data) {
+		// 	this.props.navigation.navigate('CreateService',{toCreate:{petObj:petObj,fid:fundacionId,uid:userId,fundObj:this.state.data}})
+		// }else{
+		// 	Toast.show({
+		// 		text:'Solo los voluntarios pueden cuidar mascotas.',
+		// 		buttonText:'Ok',
+		// 		duration: 4000,
+		// 		type:'warning'
+		// 	})
+		// }
 	}
 
 	addVoluntario() {
