@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Platform,	View, StyleSheet, Image, TouchableOpacity,Alert, ActivityIndicator, KeyboardAvoidingView } from 'react-native'
 import {connect} from 'react-redux'
 //Style
-import { Button, Text ,Icon,Thumbnail ,Item, Input,Label, Toast} from 'native-base'
+import { Button, Text ,Icon,Thumbnail ,Item, Input,Label, Toast, ListItem, Left, Body} from 'native-base'
 import firebase from '../../firebase/firebaseSingleton'
 import { ScrollView } from 'react-native-gesture-handler';
 import sessionActions from '../../actions/sessionActions'
@@ -83,26 +83,38 @@ class EditProfileView extends Component {
 		}else{
 		return (
 			<ScrollView>
-				<View style={{marginTop:25}}/>
 				<KeyboardAvoidingView behavior={Platform.OS==='ios'?'position':null}  style={{ flex:1, flexDirection:'column'}}>
-					<View style={{flexDirection:'row',justifyContent:'center'}}>
-						<Thumbnail square large source={{uri:user.photoUrl}}/>
+					<View style={{backgroundColor:'#ffffff'}}>
+						<View style={{marginTop:20}}/>
+						<ListItem avatar noBorder>
+							<Left>
+								<Thumbnail 
+								style={{borderColor: '#2A2A2A59', borderWidth:5, marginTop: 15}} 
+								rounded large source={{uri:user.photoUrl}}/>
+							</Left>
+
+							<Body>
+								<Text  style={{fontSize: 20, fontWeight:'bold'}}>{user.name}</Text>
+								<Text note>Edita la información de tu perfil.</Text>
+							</Body>
+						</ListItem>	
+						<View style={{marginTop:30}}/>					
 					</View>
-					<View style={{marginTop:10}}/>
+
 					<View style={{flexDirection:'column',justifyContent:'space-around'}}>
-						<Text style={{textAlign:'center'}}> 
-							{user.name}
-						</Text>
-						<View style={{marginTop:10}}/>
-						<Text style={{textAlign:'center'}}> -Información- </Text>
+						
+						<ListItem itemDivider>
+							<Text style={{textAlign:'center', fontWeight:'bold'}}> INFORMACIÓN </Text>
+						</ListItem> 
+						
 						<Item stackedLabel>
 							<Label> Descripción </Label>
 							<Input placeholder='Aquí va mi descripción... '
 							autoCorrect={true}
 							value={this.state.description}
-							onChangeText={(text)=> this.setState({description: text})} 
-							/>
+							onChangeText={(text)=> this.setState({description: text})}/>
 						</Item>
+
 						<Item stackedLabel>
 							<Label> Ciudad </Label>
 							<Input placeholder='Barranq...'
@@ -112,7 +124,11 @@ class EditProfileView extends Component {
 							/>
 						</Item>
 						<View style={{marginTop: 25}}/>
-						<Text style={{textAlign:'center'}}> -Contacto- </Text>
+
+						<ListItem itemDivider>
+							<Text style={{textAlign:'center', fontWeight:'bold'}}> CONTACTO </Text>
+						</ListItem> 
+
 						<Item stackedLabel>
 							<Label> Móvil </Label>
 							<Input placeholder='3004347...' keyboardType='phone-pad' 

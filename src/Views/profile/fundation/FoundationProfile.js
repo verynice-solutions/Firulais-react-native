@@ -12,6 +12,7 @@ import { Button, Icon, Thumbnail, Text, Item, Input,
 					Right,Toast} from 'native-base'
 import firebase from '../../../firebase/firebaseSingleton'
 import images from '../../../../assets/images'
+import { Ionicons } from '@expo/vector-icons';
 
 class FundationProfileView extends Component {
 	constructor(props) {
@@ -151,45 +152,49 @@ class FundationProfileView extends Component {
 								<ActivityIndicator size='large' />
 							</View>
 						):(
-							<View style={{backgroundColor: '#AE86A9'}}>
-								<ImageBackground
-									style={{
-										backgroundColor: '#ccc',
-										flex: 1,
-										position: 'absolute',
-										width: '100%',
-										height: '100%',
-										justifyContent: 'center',
-									}}
-									source={images.purple_gradient}>
-								</ImageBackground>	
-								<View style={styles.thumbContainer}>
-									<Thumbnail 
-										circle 
-										large 
-										source={{ uri: info.photoUrl }}
-										style={{borderColor: '#FFFFFF59', borderWidth:5, marginTop: 15}}/>
-									<Text style={styles.nameField}> 
-										{info.name}
-									</Text>
-								</View>
 
-								{profile&&<View style={styles.infoContainer}>
-									<Text style={styles.infoField}> { profile.description  }  </Text>
-								</View>}
+							<View style={{backgroundColor:'#ffffff'}}>
+								<View style={{marginTop:20}}/>	
+								<ListItem avatar noBorder>
+									<Left>
+										<Thumbnail 
+										style={{borderColor: '#2a2a2a59', borderWidth:5, marginTop: 15}} 
+										rounded large source={{ uri: info.photoUrl }}/>
+									</Left>
+									<Body>
+										<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>{info.name}</Text>
+										{profile&&<Text note style={{marginBottom:10}}>{profile.description}</Text>}
+										<Text note>
+										<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> Ciudad
+										</Text>
+									</Body>
+								</ListItem>
+								<View style={{marginTop:30}}/>
 								{
 									this.props.currentUser.type === 'user' &&(
 										<View style={{marginHorizontal: 10, marginBottom: 10}}> 											
-											<Card style={{ borderRadius:25}}> 
+											<Card> 
 												<CardItem
 													button
 													onPress={this.addVoluntario}
-													style={{backgroundColor: '#E8D6E6'}}>
+													style={{backgroundColor: '#FFFFFF'}}>
 													<Left>
 														<Thumbnail source={images.medal}/>
 														<Body>
-															<Text style={{fontWeight: 'bold'}}>¡Quiero ser voluntario!</Text>
-															<Text note>Apuntarme</Text>
+															<Text note>¿Quieres recibir noticias?</Text>
+															<Text style={{fontWeight: 'bold'}}>¡Suscríbete!</Text>
+														</Body>
+													</Left>
+												</CardItem>
+											</Card>
+											<Card> 
+												<CardItem
+													style={{backgroundColor: '#FFFFFF'}}>
+													<Left>
+														<Thumbnail source={images.medal}/>
+														<Body>
+															<Text style={{fontWeight: 'bold'}}>¡Estas suscrito!</Text>
+															<Text note>Te avisaremos de la actividad de esta fundación.</Text>
 														</Body>
 													</Left>
 												</CardItem>
@@ -204,9 +209,9 @@ class FundationProfileView extends Component {
 
 						<View style={styles.subtitle}>
 							<ListItem itemDivider>
-								<Left><Text style={styles.dividerText}>Mascotas</Text></Left>
+								<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>MASCOTAS</Text></Left>
 								{/* <Right><Text style={styles.dividerText}>Ver más...</Text></Right> */}
-							</ListItem> 
+							</ListItem>
 						</View>
 						{
 							this.state.isFetchingPets ? (
@@ -215,25 +220,26 @@ class FundationProfileView extends Component {
 								</View>
 								
 							):(
-								<View style={styles.cardsContainer}>
+								<View>
 									{pets?
-									<FlatList data={Object.keys(pets)}
-										horizontal
-										showsHorizontalScrollIndicator={false}
-										bounces={true}
-										renderItem={this.renderPets}
-										keyExtractor={ (item, index) => {return `${index}` } }
-									/>
+									<View style={styles.cardsContainer}>
+										<FlatList data={Object.keys(pets)}
+											horizontal
+											showsHorizontalScrollIndicator={false}
+											bounces={true}
+											renderItem={this.renderPets}
+											keyExtractor={ (item, index) => {return `${index}` } }/>
+									</View>
 									:
 									<View>
 										<ListItem>
-											<Left>
+											<Body style={{borderBottomWidth: 0}}> 
+												<Text style={{color: '#2a2a2a'}}>{info.givenName} no tiene mascotas todavía :(</Text>
+											</Body>	
+											<Right style={{borderBottomWidth: 0}}>
 												<Thumbnail square size={80} 
 													source={images.wonder_kitty}/>
-											</Left>
-											<Body> 
-												<Text style={{color: '#2a2a2a'}}>{info.givenName} no tiene mascotas todavía :(</Text>
-											</Body>
+											</Right>
 										</ListItem>
 									</View>
 									}
@@ -245,7 +251,7 @@ class FundationProfileView extends Component {
 					<View>
 						<View style={styles.subtitle}>
 							<ListItem itemDivider style={{justifyContent:'space-between'}}>
-								<Text style={styles.dividerText}>Noticias</Text>
+								<Text style={styles.dividerText}>NOTICIAS</Text>
 								<TouchableOpacity onPress={ ()=> navigate('AllNewsView') }>
 									<Text style={styles.dividerText}> Ver más...</Text>
 								</TouchableOpacity>
@@ -314,9 +320,9 @@ const styles = StyleSheet.create({
 	nameField: {
 		textAlign:'center',
 		fontWeight: 'bold',
-		color: '#2a2a2a',
+		color: '#ffffff',
 		marginTop: 15,
-		fontSize: 20
+		fontSize: 25
 	},
 	infoField: {
 		textAlign:'center', 
