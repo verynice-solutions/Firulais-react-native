@@ -7,7 +7,7 @@ import firebase from '../../firebase/firebaseSingleton'
 import { ImagePicker } from 'expo'
 //Style
 import Modal from 'react-native-modal'
-import {Container,Content,Button,Text,Textarea,CheckBox,ListItem,Toast,Card} from 'native-base'
+import {Container,Content,Button,Text,Textarea,CheckBox,ListItem,Toast,Card,Picker,Label,Input,Item} from 'native-base'
 import {randomPuppers} from '../../utils/random_functions'
 import { FlatList } from 'react-native-gesture-handler';
 import Imagess from '../../../assets/images'
@@ -223,7 +223,7 @@ class AddPet extends Component {
         }
 				<Content padder>
 					<View style={{marginTop:5}}/>
-          {imagesPupers?<Text style={styles.textHeaders}>Fotos:</Text>:null}
+          {imagesPupers?<Text style={styles.textHeaders}>Añade fotos de tu mascota</Text>:null}
           {this.state.fetchingImages?
             <ActivityIndicator size="small" /> 
           :
@@ -235,30 +235,32 @@ class AddPet extends Component {
               keyExtractor={(item) => {return `${item}` }}
             />
           } 
+
           <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-						<Button bordered onPress={this._onGalery}>
-							<Text primary>Galería +</Text>
+						<Button bordered onPress={this._onGalery} style={{flex: 0.45}}>
+							<Text primary style={{textAlign:'center'}}>Galería +</Text>
 						</Button>
-            <Button bordered onPress={this._onCamera}>
-							<Text primary>Cámara +</Text>
+            <Button bordered onPress={this._onCamera} style={{flex: 0.45}}>
+							<Text primary style={{textAlign:'center'}}>Cámara +</Text>
 						</Button>
 					</View>
           <View style={{marginTop:20}}/>
-          <Text> Cómo lo llamas? </Text>
-          <Textarea bordered placeholder='Firulais...'
+          <Text style={styles.textHeaders}>Nombre </Text>
+          <Textarea bordered placeholder='¿Como se llama tu mascota?'
           autoCorrect={false}
           value={this.state.tempName}
           onChangeText={(text)=> this.setState({tempName: text})} 
           />
+
           <View style={{marginTop:10}}/>
-          <Text> Que caracteristicas tiene? </Text>
-          <Textarea bordered placeholder='He is the best dog EVER...'
+          <Text style={styles.textHeaders}>Descripción</Text>
+          <Textarea bordered placeholder='¿Cuales son las caracteristicas de tu mascota?'
           autoCorrect={true}
           value={this.state.description}
-          onChangeText={(text)=> this.setState({description: text})} 
-          />
+          onChangeText={(text)=> this.setState({description: text})}/>
+
           <View style={{marginTop:10}}/>
-          <Text> Tipo </Text>
+          <Text style={styles.textHeaders}> Tipo </Text>
             <ListItem>
               <CheckBox onPress={()=>{this.setState({dog:!this.state.dog ,cat:false})}} 
                 checked={this.state.dog}/>
@@ -270,7 +272,7 @@ class AddPet extends Component {
               <Text style={{paddingLeft:15}}>Gato</Text>
             </ListItem>
             <View style={{marginTop:10}}/>
-          <Text> Tamaño </Text>
+          <Text style={styles.textHeaders}> Tamaño </Text>
           <ListItem>
             <CheckBox onPress={()=>{this.setState({pequeño:!this.state.pequeño ,mediano:false, grande:false})}} 
               checked={this.state.pequeño} color='green'/>
@@ -287,14 +289,14 @@ class AddPet extends Component {
             <Text style={{paddingLeft:15}}>Grande</Text>
           </ListItem>
           <View style={{marginTop:10}}/>
-          <Text> Que edad tiene? </Text>
-          <Textarea bordered placeholder='2 años y 3 cuartos...'
+          <Text style={styles.textHeaders}> Edad </Text>
+          <Textarea bordered placeholder='Escribe la edad. (ej. "2 años")'
           autoCorrect={false}
           value={this.state.edad}
           onChangeText={(text)=> this.setState({edad: text})} 
           />
           <View style={{marginTop:10}}/>
-          <Text> Género </Text>
+          <Text style={styles.textHeaders}> Género </Text>
           <ListItem>
             <CheckBox onPress={()=>{this.setState({hembra:!this.state.hembra , macho:false })}} 
               checked={this.state.hembra} color='purple'/>
@@ -305,7 +307,45 @@ class AddPet extends Component {
               checked={this.state.macho} color='purple' />
             <Text style={{paddingLeft:15}}>Macho</Text>
           </ListItem>
+
+          <View style={{marginTop:20}}/>
+          <Text style={styles.textHeaders}>Personalidad ***no sirve</Text>
+          <Textarea bordered placeholder='Describe como es el comportamiento y personalidad de tu mascota. (ej. jugueton, cariñoso, etc) '
+          autoCorrect={true}/>
+
+          <View style={{marginTop:20}}/>
+          <Text style={styles.textHeaders}>Cuidados Especiales ***no sirve</Text>
+          <Textarea bordered placeholder='Describe todos los cuidados especiales que tiene tu mascota. (ej. medicinas, horarios, etc)'
+          autoCorrect={true}/>
+
+          <View style={{marginTop:20}}/>
+          <Text style={styles.textHeaders}>Tipo de Hogar ***no sirve</Text>
+          <Textarea bordered placeholder='Describe las caracteristicas del hogar preferible para esta mascota. (ej. lugar amplio con patio)'
+          autoCorrect={true}/>
+
+          <View style={{marginTop:20}}/>
+          <Text style={styles.textHeaders}>Tiempo minimo de cuidado ***no sirve</Text>
+
+          <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+            <Item fixedLabel style={{flex: 0.5}}>
+              <Input placeholder="Cantidad"/>
+            </Item>
+            <Picker
+              mode="dropdown"
+              placeholder="Rango de tiempo"
+              iosHeader="Rango de tiempo"
+              iosIcon={<Ionicons name="ios-arrow-down-outline" />}
+              style={{ width: undefined, flex: 0.5 }}>
+              <Picker.Item label="Dia" value="key0" />
+              <Picker.Item label="Mes" value="key1" />
+              <Picker.Item label="Año" value="key2" />
+            </Picker>
+					</View>
           <View style={{marginBottom:40}}/>
+
+
+
+
 				</Content>
 			</Container>
 		)
@@ -342,5 +382,8 @@ const styles = StyleSheet.create({
   modalTexButton:{
     fontFamily:'Roboto-Bold',fontSize:20, marginBottom:18, 
     textAlign:'center', color:'#3457d8'
+  },
+  textHeaders:{
+    fontWeight: 'bold'
   }
 });
