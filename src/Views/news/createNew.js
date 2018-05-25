@@ -248,7 +248,7 @@ class createNew extends Component {
         }
 				<Content padder>
 					<View style={{marginTop:5}}/>
-          {imagesPupers&&<Label>Fotos</Label>}
+          {imagesPupers&&<Label style={{fontWeight: 'bold'}}>Fotos</Label>}
           {this.state.fetchingImages?
             <ActivityIndicator size="small" /> 
           :
@@ -261,32 +261,33 @@ class createNew extends Component {
             />
           } 
           <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-						<Button bordered onPress={this._onGalery}>
+						<Button bordered onPress={this._onGalery} style={{flex: 0.45}}>
 							<Text primary>Galería +</Text>
 						</Button>
-            <Button bordered onPress={this._onCamera}>
+            <Button bordered onPress={this._onCamera} style={{flex: 0.45}}>
 							<Text primary>Cámara +</Text>
 						</Button>
 					</View>
           <View style={{marginTop:20}}/>
           <Item stackedLabel>
-            <Label> Título </Label>
-            <Input onChangeText={(text)=> this.setState({title: text})} />
+            <Label style={{fontWeight: 'bold'}}> Título </Label>
+            <Input placeholder="Escribe un titulo para la noticia" onChangeText={(text)=> this.setState({title: text})} />
           </Item>
           <View style={{marginTop:20}}/>
           <Item stackedLabel>
-            <Label> Fecha </Label>
+            <Label style={{fontWeight: 'bold'}}> Fecha </Label>
             {this.renderDatePicker()}
           </Item>
+
           <View style={{marginTop:20}}/>
-          <Label> Descripcion </Label>
-          <Textarea bordered placeholder='Best. Doggo. Party. Ever...'
+          <Label style={{fontWeight: 'bold'}}> Descripción </Label>
+          <Textarea bordered placeholder='Describe aqui de que trata tu noticia.'
           autoCorrect={true}
           value={this.state.description}
           onChangeText={(text)=> this.setState({description: text})} 
           />
           <View style={{marginTop:10}}/>
-          <Label> Tipo </Label>
+          <Label style={{fontWeight: 'bold'}}> Tipo </Label>
             <ListItem>
               <CheckBox onPress={()=>{this.setState({evento:!this.state.evento ,noticia:false})}} 
                 checked={this.state.evento}/>

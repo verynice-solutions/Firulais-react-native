@@ -12,6 +12,7 @@ import { Button, Icon, Thumbnail, Text, Item, Input,
 				Right, Label} from 'native-base'
 import firebase from '../../../firebase/firebaseSingleton'
 import images from '../../../../assets/images'
+import { Ionicons } from '@expo/vector-icons';
 
 class UsersProfile extends Component {
 	constructor(props) {
@@ -143,37 +144,27 @@ class UsersProfile extends Component {
 					{
 						info ?(
 							<View>
-								<View>
-									<ImageBackground
-										style={{
-											backgroundColor: '#ccc',
-											flex: 1,
-											position: 'absolute',
-											width: '100%',
-											height: '100%',
-											justifyContent: 'center',
-										}}
-										source={images.purple_gradient}>
-									</ImageBackground>		
-
-									<View style={styles.thumbContainer}>
-										<Thumbnail 
-											circle 
-											large 
-											source={{ uri: info.photoUrl }}
-											style={{borderColor: '#FFFFFF59', borderWidth:5, marginTop: 15}}/>
-										<Text style={styles.nameField}> 
-											{info.name}
-										</Text>
-									</View>
-
-									{profile&&<View style={styles.infoContainer}>
-										<Text style={styles.infoField}> {profile.description}  </Text>
-									</View>}										
+								<View style={{backgroundColor:'#ffffff'}}>
+									<View style={{marginTop:20}}/>	
+									<ListItem avatar noBorder>
+										<Left>
+											<Thumbnail 
+											style={{borderColor: '#2a2a2a59', borderWidth:5, marginTop: 15}} 
+											rounded large source={{ uri: info.photoUrl }}/>
+										</Left>
+										<Body>
+											<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>{info.name}</Text>
+											{profile&&<Text note style={{marginBottom:10}}>{profile.description}</Text>}
+											<Text note>
+											<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> Ciudad
+											</Text>
+										</Body>
+									</ListItem>
+									<View style={{marginTop:30}}/>	
 								</View>
 
 								<View style={styles.subtitle}>
-									<ListItem itemDivider style={{justifyContent:'space-between'}}>
+									<ListItem itemDivider style={{justifyContent:'space-between', backgroundColor:'#ffffff'}}>
 										<Text style={styles.dividerText}>Fundaciones</Text>
 										<TouchableOpacity onPress={ ()=> navigate('AllFoundationsView') }>
 											<Text style={styles.dividerText}> Ver más...</Text>
@@ -208,7 +199,7 @@ class UsersProfile extends Component {
 									)
 								}
 								<View style={styles.subtitle}>
-									<ListItem itemDivider>
+									<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
 										<Left><Text style={styles.dividerText}>Últimos Servicios</Text></Left>
 									</ListItem> 
 								</View>
@@ -230,11 +221,11 @@ class UsersProfile extends Component {
 											</View>											
 										):(
 											<View>
-												<ListItem>
-													<Body> 
+												<ListItem noBorder>
+													<Body style={{borderBottomWidth: 0}}> 
 														<Text style={{color: '#2a2a2a'}}>No hay servicios todavía :(</Text>
 													</Body>
-													<Right>
+													<Right style={{borderBottomWidth: 0}}>
 														<Thumbnail square size={80} 
 															source={images.wonder_kitty}/>
 													</Right>

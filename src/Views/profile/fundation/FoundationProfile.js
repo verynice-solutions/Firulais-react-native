@@ -209,7 +209,7 @@ class FundationProfileView extends Component {
 					<View>
 
 						<View style={styles.subtitle}>
-							<ListItem itemDivider>
+							<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
 								<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>MASCOTAS</Text></Left>
 								{/* <Right><Text style={styles.dividerText}>Ver más...</Text></Right> */}
 							</ListItem>
@@ -233,7 +233,7 @@ class FundationProfileView extends Component {
 									</View>
 									:
 									<View>
-										<ListItem>
+										<ListItem noBorder>
 											<Body style={{borderBottomWidth: 0}}> 
 												<Text style={{color: '#2a2a2a'}}>{info.givenName} no tiene mascotas todavía :(</Text>
 											</Body>	
@@ -251,7 +251,7 @@ class FundationProfileView extends Component {
 
 					<View>
 						<View style={styles.subtitle}>
-							<ListItem itemDivider style={{justifyContent:'space-between'}}>
+							<ListItem itemDivider style={{justifyContent:'space-between',backgroundColor:'#ffffff'}}>
 								<Text style={styles.dividerText}>NOTICIAS</Text>
 								<TouchableOpacity onPress={ ()=> navigate('AllNewsView') }>
 									<Text style={styles.dividerText}> Ver más...</Text>
@@ -276,11 +276,11 @@ class FundationProfileView extends Component {
 										</View>
 									):(
 										<View>
-											<ListItem>
-												<Body> 
+											<ListItem noBorder>
+												<Body style={{borderBottomWidth: 0}}> 
 													<Text style={{color: '#2a2a2a'}}>No hay noticias :(</Text>
 												</Body>
-												<Right>
+												<Right style={{borderBottomWidth: 0}}>
 													<Thumbnail square size={80} 
 														source={images.wonder_kitty}/>
 												</Right>
