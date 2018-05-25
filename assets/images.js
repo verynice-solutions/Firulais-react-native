@@ -13,8 +13,8 @@ const images = {
 	//Icon images
 	icon_menu: require('./icons/menu.png'),
 
-
-
+	phone_kitty: require('./images/kitty_phone.png'),
+	bubbles_kitty: require('./images/kitty_bubbles.png'),
 	computer_kitty: require('./images/computerKitty.png'),
 	pencil_kitty: require('./images/writingKitty.png'),
 	idea_kitty: require('./images/ideaKitty.png'),

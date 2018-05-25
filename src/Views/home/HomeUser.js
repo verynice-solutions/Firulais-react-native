@@ -26,7 +26,7 @@ class HomeUser extends Component {
 							<CardItem 
 								button 
 								onPress={()=>this.props.navigation.navigate('AllFoundationsView')}
-								style={{justifyContent:'center', backgroundColor: '#AE86A9'}}>
+								style={{justifyContent:'center', backgroundColor: '#FFA6BD'}}>
 								<Image 
 									source={images.care_home} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
@@ -49,9 +49,9 @@ class HomeUser extends Component {
 							<CardItem 
 								button 
 								onPress={()=>this.props.navigation.navigate('MyServicesView')}
-								style={{justifyContent:'center', backgroundColor: '#FFDBB9'}}>
+								style={{justifyContent:'center', backgroundColor: '#AE86A9'}}>
 								<Image 
-									source={images.angel_kitty} resizeMode= 'contain' 
+									source={images.phone_kitty} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
 							</CardItem>
 							<CardItem
@@ -61,7 +61,7 @@ class HomeUser extends Component {
 								<Text 
 									primary 
 									style={{fontWeight: 'bold', textAlign: 'center'}}>
-									Ver mis servicios
+									Ver mis solicitudes
 								</Text>	
 							</CardItem>
 						</Card>	
@@ -72,7 +72,7 @@ class HomeUser extends Component {
 							<CardItem 
 								button
 								onPress={()=>this.props.navigation.navigate('AllNewsView')}
-								style={{justifyContent:'center', backgroundColor: '#FFA6BD'}}>
+								style={{justifyContent:'center', backgroundColor: '#FFDBB9'}}>
 								<Image 
 									source={images.party_kitty} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>

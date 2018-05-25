@@ -23,10 +23,10 @@ class MyServicesView extends Component {
 
   static navigationOptions = ({navigation}) => {
     const params = navigation.state.params || {};
-    let titleTop = params.isFoundation?'Solicitudes':'Servicios'
+    let titleTop = 'Solicitudes'
 		return{
       title: titleTop,
-      tabBarLabel: params.isFoundation?'Activas':'Activos'
+      tabBarLabel: 'Activas'
     }
   }
   

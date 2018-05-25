@@ -17,7 +17,7 @@ class UsersView extends Component {
   static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-			title: 'Personas'
+			title: 'Voluntarios'
     }
 	}
     
