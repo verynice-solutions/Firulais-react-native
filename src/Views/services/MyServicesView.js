@@ -14,7 +14,8 @@ class MyServicesView extends Component {
     this.state = {
       allServices: [],
       isDetailVisible: false,
-      serviceInModal: null
+      serviceInModal: null,
+      fetching:false,
     }
     this._detailService = this._detailService.bind(this)
     this._reviewService = this._reviewService.bind(this)

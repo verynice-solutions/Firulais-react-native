@@ -69,7 +69,7 @@ class PersonalFeed extends Component {
               <View style={{paddingTop:100, paddingHorizontal:30,justifyContent:'center',alignItems:'center'}}>
                   <Image source={images.sherlock_kitty} resizeMode= 'contain' 
                     style={{height: 180, width: 180}}/>
-                  <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold', textAlign:'center',lineHeight:30, fontSize:18,marginTop:18}}>Me pregunto dónde estarán mis noticias, querido Watson.</Text>
+                  <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold', textAlign:'center',lineHeight:30, fontSize:18,marginTop:18}}>No hay noticias aún.</Text>
               </View>
             )
           }
