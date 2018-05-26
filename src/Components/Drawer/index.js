@@ -86,18 +86,18 @@ class Drawer extends React.Component {
                     <Text style={styles.drawerItemText}>Inicio</Text>
                   </Ripple>
 
+                  <Ripple style={[styles.drawerItem, activeView=='AllFoundationsView'?styles.activeItem:null]} 
+                    onPress={this.navigateToScreen('AllFoundationsView')}>
+                    <Ionicons name="md-hand" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>Fundaciones</Text>
+                  </Ripple>
+
                   <Ripple style={[styles.drawerItem, activeView=='AllUsersView'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('AllUsersView')}>
                     <Ionicons name="md-people" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Voluntarios</Text>
                   </Ripple>
 
-                  <Ripple style={[styles.drawerItem, activeView=='AllFoundationsView'?styles.activeItem:null]} 
-                    onPress={this.navigateToScreen('AllFoundationsView')}>
-                    <Ionicons name="md-hand" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Fundaciones</Text>
-                  </Ripple>
-                  
                   <Ripple style={[styles.drawerItem, activeView=='MyServicesView'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('MyServicesView')}>
                     <Ionicons name="md-paw" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>

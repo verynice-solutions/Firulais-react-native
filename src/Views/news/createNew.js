@@ -24,7 +24,7 @@ class createNew extends Component {
       fetchingImages:false,
       title:'test',
       date: '',
-      evento:true, noticia:null,
+      evento:null, noticia:true,
 
       new_fire_key: firebase.database().ref().child('news').push().key,
       blockButton: false,
@@ -250,7 +250,9 @@ class createNew extends Component {
 					<View style={{marginTop:5}}/>
           {imagesPupers&&<Label style={{fontWeight: 'bold'}}>Fotos</Label>}
           {this.state.fetchingImages?
-            <ActivityIndicator size="small" /> 
+            <View style={{paddingVertical:15}}>
+              <ActivityIndicator size="small" />
+            </View> 
           :
           <FlatList horizontal style={{backgroundColor:'#F2F2F2',marginBottom:8}}
               data={imagesPupers}
@@ -280,24 +282,25 @@ class createNew extends Component {
           </Item>
 
           <View style={{marginTop:20}}/>
-          <Label style={{fontWeight: 'bold'}}> Descripción </Label>
+          <Label style={{fontWeight: 'bold'}}> Contenido </Label>
           <Textarea bordered placeholder='Describe aqui de que trata tu noticia.'
           autoCorrect={true}
           value={this.state.description}
+          rowSpan={10}
           onChangeText={(text)=> this.setState({description: text})} 
           />
           <View style={{marginTop:10}}/>
-          <Label style={{fontWeight: 'bold'}}> Tipo </Label>
-            <ListItem>
-              <CheckBox onPress={()=>{this.setState({evento:!this.state.evento ,noticia:false})}} 
-                checked={this.state.evento}/>
-              <Label style={{paddingLeft:15}}>Evento</Label>
-            </ListItem>
-            <ListItem>
-              <CheckBox onPress={()=>{this.setState({noticia:!this.state.noticia ,evento:false})}} 
-                checked={this.state.noticia} />
-              <Label style={{paddingLeft:15}}>Noticia</Label>
-            </ListItem>
+          {/* <Label style={{fontWeight: 'bold'}}> Tipo </Label>
+          <ListItem>
+            <CheckBox onPress={()=>{this.setState({evento:!this.state.evento ,noticia:false})}} 
+              checked={this.state.evento}/>
+            <Label style={{paddingLeft:15}}>Evento</Label>
+          </ListItem>
+          <ListItem>
+            <CheckBox onPress={()=>{this.setState({noticia:!this.state.noticia ,evento:false})}} 
+              checked={this.state.noticia} />
+            <Label style={{paddingLeft:15}}>Noticia</Label>
+          </ListItem> */}
         
 				</Content>
 			</Container>
