@@ -56,7 +56,6 @@ class FundationProfileView extends Component {
 	componentDidMount() {
 		let params = this.props.navigation.state.params
 		if(this.props.currentUser.uid===params.foundationID){this.props.navigation.setParams({ myperfil: true })}
-		this.setState({isFetchingData: true, isFetchingData: true})
 		this.fetchEverything(params)
 	}
 	
@@ -76,7 +75,10 @@ class FundationProfileView extends Component {
 	}
 
 	petTouched(mascotaId, fundacionId, userId,petObj) {
-		this.props.navigation.navigate('PetProfile')
+		let myPet = this.props.currentUser.uid === petObj.idFundacion
+		if(this.state.data){
+			this.props.navigation.navigate('PetProfile',{petId: mascotaId, myPet: myPet, fundObj: this.state.data })
+		}
 		// if(this.props.currentUser.type == 'user' && this.state.data) {
 		// 	this.props.navigation.navigate('CreateService',{toCreate:{petObj:petObj,fid:fundacionId,uid:userId,fundObj:this.state.data}})
 		// }else{
@@ -111,7 +113,7 @@ class FundationProfileView extends Component {
 					<CardItem>
 							<View style={styles.petCardContent}>
 							<Thumbnail circle large source={{ uri: imgURL}}/> 
-								<Text numberOfLines={1} note> {pets[item].edad} años </Text>
+								<Text numberOfLines={1} note> {pets[item].tempName} </Text>
 							</View>
 					</CardItem>
 				</Card>
@@ -173,17 +175,18 @@ class FundationProfileView extends Component {
 								<View style={{marginTop:30}}/>
 								{
 									this.props.currentUser.type === 'user' &&(
-										<View style={{marginHorizontal: 10, marginBottom: 10}}> 											
+										<View style={{marginHorizontal: 10, marginBottom: 10}}> 		
+
 											<Card> 
 												<CardItem
 													button
-													onPress={this.addVoluntario}
+													onPress={()=>null}
 													style={{backgroundColor: '#FFFFFF'}}>
 													<Left>
-														<Thumbnail source={images.medal}/>
+														<Thumbnail square small source={images.antenna_optional}/>
 														<Body>
-															<Text note>¿Quieres recibir noticias?</Text>
-															<Text style={{fontWeight: 'bold'}}>¡Suscríbete!</Text>
+															<Text note>¿Quieres recibir noticias de esta fundación?</Text>
+															<Text style={{fontWeight: 'bold'}}>¡Subscríbete!</Text>
 														</Body>
 													</Left>
 												</CardItem>
@@ -192,14 +195,15 @@ class FundationProfileView extends Component {
 												<CardItem
 													style={{backgroundColor: '#FFFFFF'}}>
 													<Left>
-														<Thumbnail source={images.medal}/>
+														<Thumbnail square small source={images.antenna_green}/>
 														<Body>
-															<Text style={{fontWeight: 'bold'}}>¡Estas suscrito!</Text>
+															<Text style={{fontWeight: 'bold'}}>¡Estas subscrito a esta fundación!</Text>
 															<Text note>Te avisaremos de la actividad de esta fundación.</Text>
 														</Body>
 													</Left>
 												</CardItem>
 											</Card>
+
 										</View>
 									)	
 								}

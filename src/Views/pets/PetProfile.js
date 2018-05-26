@@ -6,24 +6,26 @@ import {connect} from 'react-redux'
 //Style
 import { Button, Icon, Thumbnail, Text, Item, Input, 
 				Card, CardItem, Content, Left, ListItem, Body, List,
-				Right, Label} from 'native-base'
+				Right, Label,Toast} from 'native-base'
 import images from '../../../assets/images'
-import { Ionicons } from '@expo/vector-icons';
-
+import { Ionicons,MaterialCommunityIcons } from '@expo/vector-icons';
+//Actions
+import petActions from '../../actions/petActions'
+import serviceActions from '../../actions/serviceActions'
 class PetProfile extends Component {
 	constructor(props) {
 		super(props);
 		this.state={
-
+			petInfo: {},
+			isFetchingPet: true
 		}
-
   }
   
 	static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
-		if(params.myperfil){
+		if(params.myPet){
 			return{
-				title: 'Voluntario: Mi perfil',
+				title: 'Mi mascota',
 				headerRight: (Platform.OS==='ios'?
 					<Button transparent onPress={()=>navigation.navigate('EditProfile')}>
 						<Text primary>Editar</Text>
@@ -35,109 +37,175 @@ class PetProfile extends Component {
 			}
 		}else{
 			return{
-				title:'Mascota: [nombre pet]'
+				title:'Mascota'
 			}
 		}
 	}
 
 	componentDidMount() {
-    
+		let params = this.props.navigation.state.params
+		this.fetchEverything(params)
 	}
 
+	fetchEverything = async (params) =>{
+		let promise = await petActions.fetchPetById(params.petId)
+		.then((val)=>{
+			this.setState({petInfo: val, isFetchingPet: false})
+		});
+	}
+	_solicitarServicio = ()=>{
+		let pet = this.state.petInfo
+		let params = this.props.navigation.state.params
+		let currentUserId = this.props.currentUser.uid
+		// this.props.navigation.navigate('PetProfile',{petId: mascotaId, myPet: myPet })
+		if(this.props.currentUser.type == 'user' && pet) {
+
+			serviceActions.fetchUserServices(this.props.currentUser.uid).then((val)=>{
+				let validate = false
+				if(val){
+					Object.keys(val).map((item, index)=>{
+						if(val[item].petId == pet.pet_fire_key){
+							if(val[item].status!='finalizado' && val[item].status!='rechazado'){
+								validate = val[item].status
+							}
+						}
+					})
+				}
+				if (validate){
+					Toast.show({
+						text:`Ya tienes una solicitud para esta mascota. \nEstá en estado: ${validate} \u2661`,
+						buttonText:'Ok',
+						duration: 6000
+					})
+				}else{
+					this.props.navigation.navigate('CreateService',{toCreate: { petObj: pet, fid:pet.idFundacion, uid: currentUserId, fundObj:params.fundObj } })
+				}
+			})
+			.catch(err=>{
+				console.log('Error:', err)
+			})
+
+		}else{
+			Toast.show({
+				text:'Solo los voluntarios pueden cuidar mascotas',
+				buttonText:'Ok',
+				duration: 4000
+			})
+		}
+	}
 
 	render() {
-		
-		return (
-			<ScrollView style={{flex:1}}>
-				<View style={{ flexDirection:'column'}}>
-					<View style={{backgroundColor:'#ffffff'}}>
-						<View style={{marginTop:20}}/>	
-						<ListItem avatar noBorder>
-							<Left>
+		if(this.state.isFetchingPet){
+			return (
+				<View style={{ flex:1, justifyContent: 'center' }} >
+					<ActivityIndicator size='large' />
+				</View>
+			)
+		}else{
+			let pet = this.state.petInfo
+			let petImages = pet.imageUrls
+			let thumbnail = petImages[Object.keys(petImages)[0]].url
+			return (
+				<ScrollView style={{flex:1}}>
+					<View style={{ flexDirection:'column'}}>
+						<View style={{backgroundColor:'#ffffff'}}>
+							<View style={{marginTop:20}}/>	
+							<ListItem avatar noBorder>
 								<Thumbnail 
-								style={{borderColor: '#2a2a2a59', borderWidth:5, marginTop: 15}} 
-								rounded large source={images.angel_kitty}/>
-							</Left>
-							<Body>
-								<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>Nombre del perrito</Text>
-								<Text note>
-									<Ionicons name="md-paw" size={(15)} color="rgb(75, 75, 73)"/> Perro o gato
-								</Text>
-								<Text note>
-									<Ionicons name="md-sunny" size={(15)} color="rgb(75, 75, 73)"/> Macho o hembra
-								</Text>								
-								<Text note>
-									<Ionicons name="md-cloudy-night" size={(15)} color="rgb(75, 75, 73)"/> Edad
-								</Text>
-								<Text note>
-									<Ionicons name="md-shirt" size={(15)} color="rgb(75, 75, 73)"/> Tamaño
-								</Text>
-							</Body>
+								style={{width:120,height:120,borderRadius:120/2,borderColor: '#2a2a2a59', borderWidth:5, marginTop: 20}} 
+								rounded large source={{uri: thumbnail}}/>
+								<Body style={{borderBottomWidth:0, marginTop:10}}>
+									<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>{pet.tempName}</Text>
+									<Text note>
+										<Ionicons name="md-paw" size={(15)} color="rgb(75, 75, 73)"/> {_.capitalize(pet.tipo)}
+									</Text>
+									<Text note>
+										<Ionicons name={pet.genero=='macho'?'md-male':'md-female'} size={(15)} color="rgb(75, 75, 73)"/> {_.capitalize(pet.genero)}
+									</Text>				
+									<Text note>
+										<MaterialCommunityIcons name="cake" size={(15)} color="rgb(75, 75, 73)"/> {_.capitalize(pet.edad)}
+									</Text>
+									<Text note>
+									<MaterialCommunityIcons name="weight"  size={(15)} color="rgb(75, 75, 73)"/> {_.capitalize(pet.tamaño)}
+									</Text>
+								</Body>
+							</ListItem>
+							<View style={{marginTop:30}}/>
+							<View style={{marginHorizontal: 10, marginBottom: 10}}> 											
+								<Card> 
+									<CardItem
+										button
+										onPress={()=>this._solicitarServicio()}
+										style={{backgroundColor: '#FFFFFF'}}>
+										<Left>
+											<Thumbnail source={images.medal}/>
+											<Body>
+												<Text note>¡Quiero ofrecerme como voluntari@!</Text>
+												<Text style={{fontWeight: 'bold'}}>Enviar Solicitud</Text>
+											</Body>
+										</Left>
+									</CardItem>
+								</Card>
+							</View>
+						</View>
+						<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+							<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>PERSONALIDAD</Text></Left>
 						</ListItem>
-						<View style={{marginTop:30}}/>
-						<View style={{marginHorizontal: 10, marginBottom: 10}}> 											
-							<Card> 
-								<CardItem
-									button
-									onPress={this.addVoluntario}
-									style={{backgroundColor: '#FFFFFF'}}>
-									<Left>
-										<Thumbnail source={images.medal}/>
-										<Body>
-											<Text note>¡Quiero ofrecerme como voluntari@!</Text>
-											<Text style={{fontWeight: 'bold'}}>Enviar Solicitud</Text>
-										</Body>
-									</Left>
-								</CardItem>
-							</Card>
+						<View style={{margin: 20}}>
+							<Text style={{textAlign: 'justify'}}>
+								{pet.personalidad}
+							</Text>
+						</View>
+
+						{pet.cuidadosEspeciales&&<View><ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+							<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>CUIDADOS ESPECIALES</Text></Left>
+						</ListItem>
+						<View style={{margin: 20}}>
+							<Text style={{textAlign: 'justify'}}>
+								{pet.cuidadosEspeciales}
+							</Text>
+						</View></View>}
+
+						{(pet.hogarDeseado||pet.tiempoMinCuidado)&&<View><ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+							<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>REQUERIMIENTOS</Text></Left>
+						</ListItem>
+						<List>
+							{pet.hogarDeseado&&<ListItem>
+								<Thumbnail square size={40} source={images.house_kawai} />
+								<Body>
+									<Text note>Tipo de hogar</Text>
+									<Text>{pet.hogarDeseado}</Text>
+								</Body>
+							</ListItem>}
+							{pet.tiempoMinCuidado&&<ListItem>
+								<Thumbnail square size={40} source={images.calendar_kawai} />
+								<Body>
+									<Text note>Tiempo mínimo de cuidado</Text>
+									<Text>{pet.tiempoMinCuidado} {pet.tiempoMinCuidadoRango}.</Text>
+								</Body>
+							</ListItem>}
+						</List></View>}
+
+						<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+							<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>CARACTERÍSTICAS </Text></Left>
+						</ListItem>
+						<View style={{margin: 20}}>
+							<Text style={{textAlign: 'justify'}}>
+								{pet.caracteristicas}
+							</Text>
+						</View>
+						<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+							<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>FOTOS</Text></Left>
+						</ListItem>
+						<View style={{margin: 20}}>
+							<Text style={{textAlign: 'justify'}}>
+								Espacio para poner las fotos de la mascota / estilo las que salen en noticias.
+							</Text>
 						</View>
 					</View>
-					<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
-						<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>PERSONALIDAD</Text></Left>
-					</ListItem>
-					<View style={{margin: 20}}>
-						<Text style={{textAlign: 'justify'}}>
-							Espacio para describir la personalidad de la mascota.
-						</Text>
-					</View>
-					<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
-						<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>CUIDADOS ESPECIALES</Text></Left>
-					</ListItem>
-					<View style={{margin: 20}}>
-						<Text style={{textAlign: 'justify'}}>
-							Espacio para escribir los cuidados especiales que tiene la mascota.
-						</Text>
-					</View>
-					<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
-						<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>REQUERIMIENTOS</Text></Left>
-					</ListItem>
-					<List>
-            <ListItem>
-              <Thumbnail square size={80} source={images.wonder_kitty} />
-              <Body>
-                <Text note>Tipo de hogar</Text>
-                <Text>Descripcion del tipo de hogar que se requiere</Text>
-              </Body>
-            </ListItem>
-						<ListItem>
-              <Thumbnail square size={80} source={images.wonder_kitty} />
-              <Body>
-                <Text note>Tiempo minimo de cuidado</Text>
-                <Text>Una semana</Text>
-              </Body>
-            </ListItem>
-          </List>
-					<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
-						<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>FOTOS</Text></Left>
-					</ListItem>
-					<View style={{margin: 20}}>
-						<Text style={{textAlign: 'justify'}}>
-							Espacio para poner las fotos de la mascota / estilo las que salen en noticias.
-						</Text>
-					</View>
-				</View>
-			</ScrollView>
-		)
+				</ScrollView>
+			)
+		}
 	}
 }
 

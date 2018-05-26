@@ -6,6 +6,7 @@ import Modal from 'react-native-modal'
 import StarRating from 'react-native-star-rating';
 import serviceActions from '../../actions/serviceActions'
 import images from '../../../assets/images'
+import Ripple from 'react-native-material-ripple'
 
 class MyServicesView extends Component {
 	constructor(props) {
@@ -73,7 +74,8 @@ class MyServicesView extends Component {
               services?(
                 Object.keys(services).map((i)=>{
                   return (services[i].status == 'rechazado' || services[i].status == 'finalizado') && (
-                      <ListItem key={i} onPress={ ()=> navigate('FinishedService', { serviceKey:i, serviceInModal: services[i] }) }>
+                    <Ripple key={i} onPress={ ()=> navigate('FinishedService', { serviceKey:i, serviceInModal: services[i] }) }>
+                      <ListItem >
                         <Thumbnail rounded size={80} source={{ uri: services[i].thumbnail }} />
                         <Body>
                           <Text>{services[i].petInfo.tempName}</Text>
@@ -81,6 +83,7 @@ class MyServicesView extends Component {
                         </Body>
                         <Text>{services[i].status}</Text>
                       </ListItem>
+                    </Ripple>
                     )
                   
                 })

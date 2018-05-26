@@ -41,7 +41,6 @@ function fetchByUID(uid) {
     let uidRef =  ref.child(uid);
     let promise = uidRef.once("value")
     .then( (snapshot)=> {
-        console
         return snapshot.val()
     }) 
     .catch(err=>{

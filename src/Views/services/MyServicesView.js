@@ -160,7 +160,7 @@ class MyServicesView extends Component {
                     {this.state.serviceInModal.petInfo.cat&&'Gato '}
                     {this.state.serviceInModal.petInfo.hembra&&'hembra con '}
                     {this.state.serviceInModal.petInfo.macho&&'macho con '}
-                    {this.state.serviceInModal.petInfo.edad} año(s) de edad.
+                    {this.state.serviceInModal.petInfo.edad} de edad.
                   </Text>
                 </Body>
               </ListItem>
@@ -243,14 +243,16 @@ class MyServicesView extends Component {
               services?(
                 Object.keys(services).map((i)=>{
                   return (services[i].status != 'rechazado' && services[i].status != 'finalizado') && (
-                      <ListItem key={i} onPress={()=>this._detailService(services[i])}>
-                        <Thumbnail rounded size={80} source={{ uri: services[i].thumbnail }} />
-                        <Body>
-                          <Text>{services[i].petInfo.tempName}</Text>
-                          <Text note>{services[i].type}</Text>
-                        </Body>
-                        <Text>{services[i].status}</Text>
-                      </ListItem>
+                      <Ripple key={i} onPress={()=>this._detailService(services[i])} >
+                        <ListItem>
+                          <Thumbnail rounded size={80} source={{ uri: services[i].thumbnail }} />
+                          <Body>
+                            <Text>{services[i].petInfo.tempName}</Text>
+                            <Text note>{services[i].type}</Text>
+                          </Body>
+                          <Text>{services[i].status}</Text>
+                        </ListItem>
+                      </Ripple>
                     )
                   
                 })

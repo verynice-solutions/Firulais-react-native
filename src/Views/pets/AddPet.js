@@ -7,7 +7,8 @@ import firebase from '../../firebase/firebaseSingleton'
 import { ImagePicker } from 'expo'
 //Style
 import Modal from 'react-native-modal'
-import {Container,Content,Button,Text,Textarea,CheckBox,ListItem,Toast,Card,Picker,Label,Input,Item, Thumbnail} from 'native-base'
+import {Container,Content,Button,Text,Textarea,CheckBox,ListItem,
+  Toast,Card,Picker,Label,Input,Item, Thumbnail} from 'native-base'
 import {randomPuppers} from '../../utils/random_functions'
 import { FlatList } from 'react-native-gesture-handler';
 import Imagess from '../../../assets/images'
@@ -21,14 +22,14 @@ class AddPet extends Component {
       images:[],
       fetchingImages:false,
       tempName: null,
-      description: null,
+      caracteristicas: null,
       tipo: 'perro',
       tamaño: 'pequeño',
       genero: 'hembra',
-      edad: '0-1',
+      edad: 'Menos de 1 año',
       personalidad: null,
-      tiempoCuidado: null,
-      tiempoCuidadoRango:'dias',
+      tiempoMinCuidado: null,
+      tiempoMinCuidadoRango:'dias',
       cuidadosEspeciales: null,
       hogarDeseado: null,
       pet_fire_key: firebase.database().ref().child('pets').push().key,
@@ -67,22 +68,22 @@ class AddPet extends Component {
     // console.log(values)
     let valuesToSend = {
       tempName: values.tempName,
-      description: values.description,
+      caracteristicas: values.caracteristicas,
       tipo: values.tipo,
       tamaño: values.tamaño,
       genero: values.genero,
       edad: values.edad,
       personalidad: values.personalidad,
-      tiempoCuidado: values.tiempoCuidado,
-      tiempoCuidadoRango: values.tiempoCuidadoRango,
+      tiempoMinCuidado: values.tiempoMinCuidado,
+      tiempoMinCuidadoRango: values.tiempoMinCuidadoRango,
       cuidadosEspeciales: values.cuidadosEspeciales,
       hogarDeseado: values.hogarDeseado,
-
       pet_fire_key: values.pet_fire_key
     }
     let obligatorios ={
       tempName: values.tempName,
-      description: values.description,
+      personalidad: values.personalidad,
+      caracteristicas: values.caracteristicas,
       tipo: values.tipo,
       tamaño: values.tamaño,
       genero: values.genero,
@@ -188,10 +189,18 @@ class AddPet extends Component {
     }, 1000);
   }
 
-  renderImageItem({item}){
+  renderImageItem({item,index}){
     return (
       <Card style={{flex: 1}}>
+        {index==0?
+        <View style={{justifyContent:'center',alignItems: 'center', width:160,
+        height:120}}>
+          <Text style={{textAlign:'center',paddingBottom:5}}>Principal</Text>
+          <Thumbnail circular source={{uri: item}} style={styles.profileFoto} />
+        </View>
+        :
         <Image resizeMode='contain' style={styles.petImage} source={{uri: item}}/>
+        }
         <TouchableOpacity style={{flexDirection:'row', justifyContent:'center',padding:5}} onPress={()=>this._deletePhoto(item)}>
           <Text> Quitar   </Text>
           <Ionicons name='md-close' size={20}/>
@@ -276,11 +285,13 @@ class AddPet extends Component {
           </View>
 
           <View style={styles.textAreaContainer}>
-            <Text style={styles.textHeaders}>Descripción <Text style={{color:'red'}}>*</Text></Text>
-            <Textarea bordered placeholder='¿Cuales son las características de tu mascota?'
+            <Text style={styles.textHeaders}>Personalidad <Text style={{color:'red'}}>*</Text></Text>
+            <Textarea bordered placeholder='Describe como es el comportamiento de tu mascota.
+            (ej. jugueton, cariñoso, etc)'
             autoCorrect={true}
-            value={this.state.description}
-            onChangeText={(text)=> this.setState({description: text})}/>
+            value={this.state.personalidad}
+            onChangeText={(text)=> this.setState({personalidad: text})} 
+            />
           </View>
 
           <View style={styles.pickerContainer}>
@@ -324,10 +335,10 @@ class AddPet extends Component {
               headerBackButtonText="Atrás"
               selectedValue={this.state.edad}
               onValueChange={(value)=>{this.setState({edad: value})}}>
-              <Picker.Item label="Menos de 1 año" value="0-1" />
-              <Picker.Item label="1 ~ 2 años" value="1-2" />
-              <Picker.Item label="3 ~ 10 años" value="3-10" />
-              <Picker.Item label="Más de 10 años" value="5-10" />
+              <Picker.Item label="Menos de 1 año" value="Menos de 1 año" />
+              <Picker.Item label="1 ~ 2 años" value="1 ~ 2 años" />
+              <Picker.Item label="3 ~ 10 años" value="3 ~ 10 años" />
+              <Picker.Item label="Más de 10 años" value="Más de 10 años" />
             </Picker>
           </View>
 
@@ -347,12 +358,12 @@ class AddPet extends Component {
           </View>
 
           <View style={styles.textAreaContainer}>
-            <Text style={styles.textHeaders}>Personalidad </Text>
-            <Textarea bordered placeholder='Describe como es el comportamiento y personalidad de tu mascota. (ej. jugueton, cariñoso, etc) '
+            <Text style={styles.textHeaders}>Características <Text style={{color:'red'}}>*</Text></Text>
+            <Textarea bordered placeholder='¿Cuales son las características físicas de tu mascota?
+            (ej. amarillo, peludito, de raza labrador...)'
             autoCorrect={true}
-            value={this.state.personalidad}
-            onChangeText={(text)=> this.setState({personalidad: text})} 
-            />
+            value={this.state.caracteristicas}
+            onChangeText={(text)=> this.setState({caracteristicas: text})}/>
           </View>
 
           <View style={styles.pickerContainer}>
@@ -360,8 +371,8 @@ class AddPet extends Component {
             <View style={{flexDirection:'row',justifyContent:'space-around'}}>
               <Item fixedLabel style={{flex: 0.5}}>
                 <Input placeholder="Cantidad" keyboardType='numeric'
-                value={this.state.tiempoCuidado}
-                onChangeText={(text)=> this.setState({tiempoCuidado: text})} />
+                value={this.state.tiempoMinCuidado}
+                onChangeText={(text)=> this.setState({tiempoMinCuidado: text})} />
               </Item>
               <Picker
                 mode="dropdown"
@@ -369,8 +380,8 @@ class AddPet extends Component {
                 iosHeader="Rango de tiempo"
                 iosIcon={<Ionicons name="ios-arrow-down-outline" />}
                 headerBackButtonText="Atrás"
-                selectedValue={this.state.tiempoCuidadoRango}
-                onValueChange={(value)=>{this.setState({tiempoCuidadoRango: value})}}
+                selectedValue={this.state.tiempoMinCuidadoRango}
+                onValueChange={(value)=>{this.setState({tiempoMinCuidadoRango: value})}}
                 style={{ width: undefined, flex: 0.5 }}>
                 <Picker.Item label="Dias" value="dias" />
                 <Picker.Item label="Meses" value="meses" />
@@ -381,14 +392,16 @@ class AddPet extends Component {
 
           <View style={styles.textAreaContainer}>
             <Text style={styles.textHeaders}>Tipo de Hogar </Text>
-            <Textarea bordered placeholder='Describe las caracteristicas del hogar preferible para tu mascota. (ej. lugar amplio con patio)'
+            <Textarea bordered placeholder='Describe las caracteristicas del hogar preferible para tu mascota. 
+            (ej. lugar amplio con patio ...)'
             autoCorrect={true}
             value={this.state.hogarDeseado}
             onChangeText={(text)=> this.setState({hogarDeseado: text})} />
 
             <View style={{marginTop:20}}/>
             <Text style={styles.textHeaders}>Cuidados Especiales </Text>
-            <Textarea bordered placeholder='Describe todos los cuidados especiales que tiene tu mascota. (ej. medicinas, horarios, etc)'
+            <Textarea bordered placeholder='Describe todos los cuidados especiales que tiene tu mascota. 
+            (ej. medicinas, horarios ...)'
             autoCorrect={true}
             value={this.state.cuidadosEspeciales}
             onChangeText={(text)=> this.setState({cuidadosEspeciales: text})} />
@@ -411,6 +424,11 @@ const styles = StyleSheet.create({
   petImage:{
     width:160,
     height:120
+  },
+  profileFoto:{
+    width: 84,
+    height: 84,
+    borderRadius: 84/2
   },
   pickerContainer:{
     flexDirection:'column',

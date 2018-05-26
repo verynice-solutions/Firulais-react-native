@@ -9,7 +9,13 @@ const images = {
 	sherlock_kitty: require('./images/sherlock_kitty.png'),
 	//Drawer
 	firulais_logo: require('./images/logo_firulais_op.png'),
-
+	//Home
+	house_kawai:require('./images/house_kawai.png'),
+	//Calendar
+	calendar_kawai:require('./images/calendar_kawai.png'),
+	//News
+	antenna_optional:require('./images/antenna_optional.png'),
+	antenna_green:require('./images/antenna_green.png'),
 	//Icon images
 	icon_menu: require('./icons/menu.png'),
 
