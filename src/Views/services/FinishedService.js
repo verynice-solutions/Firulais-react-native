@@ -76,6 +76,73 @@ class FinishedService extends Component {
     }else if(serviceInModal){
       return (
         <ScrollView>
+          
+          {
+            serviceInModal.status === 'finalizado' && (
+              this.props.currentUser.type==='user' ? (
+                <View style={{flex:1, flexDirection:'column',justifyContent:'space-around'}}>
+                  <ListItem itemDivider>
+                    <Left><Text style={styles.dividerText}>Calificación del servicio</Text></Left>
+                  </ListItem>  
+                  {serviceInModal.ratingMsg?<ListItem avatar>
+                    <Left>
+                      <Thumbnail square source={images.chat_bubbles} />
+                    </Left>
+                    <Body>
+                      <Text>Comentario</Text>
+                      <Text numberOfLines={3} note style={{marginVertical:10}}>
+                        {serviceInModal.ratingMsg}
+                      </Text>
+                    </Body>
+                    <Right>
+                      {serviceInModal.rating&&<Text>
+                        {serviceInModal.rating} <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/> 
+                      </Text>}
+                    </Right> 
+                  </ListItem>:<ListItem thumbnail>
+                    <Left>
+                      <Thumbnail source={images.wonder_kitty} />
+                    </Left>
+                    <Body>
+                      <Text>Comentario</Text>
+                      <Text numberOfLines={3} note style={{marginVertical:10}}>
+                        Todavía no tienes calificación de este servicio.
+                      </Text>
+                    </Body>
+                  </ListItem>}
+                </View>
+              ):( 
+                <KeyboardAvoidingView behavior={Platform.OS==='ios'?'padding':null} style={{flex:1, flexDirection:'column', justifyContent:'center'}}>
+                  <ListItem itemDivider>
+                    <Left><Text style={styles.dividerText}>Da tu opinión...</Text></Left>
+                  </ListItem> 
+  
+                  <View style={{padding: 10, marginHorizontal:50, marginTop:10}}>
+                    <StarRating
+                      disabled={false}
+                      maxStars={5}
+                      fullStarColor={'purple'}
+                      rating={this.state.starSelected}
+                      selectedStar={(rating) => this._onStarRatingPress(rating)}/>  
+                  </View>
+                  <View style={{paddingBottom: 10, marginHorizontal:20}}>
+                    <Textarea bordered placeholder='Un mensaje para el voluntario'
+                      rowSpan={5}
+                      autoCorrect={true}
+                      value={this.state.ratingDesc}
+                      onChangeText={(text)=> this.setState({ratingDesc: text})} />
+                  </View>
+  
+                  <View style={{marginBottom:15}}/>
+                  <View style={{flexDirection:'row',justifyContent:'space-around'}}><Button onPress={()=>this._rateVolunteer()} rounded info>
+                    <Text>  Calificar  </Text>
+                  </Button></View>
+                  <View style={{marginBottom:15}}/>
+                </KeyboardAvoidingView>
+              )
+            )
+            
+          }
           <View>
             <ListItem itemDivider>
               <Left><Text style={styles.dividerText}>Información del voluntario</Text></Left>
@@ -89,14 +156,7 @@ class FinishedService extends Component {
             <Body>
               <Text>{serviceInModal.userInfo.givenName}</Text>
               <Text note>{serviceInModal.userInfo.email}</Text>
-            </Body>
-          </ListItem>
-  
-          <ListItem noBorder>
-            <Ionicons name='md-checkmark-circle-outline' size={40} style={{paddingLeft:10,paddingRight:20}} color='green'/>
-            <Body>
-              <Text>{serviceInModal.phone}</Text>
-              <Text note>Teléfono</Text>
+              <Text note>{serviceInModal.phone}</Text>
             </Body>
           </ListItem>
   
@@ -172,51 +232,7 @@ class FinishedService extends Component {
             </ListItem>                
           }
   
-          {
-            serviceInModal.status === 'finalizado' && (
-              this.props.currentUser.type==='user' ? (
-                <View style={{flex:1, flexDirection:'column',justifyContent:'space-around'}}>
-                  <View style={{padding: 10, marginHorizontal:50, marginTop:10}}>
-                    <StarRating
-                      disabled={true}
-                      maxStars={5}
-                      fullStarColor={'purple'}
-                      rating={serviceInModal.rating ? serviceInModal.rating : 0}/>                
-                  </View>
-                  <Text style={{textAlign: 'center'}}>{serviceInModal.ratingMsg ? serviceInModal.ratingMsg : 'No hay calificación aún'}</Text>
-                  </View>
-              ):( 
-                <KeyboardAvoidingView behavior={Platform.OS==='ios'?'padding':null} style={{flex:1, flexDirection:'column', justifyContent:'center'}}>
-                  <ListItem itemDivider>
-                    <Left><Text style={styles.dividerText}>Da tu opinión...</Text></Left>
-                  </ListItem> 
-  
-                  <View style={{padding: 10, marginHorizontal:50, marginTop:10}}>
-                    <StarRating
-                      disabled={false}
-                      maxStars={5}
-                      fullStarColor={'purple'}
-                      rating={this.state.starSelected}
-                      selectedStar={(rating) => this._onStarRatingPress(rating)}/>  
-                  </View>
-                  <View style={{paddingBottom: 10, marginHorizontal:20}}>
-                    <Textarea bordered placeholder='Un mensaje para el voluntario'
-                      rowSpan={5}
-                      autoCorrect={true}
-                      value={this.state.ratingDesc}
-                      onChangeText={(text)=> this.setState({ratingDesc: text})} />
-                  </View>
-  
-                  <View style={{marginBottom:15}}/>
-                  <View style={{flexDirection:'row',justifyContent:'space-around'}}><Button onPress={()=>this._rateVolunteer()} rounded info>
-                    <Text>  Calificar  </Text>
-                  </Button></View>
-                  <View style={{marginBottom:15}}/>
-                </KeyboardAvoidingView>
-              )
-            )
-            
-          }
+
     
         </ScrollView>
       )

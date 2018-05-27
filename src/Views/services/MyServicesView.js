@@ -113,22 +113,20 @@ class MyServicesView extends Component {
             <View style={styles.ModalContainer}>
               {user.type==='fundation'?
               <Ripple onPress={()=>this._goToUserProfile()}>
-                <ListItem avatar>
-                  <Left>
-                    <Thumbnail size={40} source={{uri: this.state.serviceInModal.userInfo.photoUrl}} />
-                  </Left>
+                <ListItem noBorder>
+                  <Thumbnail rounded size={40} source={{uri: this.state.serviceInModal.userInfo.photoUrl}} />
                   <Body>
                     <Text>{this.state.serviceInModal.userInfo.givenName}</Text>
                     <Text note>{this.state.serviceInModal.userInfo.email}</Text>
+                    {(this.state.serviceInModal.status !== 'pendiente')&&
+                      <Text note>{this.state.serviceInModal.phone}</Text>}
                   </Body>
                 </ListItem>
               </Ripple>
               :
               <Ripple onPress={()=>this._goToFundProfile()}>
-                <ListItem avatar >
-                  <Left>
-                    <Thumbnail size={40} source={{uri: this.state.serviceInModal.fundInfo.photoUrl}} />
-                  </Left>
+                <ListItem noBorder>   
+                  <Thumbnail rounded size={40} source={{uri: this.state.serviceInModal.fundInfo.photoUrl}} /> 
                   <Body>
                     <Text>{this.state.serviceInModal.fundInfo.givenName}</Text>
                     <Text note>{this.state.serviceInModal.fundInfo.email}</Text>
@@ -136,23 +134,13 @@ class MyServicesView extends Component {
                 </ListItem>
               </Ripple>
               }
-              {(user.type==='fundation' && this.state.serviceInModal.status !== 'pendiente')?
-              <ListItem noBorder>
-                <Ionicons name='md-checkmark-circle-outline' size={40} style={{paddingLeft:10,paddingRight:20}} color='green'/>
-                <Body>
-                  <Text>{this.state.serviceInModal.phone}</Text>
-                  <Text note>Teléfono</Text>
-                </Body>
-              </ListItem>
-              :null
-              }
 
               <ListItem itemDivider>
                 <Left><Text style={styles.dividerText}>Mascota</Text></Left>
               </ListItem> 
               
               <ListItem noBorder>
-                <Thumbnail square size={80} source={{uri: this.state.serviceInModal.thumbnail}}/>
+                <Thumbnail rounded size={80} source={{uri: this.state.serviceInModal.thumbnail}}/>
                 <Body>
                   <Text>{this.state.serviceInModal.petInfo.tempName}</Text>
                   <Text note>  
@@ -206,27 +194,29 @@ class MyServicesView extends Component {
 
               </List>
 
+
+              <View style={{justifyContent:'flex-end', flexDirection: 'column', flex:1}}>
               {
                 user.uid===this.state.serviceInModal.founId && user.type==='fundation' &&(
                   this.state.serviceInModal.status === 'pendiente' ? (
-                    <View style={{flexDirection:'row',justifyContent:'space-around', marginBottom:10,marginTop:10}}>
-                      <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'rechazado')} rounded info>
+                    <View style={{flexDirection:'row',justifyContent:'space-around', margin:10}}>
+                      <Button style={{flex: 0.47}} danger onPress={()=>this._reviewService(this.state.serviceInModal.servId,'rechazado')} block>
                         <Text>Rechazar</Text>
                       </Button>
-                      <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'aprobado')} rounded info>
+                      <Button style={{flex: 0.47}} success onPress={()=>this._reviewService(this.state.serviceInModal.servId,'aprobado')} block>
                         <Text>Aceptar</Text>
                       </Button>
                     </View>
                   ):(
                     this.state.serviceInModal.status == 'progreso' ? (
-                      <View style={{flexDirection:'row',justifyContent:'space-around', marginBottom:10,marginTop:10}}>
-                        <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'finalizado')} rounded info>
+                      <View style={{flexDirection:'row',justifyContent:'space-around', margin:10}}>
+                        <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'finalizado')} block style={{flex: 1}} info>
                           <Text>Finalizar</Text>
                         </Button>
                       </View>
                     ):(
                       <View style={{flexDirection:'row',justifyContent:'space-around', marginBottom:10,marginTop:10}}>
-                        <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'progreso')} rounded info>
+                        <Button onPress={()=>this._reviewService(this.state.serviceInModal.servId,'progreso')} block style={{flex: 0.9}} info>
                           <Text>Iniciar</Text>
                         </Button>
                       </View>
@@ -235,7 +225,7 @@ class MyServicesView extends Component {
                 )
 
               }
-
+              </View>
             </View>
           </Modal>}
           <List>
@@ -283,7 +273,6 @@ const styles = StyleSheet.create({
     flex:0.9,
     flexDirection:'column', 
     backgroundColor:'white',
-    justifyContent:'space-around'
   },
   dividerText: {
 		fontWeight: 'bold',

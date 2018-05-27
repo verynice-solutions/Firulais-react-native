@@ -103,15 +103,15 @@ class UsersProfile extends Component {
               <Left>
                 <Thumbnail source={{uri: data.fundInfo.photoUrl}} />
               </Left>
-								<Body>
-                  <Text>Comentario</Text>
-									<Text numberOfLines={3} note style={{marginVertical:10}}>
-										{data.ratingMsg}
-									</Text>
-									<Text note><Ionicons name="md-person" size={(15)} color="rgb(75, 75, 73)"/>  {data.fundInfo.name}</Text>
-									<Text note><Ionicons name="md-paw" size={(15)} color="rgb(75, 75, 73)"/>  Mascota {data.petInfo.tempName}</Text>
-                	<Text note><Ionicons name="md-hand" size={(15)} color="rgb(75, 75, 73)"/>  {data.type.toUpperCase()}</Text>
-                </Body>
+							<Body>
+								<Text>Comentario</Text>
+								<Text numberOfLines={3} note style={{marginVertical:10}}>
+									{data.ratingMsg}
+								</Text>
+								<Text note><Ionicons name="md-person" size={(15)} color="rgb(75, 75, 73)"/>  {data.fundInfo.name}</Text>
+								<Text note><Ionicons name="md-paw" size={(15)} color="rgb(75, 75, 73)"/>  Mascota {data.petInfo.tempName}</Text>
+								<Text note><Ionicons name="md-hand" size={(15)} color="rgb(75, 75, 73)"/>  {data.type.toUpperCase()}</Text>
+							</Body>
 							<Right>
 								{data.rating&&<Text>
 									{data.rating} <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/> 
