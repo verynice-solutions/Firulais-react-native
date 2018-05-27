@@ -19,6 +19,7 @@ const images = {
 	//Icon images
 	icon_menu: require('./icons/menu.png'),
 
+	sad_kitty: require('./images/kitty_sad.png'),
 	phone_kitty: require('./images/kitty_phone.png'),
 	bubbles_kitty: require('./images/kitty_bubbles.png'),
 	computer_kitty: require('./images/computerKitty.png'),

@@ -283,7 +283,7 @@ class createNew extends Component {
 
           <View style={{marginTop:20}}/>
           <Label style={{fontWeight: 'bold'}}> Contenido </Label>
-          <Textarea bordered placeholder='Describe aqui de que trata tu noticia.'
+          <Textarea bordered placeholder='Describe aquí de que trata tu noticia...'
           autoCorrect={true}
           value={this.state.description}
           rowSpan={10}

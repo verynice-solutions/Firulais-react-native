@@ -19,6 +19,7 @@ class PetProfile extends Component {
 			petInfo: {},
 			isFetchingPet: true
 		}
+		this.renderPics = this.renderPics.bind(this)
   }
   
 	static navigationOptions = ({navigation}) => {
@@ -94,6 +95,16 @@ class PetProfile extends Component {
 		}
 	}
 
+	renderPics({item}) {
+    let img = item.url
+    console.log("item: ", item)
+		return(
+      <View style={styles.picContent}>
+        <Image source={{uri: img}} resizeMode='contain' style={{height: 300, width: 300, flex: 1}}/>
+      </View>
+		)
+	}
+	
 	render() {
 		if(this.state.isFetchingPet){
 			return (
@@ -106,6 +117,7 @@ class PetProfile extends Component {
 			let user = this.props.currentUser
 			let petImages = pet.imageUrls
 			let thumbnail = petImages[Object.keys(petImages)[0]].url
+			let imagesArray = Object.values(petImages)
 			return (
 				<ScrollView style={{flex:1}}>
 					<View style={{ flexDirection:'column'}}>
@@ -202,9 +214,13 @@ class PetProfile extends Component {
 							<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>FOTOS</Text></Left>
 						</ListItem>
 						<View style={{margin: 20}}>
-							<Text style={{textAlign: 'justify'}}>
-								Espacio para poner las fotos de la mascota / estilo las que salen en noticias.
-							</Text>
+						<View style={{flex:0.4,alignItems:'center'}}>
+							<FlatList data={imagesArray}
+								horizontal
+								bounces={true}
+								renderItem={this.renderPics}
+								keyExtractor={ (item, index) => {return `${index}` } }/>
+						</View>
 						</View>
 					</View>
 				</ScrollView>

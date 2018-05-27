@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
+import Ripple from 'react-native-material-ripple'
 import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body } from 'native-base';
 
@@ -47,13 +48,15 @@ class UsersView extends Component {
                 users!==undefined ?(
                   Object.keys(users).map((i)=>{
                     let profile = users[i].profile             
-                    return <ListItem key={i} onPress={ ()=> navigate('UserProfile', { userID: i }) }>
-                      <Thumbnail rounded size={80} source={{ uri: users[i].photoUrl }} />
-                      <Body>
-                        <Text>{users[i].name}</Text>
-                        <Text note>{ profile && profile.description  } </Text>
-                      </Body>
-                    </ListItem>
+                    return <Ripple  key={i} onPress={ ()=> navigate('UserProfile', { userID: i }) }>
+                      <ListItem>
+                        <Thumbnail rounded size={80} source={{ uri: users[i].photoUrl }} />
+                        <Body>
+                          <Text>{users[i].name}</Text>
+                          <Text note>{ profile && profile.description  } </Text>
+                        </Body>
+                      </ListItem>
+                    </Ripple> 
                   })
                 ):(
                   <Text>No hay Personas :( </Text>

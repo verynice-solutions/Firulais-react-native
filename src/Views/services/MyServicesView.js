@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
+import _ from 'lodash'
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator,ScrollView, Image } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Left, Icon } from 'native-base';
 import Modal from 'react-native-modal'
@@ -15,7 +16,7 @@ class MyServicesView extends Component {
       allServices: [],
       isDetailVisible: false,
       serviceInModal: null,
-      fetching:false,
+      fetching: true,
     }
     this._detailService = this._detailService.bind(this)
     this._reviewService = this._reviewService.bind(this)
@@ -40,12 +41,24 @@ class MyServicesView extends Component {
   _fetchAll = ()=>{
     this.setState({fetching: true})
     if(this.props.currentUser.type==='fundation'){
-      serviceActions.fetchAllServices(this.props.currentUser.uid).then( (val) =>{
-        this.setState({allServices: val, fetching:false})
+      serviceActions.fetchAllServices(this.props.currentUser.uid).then( (values) =>{
+        if(_.some(values,{"status":"pendiente"})||_.some(values,{"status":"aprobado"})
+        ||_.some(values,{"status":"progreso"})
+        ){
+          this.setState({allServices: values, fetching:false})
+        }else{
+          this.setState({allServices: null, fetching:false})
+        }
       })
     }else{
-      serviceActions.fetchUserServices(this.props.currentUser.uid).then( (val) =>{
-        this.setState({allServices: val, fetching:false})
+      serviceActions.fetchUserServices(this.props.currentUser.uid).then( (values) =>{
+        if(_.some(values,{"status":"pendiente"})||_.some(values,{"status":"aprobado"})
+          ||_.some(values,{"status":"progreso"})
+          ){
+          this.setState({allServices: values, fetching:false})
+        }else{
+          this.setState({allServices: null, fetching:false})
+        }
       })
     }
   }
@@ -79,6 +92,13 @@ class MyServicesView extends Component {
         'FoundationProfile', {foundationID: this.state.serviceInModal.founId })
     }, 300);
   }
+  _goToPetProfile = ()=>{
+    this.setState({ isDetailVisible: false })
+    setTimeout(() => {
+      this.props.navigation.navigate(
+        'PetProfile', {petId: this.state.serviceInModal.petId })
+    }, 300);
+  }
 	render() {
     let services = this.state.allServices
     let user = this.props.currentUser
@@ -110,7 +130,7 @@ class MyServicesView extends Component {
                 </Right>
               </ListItem>               
             </View>
-            <View style={styles.ModalContainer}>
+            <ScrollView style={styles.ModalContainer}>
               {user.type==='fundation'?
               <Ripple onPress={()=>this._goToUserProfile()}>
                 <ListItem noBorder>
@@ -138,20 +158,17 @@ class MyServicesView extends Component {
               <ListItem itemDivider>
                 <Left><Text style={styles.dividerText}>Mascota</Text></Left>
               </ListItem> 
-              
+              <Ripple onPress={()=>this._goToPetProfile()}>
               <ListItem noBorder>
                 <Thumbnail rounded size={80} source={{uri: this.state.serviceInModal.thumbnail}}/>
                 <Body>
                   <Text>{this.state.serviceInModal.petInfo.tempName}</Text>
-                  <Text note>  
-                    {this.state.serviceInModal.petInfo.dog&&'Perro '}
-                    {this.state.serviceInModal.petInfo.cat&&'Gato '}
-                    {this.state.serviceInModal.petInfo.hembra&&'hembra con '}
-                    {this.state.serviceInModal.petInfo.macho&&'macho con '}
-                    {this.state.serviceInModal.petInfo.edad} de edad.
+                    <Text note numberOfLines={2}>  
+                      {this.state.serviceInModal.petInfo.personalidad} 
                   </Text>
                 </Body>
               </ListItem>
+              </Ripple>
               
               <ListItem itemDivider>
                 <Left><Text style={styles.dividerText}>Información de la solicitud</Text></Left>
@@ -226,32 +243,33 @@ class MyServicesView extends Component {
 
               }
               </View>
-            </View>
+            </ScrollView>
           </Modal>}
+
           <List>
             {
               services?(
                 Object.keys(services).map((i)=>{
-                  return (services[i].status != 'rechazado' && services[i].status != 'finalizado') && (
-                      <Ripple key={i} onPress={()=>this._detailService(services[i])} >
-                        <ListItem>
-                          <Thumbnail rounded size={80} source={{ uri: services[i].thumbnail }} />
-                          <Body>
-                            <Text>{services[i].petInfo.tempName}</Text>
-                            <Text note>{services[i].type}</Text>
-                          </Body>
-                          <Text>{services[i].status}</Text>
-                        </ListItem>
-                      </Ripple>
-                    )
-                  
+                  return (services[i].status != 'rechazado' && services[i].status != 'finalizado' && services[i].status != 'calificado') && (
+                    <Ripple key={i} onPress={()=>this._detailService(services[i])} >
+                      <ListItem>
+                        <Thumbnail rounded size={80} source={{ uri: services[i].thumbnail }} />
+                        <Body>
+                          <Text>{services[i].petInfo.tempName}</Text>
+                          <Text note>{services[i].type}</Text>
+                        </Body>
+                        <Text>{services[i].status}</Text>
+                      </ListItem>
+                    </Ripple>
+                  )
                 })
               ):(
                 <View style={{paddingTop:100,justifyContent:'center',alignItems:'center'}}>
                   <Image source={images.thinking_kitty} resizeMode= 'contain' 
                     style={{height: 180, width: 180}}/>
-                  <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold',fontSize:18,marginTop:18}}>Aún no
-                  {user.type==='fundation'?' te han enviado solicitudes.':' te has ofrecido como voluntario?'} </Text>
+                  <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold',fontSize:18,marginTop:18}}>
+                    En el momento no tienes solicitudes activas.
+                  </Text>
                 </View>
               )
             }
@@ -270,7 +288,6 @@ export default connect(mapStateToProps)(MyServicesView)
 
 const styles = StyleSheet.create({
   ModalContainer:{
-    flex:0.9,
     flexDirection:'column', 
     backgroundColor:'white',
   },

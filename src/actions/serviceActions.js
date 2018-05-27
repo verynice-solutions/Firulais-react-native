@@ -102,6 +102,7 @@ function updateStatus(serviceKey,statusValue){
 
 function setRating(serviceKey, stars, msg) {
   refServices.child(serviceKey).update({
+    status: 'calificado',
     rating: stars,
     ratingMsg: msg,
     ratingDate: new Date()

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
+import _ from 'lodash'
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Textarea } from 'native-base';
 import Modal from 'react-native-modal'
@@ -14,7 +15,8 @@ class MyServicesView extends Component {
     this.state = {
       allServices: [],
       isDetailVisible: false,
-      serviceInModal: null
+      serviceInModal: null,
+      fetching: true
     }
     this._reviewService = this._reviewService.bind(this)
   }
@@ -38,12 +40,24 @@ class MyServicesView extends Component {
   _fetchAll = ()=>{
     this.setState({fetching: true})
     if(this.props.currentUser.type==='fundation'){
-      serviceActions.fetchAllServices(this.props.currentUser.uid).then( (val) =>{
-        this.setState({allServices: val, fetching:false})
+      serviceActions.fetchAllServices(this.props.currentUser.uid).then( (values) =>{
+        if(_.some(values,{"status":"rechazado"})||_.some(values,{"status":"finalizado"})
+          ||_.some(values,{"status":"calificado"})
+        ){
+          this.setState({allServices: values, fetching:false})
+        }else{
+          this.setState({allServices: null, fetching:false})
+        }
       })
     }else{
-      serviceActions.fetchUserServices(this.props.currentUser.uid).then( (val) =>{
-        this.setState({allServices: val, fetching:false})
+      serviceActions.fetchUserServices(this.props.currentUser.uid).then( (values) =>{
+        if(_.some(values,{"status":"rechazado"})||_.some(values,{"status":"finalizado"})
+          ||_.some(values,{"status":"calificado"})
+        ){
+          this.setState({allServices: values, fetching:false})
+        }else{
+          this.setState({allServices: null, fetching:false})
+        }
       })
     }
   }
@@ -73,7 +87,7 @@ class MyServicesView extends Component {
             {
               services?(
                 Object.keys(services).map((i)=>{
-                  return (services[i].status == 'rechazado' || services[i].status == 'finalizado') && (
+                  return (services[i].status == 'rechazado' || services[i].status == 'finalizado'|| services[i].status == 'calificado') && (
                     <Ripple key={i} onPress={ ()=> navigate('FinishedService', { serviceKey:i, serviceInModal: services[i] }) }>
                       <ListItem >
                         <Thumbnail rounded size={80} source={{ uri: services[i].thumbnail }} />
@@ -84,8 +98,7 @@ class MyServicesView extends Component {
                         <Text>{services[i].status}</Text>
                       </ListItem>
                     </Ripple>
-                    )
-                  
+                  )
                 })
               ):(
                 <View style={{paddingTop:100,justifyContent:'center',alignItems:'center'}}>

@@ -8,6 +8,7 @@ import Historial from './History'
 const tabBarStyle = {
   tabBarPosition: 'bottom',
   tabBarComponent: TabBarTop,
+  
   tabBarOptions: {
     activeTintColor: 'black',
     inactiveTintColor: 'grey',
@@ -38,7 +39,11 @@ const TabNav = TabNavigator({
     Historial: {
       screen: Historial
     }
-  },tabBarStyle
+  },{
+    ...tabBarStyle,
+    swipeEnabled:true,
+    lazy:true
+  }
 );
 
 export default TabNav

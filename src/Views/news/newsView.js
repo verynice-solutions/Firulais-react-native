@@ -67,7 +67,6 @@ class NewsView extends React.Component {
                 <View style={styles.container}>
                   <FlatList data={Object.keys(imgs)}
                     horizontal
-                    showsHorizontalScrollIndicator={false}
                     bounces={true}
                     renderItem={this.renderPics}
                     keyExtractor={ (item, index) => {return `${index}` } }/>

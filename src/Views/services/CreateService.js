@@ -294,8 +294,8 @@ class CreateService extends Component {
       </View>
     )
   }
+  
   registerAdoption = (object) => {
-
     if(this.state.adoptPhone){
       Alert.alert(
         `Confirmar adopción`,
@@ -314,9 +314,8 @@ class CreateService extends Component {
         type:'warning'
       })
     }
-
-
   }
+
   renderBtns = () => {
     if(this.state.selectedView === 0){
       return <View style={{flex:1, paddingVertical:10, flexDirection: 'row', justifyContent:'space-around', backgroundColor:'#ffffff'}}>

@@ -172,6 +172,27 @@ class FundationProfileView extends Component {
 			</TouchableOpacity>
 		)
 	}
+	reportarFund =()=>{
+		// TOO DOO!!
+		let fundId = this.props.navigation.state.params.foundationID
+		let fundName = this.state.data.givenName
+		Alert.alert(
+			`Reportar a ${fundName}`,
+			`Este perfíl será revisado por un administrador y eliminado en caso de encuentrar abusos.`,
+			[
+				{text: 'Cancelar', onPress: () => null, style: 'cancel'},
+				{text: 'Reportar', onPress: () => this._sendReport()},
+			],
+			{ cancelable: false }
+		)
+	}
+	_sendReport = ()=>{
+		Toast.show({
+			text:'Fundación reportada al administrador',
+			buttonText:'Bien',
+			duration: 4000,
+		})
+	}
 	render() {
 		const { navigate } = this.props.navigation
 		let info = this.state.data
@@ -204,8 +225,14 @@ class FundationProfileView extends Component {
 										{profile&&profile.ciudad&&<Text note>
 										<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> {profile.ciudad}</Text>}
 									</Body>
+									<Right>
+										<Ripple style={{padding:12}} onPress={()=>this.reportarFund()}>
+										<Ionicons name="md-flag"  size={(16)} color="rgb(75, 75, 73)"/> 
+										</Ripple>
+									</Right>
 								</ListItem>
-								<View style={{marginTop:30}}/>
+
+								<View style={{marginTop:25}}/>
 
 								{this.props.currentUser.type === 'user' &&(
 										<View style={{marginHorizontal: 10, marginBottom: 10}}> 		
@@ -233,7 +260,7 @@ class FundationProfileView extends Component {
 															<Thumbnail square small source={images.antenna_green}/>
 															<Body>
 																<Text style={{fontWeight: 'bold'}}>¡Estas subscrito a esta fundación!</Text>
-																<Text note>Te avisaremos de la actividad de esta fundación.</Text>
+																<Text note>Te avisaremos de sus eventos.</Text>
 															</Body>
 														</Left>
 														<Ionicons name='md-close' size={20}/>
@@ -276,11 +303,11 @@ class FundationProfileView extends Component {
 									<View>
 										<ListItem noBorder>
 											<Body style={{borderBottomWidth: 0}}> 
-												<Text style={{color: '#2a2a2a'}}>{info.givenName} no tiene mascotas todavía :(</Text>
+												<Text style={{color: '#2a2a2a'}}>{info.givenName} no tiene mascotas todavía.</Text>
 											</Body>	
 											<Right style={{borderBottomWidth: 0}}>
 												<Thumbnail square size={80} 
-													source={images.wonder_kitty}/>
+													source={images.sad_kitty}/>
 											</Right>
 										</ListItem>
 									</View>
@@ -319,7 +346,7 @@ class FundationProfileView extends Component {
 										<View>
 											<ListItem noBorder>
 												<Body style={{borderBottomWidth: 0}}> 
-													<Text style={{color: '#2a2a2a'}}>No hay noticias :(</Text>
+													<Text style={{color: '#2a2a2a'}}>Por el momento,{' '+info.givenName+' '}no tiene noticias.</Text>
 												</Body>
 												<Right style={{borderBottomWidth: 0}}>
 													<Thumbnail square size={80} 
@@ -372,6 +399,11 @@ const styles = StyleSheet.create({
 
 		color: '#ffffff',
 		marginBottom: 30,
+	},
+	reportButton:{
+		flexDirection:'row',
+		justifyContent:'flex-end',
+		alignItems:'flex-end'
 	},
 	cardsContainer: {
 		alignItems:'center', 
