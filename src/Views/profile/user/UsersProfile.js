@@ -73,7 +73,7 @@ class UsersProfile extends Component {
 					<CardItem>
 							<View style={styles.petCardContent}>
 							<Thumbnail circle large source={{ uri: imgURL}}/> 
-								<Text style={{textAlign:'center'}} numberOfLines={1} note> {foundation[item].givenName ? 
+								<Text style={{textAlign:'center', marginTop:5}} numberOfLines={1} note> {foundation[item].givenName ? 
 									foundation[item].givenName : foundation[item].name}</Text>
 							</View>
 					</CardItem>
@@ -98,33 +98,27 @@ class UsersProfile extends Component {
 					// 		</View>
 					// 	</CardItem>
 					// </Card>
-					<Card style={{flex: 1}}>
+					<View style={{flex: 1}}>
             <ListItem avatar>
               <Left>
                 <Thumbnail source={{uri: data.fundInfo.photoUrl}} />
               </Left>
-								<Body>
-                  <Text>{data.fundInfo.name}</Text>
-                  <Text note>{data.type.toUpperCase()}</Text>
-                </Body>
-							<Right>
-								<Text note>
-									{data.rating? data.rating+'\u2b50' : ''} 
-								</Text>
-							</Right>
-            </ListItem>
-            <ListItem>
-							<Left>
-								<Thumbnail large source={{uri: imgURL}}/>
-							</Left>
-							<Body style={{flexDirection: 'column'}}>
-								<Label> Comentario </Label>
-								<Text numberOfLines={3} note>
+							<Body>
+								<Text>Comentario</Text>
+								<Text numberOfLines={3} note style={{marginVertical:10}}>
 									{data.ratingMsg}
 								</Text>
+								<Text note><Ionicons name="md-person" size={(15)} color="rgb(75, 75, 73)"/>  {data.fundInfo.name}</Text>
+								<Text note><Ionicons name="md-paw" size={(15)} color="rgb(75, 75, 73)"/>  Mascota {data.petInfo.tempName}</Text>
+								<Text note><Ionicons name="md-hand" size={(15)} color="rgb(75, 75, 73)"/>  {data.type.toUpperCase()}</Text>
 							</Body>
+							<Right>
+								{data.rating&&<Text>
+									{data.rating} <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/> 
+								</Text>}
+							</Right> 
             </ListItem>
-          </Card>
+          </View>
 				)
 		}else {
 			return null
@@ -165,7 +159,7 @@ class UsersProfile extends Component {
 
 								<View style={styles.subtitle}>
 									<ListItem itemDivider style={{justifyContent:'space-between', backgroundColor:'#ffffff'}}>
-										<Text style={styles.dividerText}>Fundaciones</Text>
+										<Text style={styles.dividerText}>FUNDACIONES</Text>
 										<TouchableOpacity onPress={ ()=> navigate('AllFoundationsView') }>
 											<Text style={styles.dividerText}> Ver más...</Text>
 										</TouchableOpacity>
@@ -181,13 +175,12 @@ class UsersProfile extends Component {
 										<View style={styles.cardsContainer}>
 											{
 												foundations?
-														<FlatList data={Object.keys(foundations)}
-															horizontal
-															showsHorizontalScrollIndicator={false}
-															bounces={true}
-															renderItem={this.renderFoundations}
-															keyExtractor={ (item, index) => {return `${index}` } }
-														/>
+													<FlatList data={Object.keys(foundations)}
+														horizontal
+														showsHorizontalScrollIndicator={false}
+														bounces={true}
+														renderItem={this.renderFoundations}
+														keyExtractor={ (item, index) => {return `${index}` } }/>
 												:
 													<View style={styles.infoContainer}>
 														<Text style={styles.infoField}>
@@ -200,7 +193,7 @@ class UsersProfile extends Component {
 								}
 								<View style={styles.subtitle}>
 									<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
-										<Left><Text style={styles.dividerText}>Últimos Servicios</Text></Left>
+										<Left><Text style={styles.dividerText}>ÚLTIMOS SERVICIOS</Text></Left>
 									</ListItem> 
 								</View>
 								{
@@ -291,8 +284,6 @@ const styles = StyleSheet.create({
 		marginBottom: 5  
 	},
 	petCard: {
-		flex: 0,
-		margin: 2,
 		width: 120
 	},
 	serviceCard: {

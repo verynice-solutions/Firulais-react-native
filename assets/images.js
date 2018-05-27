@@ -36,6 +36,7 @@ const images = {
 	record: require('./images/medical_record.png'),
 
 	calendar: require('./images/calendar.png'),
+	chat_bubbles: require('./images/chat.png'),
 };
 
 
