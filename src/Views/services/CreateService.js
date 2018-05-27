@@ -119,14 +119,14 @@ class CreateService extends Component {
       }else{
         if(!iniDate || !finDate || !validDate){
           Toast.show({
-            text:'Asigna una fecha válida \u2661',
+            text:'Asigna una fecha válida \u2665',
             buttonText:'Ok',
             duration: 4000,
             type:'warning'
           })
         }else{
           Toast.show({
-            text:'Recuerda llenar todos los campos \u2661',
+            text:'Recuerda llenar todos los campos \u2665',
             buttonText:'Ok',
             duration: 4000,
             type:'warning'
@@ -149,7 +149,7 @@ class CreateService extends Component {
         this.props.navigation.goBack()
       }else{
         Toast.show({
-          text:'Recuerda llenar todos los campos \u2661',
+          text:'Recuerda llenar todos los campos \u2665',
           buttonText:'Ok',
           duration: 4000,
           type:'warning'
@@ -276,7 +276,7 @@ class CreateService extends Component {
         <View>
           <Button rounded success onPress={()=>Alert.alert(
             `Adoptar a ${object.petObj.tempName}`,
-            'Lo quiero forever \u2661',
+            'Lo quiero forever \u2665',
             [
               {text: 'NO', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
               {text: 'SI', onPress: () => this.newService(object,'adoptar')},
