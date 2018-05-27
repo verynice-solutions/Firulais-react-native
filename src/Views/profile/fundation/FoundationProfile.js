@@ -113,7 +113,7 @@ class FundationProfileView extends Component {
 					<CardItem>
 							<View style={styles.petCardContent}>
 							<Thumbnail circle large source={{ uri: imgURL}}/> 
-								<Text numberOfLines={1} note> {pets[item].tempName} </Text>
+								<Text numberOfLines={1} note style={{textAlign:'center', marginTop:5}}> {pets[item].tempName} </Text>
 							</View>
 					</CardItem>
 				</Card>
@@ -132,7 +132,7 @@ class FundationProfileView extends Component {
 					<CardItem>
 							<View style={styles.petCardContent}>
 							<Thumbnail circle large source={{ uri: imgURL}}/> 
-								<Text numberOfLines={1} note> {news[item].title}</Text>
+								<Text numberOfLines={1} note style={{textAlign:'center', marginTop:5}}> {news[item].title}</Text>
 							</View>
 					</CardItem>
 				</Card>

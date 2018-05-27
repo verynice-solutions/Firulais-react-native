@@ -73,7 +73,7 @@ class CreateService extends Component {
     let iniDate = this.state.dateIni
     let finDate = moment(iniDate).add(this.state.tiempoCuidado,this.state.tiempoCuidadoRango).format('YYYY-MM-DD')
     let rangoMin = null
-    
+  
     if(this.state.infoObject.petObj.tiempoMinCuidadoRango == 'dias'){
       rangoMin= 'days'
     }
@@ -119,7 +119,7 @@ class CreateService extends Component {
       }else{
         if(!iniDate || !finDate || !validDate){
           Toast.show({
-            text:'Asigna una fecha válida \u2661',
+            text:'Por favor ingresa un tiempo de cuidado o fecha válidos \u2661',
             buttonText:'Ok',
             duration: 4000,
             type:'warning'
@@ -134,14 +134,14 @@ class CreateService extends Component {
         }
       }
     }else{
-      if(this.state.adoptPhone && iniDate){
+      if(this.state.adoptPhone){
         serviceActions.createService(
           object.petObj.pet_fire_key, 
           object.fid, 
           object.uid, 
           object.petObj,
           type,
-          iniDate,null,
+          null,null,
           this.state.adoptPhone,
           info_user||null,
           object.fundObj
@@ -160,11 +160,11 @@ class CreateService extends Component {
   }
   
   renderDatePickerIni = () => {
-    return <View><DatePicker
+    return <View style={{alignItems:'center'}}><DatePicker
       style={{width: 200}}
       date = {this.state.dateIni}
       mode="date"
-      placeholder="Inicio cuidado"
+      placeholder="Fecha"
       format="YYYY-MM-DD"
       minDate={_getNowDateISO()}
       maxDate={_getNextYear()}
@@ -200,59 +200,73 @@ class CreateService extends Component {
     return(
       <View style={styles.subcontainer}>
         <View style={styles.pickerContainer}>
-          <Text style={styles.textHeaders}>¿Por cuánto tiempo deseas cuidar a {object.petObj.tempName}?</Text>
-          <Text style={{fontStyle:'italic',textAlign:'center'}}> {object.fundObj.givenName} - "mínimo {object.petObj.tiempoMinCuidado} {object.petObj.tiempoMinCuidadoRango}"</Text>
-          <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-            <Item fixedLabel style={{flex: 0.2}}>
-              <Input placeholder='nº' keyboardType='numeric'
-              value={this.state.tiempoCuidado}
-              onChangeText={(text)=> { this.setState({tiempoCuidado: text}) }} />
-            </Item>
-            <Picker
-              mode="dropdown"
-              placeholder="Rango de tiempo"
-              iosHeader="Rango de tiempo"
-              iosIcon={<Ionicons name="ios-arrow-down-outline" />}
-              headerBackButtonText="Atrás"
-              style={{ width: undefined, flex: 0.8 }}
-              selectedValue={this.state.tiempoCuidadoRango}
-              onValueChange={(value)=>{
-                this.setState({tiempoCuidadoRango: value
-              })}}>
-              <Picker.Item label="Dias" value="days" />
-              <Picker.Item label="Meses" value="months" />
-              <Picker.Item label="Años" value="years" />
-            </Picker>
+          <ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+            <Text style={{fontWeight:'bold'}}>TIEMPO DE CUIDADO</Text>
+          </ListItem>  
+          <View style={{padding: 10}}>
+            <Text style={{textAlign:'center'}}>¿Por cuánto tiempo deseas cuidar a {object.petObj.tempName}?</Text>
+            <Text style={{fontStyle:'italic',textAlign:'center'}}> {object.fundObj.givenName} - "mínimo {object.petObj.tiempoMinCuidado} {object.petObj.tiempoMinCuidadoRango}"</Text>
+            <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+              <Item fixedLabel style={{flex: 0.2}}>
+                <Input placeholder='nº' keyboardType='numeric'
+                value={this.state.tiempoCuidado}
+                onChangeText={(text)=> { this.setState({tiempoCuidado: text}) }} />
+              </Item>
+              <Picker
+                mode="dropdown"
+                placeholder="Rango de tiempo"
+                iosHeader="Rango de tiempo"
+                iosIcon={<Ionicons name="ios-arrow-down-outline" />}
+                headerBackButtonText="Atrás"
+                style={{ width: undefined, flex: 0.8 }}
+                selectedValue={this.state.tiempoCuidadoRango}
+                onValueChange={(value)=>{
+                  this.setState({tiempoCuidadoRango: value
+                })}}>
+                <Picker.Item label="Dias" value="days" />
+                <Picker.Item label="Meses" value="months" />
+                <Picker.Item label="Años" value="years" />
+              </Picker>          
+          </View> 
+
           </View>
         </View>
-        <Text style={styles.textHeaders}>¿Que día iniciará el cuidado?</Text>
-        {this.renderDatePickerIni()}
-        {iniDate&&
-          <Text style={{fontStyle:'italic',textAlign:'center'}}>
-            Inicia el {momentIni}
-          </Text>
-        }
-        {iniDate&&
-          <Text style={{fontStyle:'italic',textAlign:'center'}}>
-            finaliza, {momentFin}
-          </Text>
-        }
-        <View>
-          <Text style={styles.textHeaders}>Teléfono de contacto</Text>
+        <ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+          <Text style={{fontWeight:'bold'}}>FECHA DE INICIO</Text>
+        </ListItem> 
+        <View style={{padding: 10}}>
+          <Text style={{textAlign:'center'}}>¿Que día iniciará el cuidado?</Text>
+          <View style={{padding: 10, alignContent:'center'}}>
+            {this.renderDatePickerIni()}
+          </View> 
+          
+          {iniDate&&
+            <Text style={{fontStyle:'italic',textAlign:'center'}}>
+              Inicia el {momentIni}
+            </Text>
+          }
+          {iniDate&&
+            <Text style={{fontStyle:'italic',textAlign:'center'}}>
+              Finaliza el {momentFin}
+            </Text>
+          }        
+        </View> 
+
+        <ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+          <Text style={{fontWeight:'bold'}}>TELÉFONO DE CONTACTO</Text>
+        </ListItem> 
+        <View style={{padding: 10}}>
           <Item>
             <Input keyboardType='numeric' placeholder='Teléfono' 
               value={this.state.carePhone} 
-              onChangeText={(text)=> this.setState({carePhone: text})} 
-            />
+              onChangeText={(text)=> this.setState({carePhone: text})}/>
           </Item>
-        </View>
-        
-        <View>
-          <Button rounded info onPress={()=>this.newService(object,'cuidado')}>
+          <Button style={{margin: 10}} success block onPress={()=>this.newService(object,'cuidado')}>
             <Text>Programar cuidado</Text>
-          </Button>
+          </Button>          
         </View>
       </View>
+
     )
   }
 
@@ -262,50 +276,63 @@ class CreateService extends Component {
     let momentIni = moment(iniDate).format('dddd DD MMMM YYYY')
     return(
       <View style={styles.subcontainer}>
-        {this.renderDatePickerIni()}
-        {iniDate&&
-              <Text style={{fontStyle:'italic',textAlign:'center'}}>
-                Inicia el {momentIni}
-              </Text>
-            }
-        <Text style={styles.textHeaders}>Teléfono de contacto</Text>
-        <Item>
-          <Input keyboardType='numeric' placeholder='Teléfono'  
-          value={this.state.adoptPhone} onChangeText={(text)=> this.setState({adoptPhone: text})} />
-        </Item>
-        <View>
-          <Button rounded success onPress={()=>Alert.alert(
-            `Adoptar a ${object.petObj.tempName}`,
-            'Lo quiero forever \u2661',
-            [
-              {text: 'NO', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-              {text: 'SI', onPress: () => this.newService(object,'adoptar')},
-            ],
-            { cancelable: false }
-          )}>
+        <ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+          <Text style={{fontWeight:'bold'}}>TELÉFONO DE CONTACTO</Text>
+        </ListItem>
+        <View style={{padding: 10}}>
+          <Text style={{textAlign:'center'}}>Deja tu número de contacto para que la fundación pueda contactarte y conversar requisitos para la adopción.</Text>
+          <Item>
+            <Input keyboardType='numeric' placeholder='Teléfono'  
+            value={this.state.adoptPhone} onChangeText={(text)=> this.setState({adoptPhone: text})} />
+          </Item>
+        </View>
+        <View style={{margin: 10}}>
+          <Button block success onPress={()=>this.registerAdoption(object)}>
             <Text>Registrar adopción</Text>
           </Button>
         </View>
       </View>
     )
   }
+  registerAdoption = (object) => {
 
+    if(this.state.adoptPhone){
+      Alert.alert(
+        `Confirmar adopción`,
+        `Estoy segur@ de que quiero adoptar a ${object.petObj.tempName} \u2661`,
+        [
+          {text: 'NO', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+          {text: 'SI', onPress: () => this.newService(object,'adoptar')},
+        ],
+        { cancelable: false }
+      )
+    } else {
+      Toast.show({
+        text:'Por favor ingresa tu teléfono de contacto \u2661',
+        buttonText:'Ok',
+        duration: 4000,
+        type:'warning'
+      })
+    }
+
+
+  }
   renderBtns = () => {
     if(this.state.selectedView === 0){
-      return <View style={{flex:0, marginTop:10, flexDirection: 'row', justifyContent:'space-around'}}>
-        <Button onPress={this.toggleCare} rounded light>
+      return <View style={{flex:1, paddingVertical:10, flexDirection: 'row', justifyContent:'space-around', backgroundColor:'#ffffff'}}>
+        <Button onPress={this.toggleCare} primary bordered style={{flex:0.47, justifyContent:'center'}}>
             <Text>Cuidar</Text>
         </Button>
-        <Button onPress={this.toggleAdopt} rounded info>
+        <Button onPress={this.toggleAdopt} primary style={{flex:0.47, justifyContent:'center'}}>
             <Text>Adoptar</Text>
         </Button>
       </View>
     }else{
-      return <View style={{flex:0, marginTop:10, flexDirection: 'row', justifyContent:'space-around'}}>
-        <Button onPress={this.toggleCare} rounded info>
+      return <View style={{flex:1, paddingVertical:10, flexDirection: 'row', justifyContent:'space-around', backgroundColor:'#ffffff'}}>
+        <Button onPress={this.toggleCare} primary style={{flex:0.47, justifyContent:'center'}}>
             <Text>Cuidar</Text>
         </Button>
-        <Button onPress={this.toggleAdopt} rounded light>
+        <Button onPress={this.toggleAdopt} primary bordered style={{flex:0.47, justifyContent:'center'}}>
             <Text>Adoptar</Text>
         </Button>
       </View>
@@ -339,14 +366,12 @@ export default connect(mapStateToProps)(CreateService)
 
 const styles = StyleSheet.create({
  subcontainer: {
-   flex:1, 
-   padding:15,
-   alignItems:'center', 
+   flex:1,
    justifyContent:'space-around'
   },
   pickerContainer:{
     flexDirection:'column',
-    marginTop:20
+
   },
   textHeaders:{
     fontWeight: 'bold'
