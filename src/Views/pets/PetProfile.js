@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { Platform,	View, StyleSheet, Image, TouchableOpacity, ActivityIndicator, ScrollView, FlatList, ImageBackground} from 'react-native'
 import {connect} from 'react-redux'
-
+import Ripple from 'react-native-material-ripple'
 //Style
 import { Button, Icon, Thumbnail, Text, Item, Input, 
 				Card, CardItem, Content, Left, ListItem, Body, List,
@@ -73,7 +73,7 @@ class PetProfile extends Component {
 				}
 				if (validate){
 					Toast.show({
-						text:`Ya tienes una solicitud para esta mascota. \nEstá en estado: ${validate} \u2661`,
+						text:`Ya tienes una solicitud para esta mascota. \nEstá en estado: ${validate} \u2665`,
 						buttonText:'Ok',
 						duration: 6000
 					})
@@ -103,6 +103,7 @@ class PetProfile extends Component {
 			)
 		}else{
 			let pet = this.state.petInfo
+			let user = this.props.currentUser
 			let petImages = pet.imageUrls
 			let thumbnail = petImages[Object.keys(petImages)[0]].url
 			return (
@@ -130,23 +131,26 @@ class PetProfile extends Component {
 									</Text>
 								</Body>
 							</ListItem>
-							<View style={{marginTop:30}}/>
-							<View style={{marginHorizontal: 10, marginBottom: 10}}> 											
-								<Card> 
-									<CardItem
-										button
-										onPress={()=>this._solicitarServicio()}
-										style={{backgroundColor: '#FFFFFF'}}>
-										<Left>
-											<Thumbnail source={images.medal}/>
-											<Body>
-												<Text note>¡Quiero ofrecerme como voluntari@!</Text>
-												<Text style={{fontWeight: 'bold'}}>Enviar Solicitud</Text>
-											</Body>
-										</Left>
-									</CardItem>
+							
+							{user.type === 'user'&&<View style={{marginHorizontal: 10, marginBottom: 10,marginTop:20}}>	
+								<Card>
+									<Ripple onPress={()=>this._solicitarServicio()}> 
+										<CardItem
+											button
+											onPress={()=>this._solicitarServicio()}
+											style={{backgroundColor: '#FFFFFF'}}>
+											<Left>
+												<Thumbnail source={images.medal}/>
+												<Body>
+													<Text note>¡Quiero ofrecerme como voluntari@!</Text>
+													<Text style={{fontWeight: 'bold'}}>Enviar Solicitud</Text>
+												</Body>
+											</Left>
+										</CardItem>
+									</Ripple>
 								</Card>
-							</View>
+							</View>}
+							
 						</View>
 						<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
 							<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>PERSONALIDAD</Text></Left>

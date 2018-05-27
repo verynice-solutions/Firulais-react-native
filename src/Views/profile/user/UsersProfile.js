@@ -148,10 +148,10 @@ class UsersProfile extends Component {
 										</Left>
 										<Body>
 											<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>{info.name}</Text>
-											{profile&&<Text note style={{marginBottom:10}}>{profile.description}</Text>}
-											<Text note>
-											<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> Ciudad
-											</Text>
+											{profile&&profile.description&&<Text note style={{marginBottom:10}}>{profile.description}</Text>}
+
+											{profile&&profile.ciudad&&<Text note>
+											<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> {profile.ciudad}</Text>}
 										</Body>
 									</ListItem>
 									<View style={{marginTop:30}}/>	

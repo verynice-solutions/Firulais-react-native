@@ -58,7 +58,7 @@ class FinishedService extends Component {
       this._fetchService()
     }else{
       Toast.show({
-        text:'Recuerda llenar todos los campos \u2661',
+        text:'Recuerda llenar todos los campos \u2665',
         buttonText:'Ok',
         duration: 3000,
         type:'warning'

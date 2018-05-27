@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Platform,	View, StyleSheet, Image, TouchableOpacity, 
 					Alert, ActivityIndicator, ScrollView, FlatList, ImageBackground} from 'react-native'
 import {connect} from 'react-redux'
+import Ripple from 'react-native-material-ripple'
 //Accions
 import foundationsActions from '../../../actions/foundationsActions'
 import userActions from '../../../actions/usersActions'
@@ -21,9 +22,11 @@ class FundationProfileView extends Component {
 			data: [],
 			pets: [],
 			news: [],
+			imSubscribed: false,
 			isFetchingData: true,
 			isFetchingPets: true,
-			isFetchingNews: true
+			isFetchingNews: true,
+			isFetchingSubscription: true
 		}
 		this.renderPets = this.renderPets.bind(this)
 		this.renderNews = this.renderNews.bind(this)
@@ -55,8 +58,10 @@ class FundationProfileView extends Component {
 		
 	componentDidMount() {
 		let params = this.props.navigation.state.params
+		this.fetchIsSubscribed(this.props.currentUser.uid,params)
 		if(this.props.currentUser.uid===params.foundationID){this.props.navigation.setParams({ myperfil: true })}
 		this.fetchEverything(params)
+
 	}
 	
 	fetchEverything = async (params) =>{
@@ -73,34 +78,61 @@ class FundationProfileView extends Component {
 			this.setState({news: val, isFetchingNews: false})
 		})
 	}
+	
+	fetchIsSubscribed = async (uid,params) =>{
+		let promiseSubscribe = await userActions.fetchUserIsSubscribed(uid,params.foundationID).then((val)=>{
+			// console.log('SUBSCRITO',val)
+			if(val){
+				this.setState({imSubscribed: true, isFetchingSubscription: false })
+			}
+			
+		})
+	}
 
 	petTouched(mascotaId, fundacionId, userId,petObj) {
 		let myPet = this.props.currentUser.uid === petObj.idFundacion
 		if(this.state.data){
 			this.props.navigation.navigate('PetProfile',{petId: mascotaId, myPet: myPet, fundObj: this.state.data })
 		}
-		// if(this.props.currentUser.type == 'user' && this.state.data) {
-		// 	this.props.navigation.navigate('CreateService',{toCreate:{petObj:petObj,fid:fundacionId,uid:userId,fundObj:this.state.data}})
-		// }else{
-		// 	Toast.show({
-		// 		text:'Solo los voluntarios pueden cuidar mascotas.',
-		// 		buttonText:'Ok',
-		// 		duration: 4000,
-		// 		type:'warning'
-		// 	})
-		// }
 	}
 
 	addVoluntario() {
-		let info = this.state.data
+		Alert.alert(
+			`Confirmar subscripción`,
+			`Estoy segur@ de que quiero recibir noticias de ${this.state.data.givenName} \u2665`,
+			[
+				{text: 'NO', onPress: () => null, style: 'cancel'},
+				{text: 'SI', onPress: () => this._updateUserSubscription()},
+			],
+			{ cancelable: false }
+		)
+	}
+	deleteVoluntario() {
+		Alert.alert(
+			'Anular subscripción',
+			`No quiero recibir más noticias de ${this.state.data.givenName}.`,
+			[
+				{text: 'NO', onPress: () => null, style: 'cancel'},
+				{text: 'SI', onPress: () => this._updateUserSubscription()},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	_updateUserSubscription = ()=>{
 		let uid = this.props.currentUser.uid
 		let fundId = this.props.navigation.state.params.foundationID
-		let name = info.name
-		let thumb = info.photoUrl
-		Alert.alert('\u2b50','Se un voluntario!',[
-			{text: 'YES!', onPress: () => userActions.addFoundationToUser(uid, fundId, name, thumb)},
-		],
-		{ cancelable: true })
+		if(!this.state.imSubscribed){
+			let info = this.state.data
+			let params = this.props.navigation.state.params
+			let name = info.name
+			let thumb = info.photoUrl
+			userActions.addFoundationToUser(uid, fundId, name, thumb)
+			this.setState({imSubscribed: true})
+		}else{
+			userActions.unSubscribe(uid, fundId)
+			this.setState({imSubscribed: false})
+		}
 	}
 
 	renderPets({item, index}) {
@@ -166,44 +198,49 @@ class FundationProfileView extends Component {
 									</Left>
 									<Body>
 										<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>{info.name}</Text>
-										{profile&&<Text note style={{marginBottom:10}}>{profile.description}</Text>}
-										<Text note>
-										<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> Ciudad
-										</Text>
+
+										{profile&&profile.description&&<Text note style={{marginBottom:10}}>{profile.description}</Text>}
+
+										{profile&&profile.ciudad&&<Text note>
+										<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> {profile.ciudad}</Text>}
 									</Body>
 								</ListItem>
 								<View style={{marginTop:30}}/>
-								{
-									this.props.currentUser.type === 'user' &&(
+
+								{this.props.currentUser.type === 'user' &&(
 										<View style={{marginHorizontal: 10, marginBottom: 10}}> 		
 
-											<Card> 
+											{!this.state.imSubscribed?<Card> 
 												<CardItem
 													button
-													onPress={()=>null}
+													onPress={()=>this.addVoluntario()}
 													style={{backgroundColor: '#FFFFFF'}}>
 													<Left>
 														<Thumbnail square small source={images.antenna_optional}/>
 														<Body>
 															<Text note>¿Quieres recibir noticias de esta fundación?</Text>
-															<Text style={{fontWeight: 'bold'}}>¡Subscríbete!</Text>
+															<Text style={{fontWeight: 'bold'}}>¡Subscríbeme!</Text>
 														</Body>
 													</Left>
 												</CardItem>
 											</Card>
-											<Card> 
-												<CardItem
-													style={{backgroundColor: '#FFFFFF'}}>
-													<Left>
-														<Thumbnail square small source={images.antenna_green}/>
-														<Body>
-															<Text style={{fontWeight: 'bold'}}>¡Estas subscrito a esta fundación!</Text>
-															<Text note>Te avisaremos de la actividad de esta fundación.</Text>
-														</Body>
-													</Left>
-												</CardItem>
+											:
+											<Card>
+												<Ripple onPress={()=>this.deleteVoluntario()}> 
+													<CardItem
+														style={{backgroundColor: '#FFFFFF'}}>
+														<Left>
+															<Thumbnail square small source={images.antenna_green}/>
+															<Body>
+																<Text style={{fontWeight: 'bold'}}>¡Estas subscrito a esta fundación!</Text>
+																<Text note>Te avisaremos de la actividad de esta fundación.</Text>
+															</Body>
+														</Left>
+														<Ionicons name='md-close' size={20}/>
+													</CardItem>
+												</Ripple>
 											</Card>
-
+											}
 										</View>
 									)	
 								}

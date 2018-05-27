@@ -90,7 +90,7 @@ class createNew extends Component {
     let newID = this.state.new_fire_key
     if(valuesToSend===false) {
       Toast.show({
-        text:'Recuerda llenar todos los campos \u2661',
+        text:'Recuerda llenar todos los campos \u2665',
         buttonText:'Ok',
         duration: 4000,
         type:'warning'
@@ -113,7 +113,7 @@ class createNew extends Component {
         })
       }).then(() => {
         Toast.show({
-          text:'Noticia subida con éxito  \u2661',
+          text:'Noticia subida con éxito  \u2665',
           buttonText:'Ok',
           duration: 4000,
           type:'success'

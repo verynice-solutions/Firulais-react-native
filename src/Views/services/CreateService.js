@@ -119,14 +119,14 @@ class CreateService extends Component {
       }else{
         if(!iniDate || !finDate || !validDate){
           Toast.show({
-            text:'Por favor ingresa un tiempo de cuidado o fecha válidos \u2661',
+            text:'Por favor ingresa un tiempo de cuidado o fecha válidos \u2665',
             buttonText:'Ok',
             duration: 4000,
             type:'warning'
           })
         }else{
           Toast.show({
-            text:'Recuerda llenar todos los campos \u2661',
+            text:'Recuerda llenar todos los campos \u2665',
             buttonText:'Ok',
             duration: 4000,
             type:'warning'
@@ -149,7 +149,7 @@ class CreateService extends Component {
         this.props.navigation.goBack()
       }else{
         Toast.show({
-          text:'Recuerda llenar todos los campos \u2661',
+          text:'Recuerda llenar todos los campos \u2665',
           buttonText:'Ok',
           duration: 4000,
           type:'warning'
