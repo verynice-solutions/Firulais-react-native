@@ -27,14 +27,14 @@ class PetProfile extends Component {
 		if(params.myPet){
 			return{
 				title: 'Mi mascota',
-				headerRight: (Platform.OS==='ios'?
-					<Button transparent onPress={()=>navigation.navigate('EditProfile')}>
-						<Text primary>Editar</Text>
-					</Button>
-				:
-				<Button transparent style={{marginTop: 8}} onPress={()=>navigation.navigate('EditProfile')}>
-					<Text primary style={{fontSize:16}} >Editar</Text>
-				</Button>)
+				// headerRight: (Platform.OS==='ios'?
+				// 	<Button transparent onPress={()=>navigation.navigate('EditProfile')}>
+				// 		<Text primary>Editar</Text>
+				// 	</Button>
+				// :
+				// <Button transparent style={{marginTop: 8}} onPress={()=>navigation.navigate('EditProfile')}>
+				// 	<Text primary style={{fontSize:16}} >Editar</Text>
+				// </Button>)
 			}
 		}else{
 			return{
@@ -97,7 +97,7 @@ class PetProfile extends Component {
 
 	renderPics({item}) {
     let img = item.url
-    console.log("item: ", item)
+    // console.log("item: ", item)
 		return(
       <View style={styles.picContent}>
         <Image source={{uri: img}} resizeMode='contain' style={{height: 300, width: 300, flex: 1}}/>

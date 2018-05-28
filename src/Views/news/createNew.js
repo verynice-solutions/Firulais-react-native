@@ -88,6 +88,7 @@ class createNew extends Component {
   _añadirNew(){
     let valuesToSend = this._setValuesNew(this.state)
     let newID = this.state.new_fire_key
+    let imagesInState = this.state.images
     if(valuesToSend===false) {
       Toast.show({
         text:'Recuerda llenar todos los campos \u2665',
@@ -99,9 +100,11 @@ class createNew extends Component {
       this.setState({blockButton: true, isModalVisible: true})
       this._upLoadPhotos()
         .then(() => {
-        let imagesInState = this.state.images
+          // console.log('Pasaste uploadPhotos')
         imagesInState.forEach((img,count) => {
+          // console.log('¡Each foto!')
           firebase.storage().ref(`images/news/${newID}/P-${count}`).getDownloadURL().then((url)=>{
+            // console.log('¡urls images!',url)
             firebase.database().ref().child(`news/${newID}/imageUrls`).push({
               url
             })
@@ -112,6 +115,7 @@ class createNew extends Component {
           idFundacion: this.props.currentUser.uid,
         })
       }).then(() => {
+        // console.log('Pasaste meter al firebasedb')
         Toast.show({
           text:'Noticia subida con éxito  \u2665',
           buttonText:'Ok',
@@ -122,9 +126,13 @@ class createNew extends Component {
 
       })
       .catch((err) => {
-        this.setState({blockButton: false, isModalVisible: false})
         console.log('Error:', err)
-        Alert.alert('Error:',' Hubo un error subiendo tu noticia.')
+        Alert.alert('Error:',' Hay un problema de conexión. Intenta cambiar de red a una más estable.')
+
+        setTimeout(() => {
+          this.setState({blockButton: false, isModalVisible: false})
+        }, 6000);
+
       })
     }
   }
@@ -134,7 +142,7 @@ class createNew extends Component {
     imagesInState.forEach( (img,count)=>{
       let newID = this.state.new_fire_key
       let fileName = `P-${count}`
-      PromisesImages.push( photoActions._uploadImage( img, newID, fileName) )
+      PromisesImages.push( photoActions._uploadImage( img, newID, fileName,'news') )
     })
     return Promise.all(PromisesImages);
   }

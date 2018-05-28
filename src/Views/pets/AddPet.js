@@ -101,6 +101,7 @@ class AddPet extends Component {
   _añadirMascota(){
     let valuesToSend = this._setValuesMascota(this.state)
     let petID = this.state.pet_fire_key
+    let imagesInState = this.state.images
     if(valuesToSend===false) {
       Toast.show({
         text:'Recuerda llenar los campos marcados con *',
@@ -112,7 +113,6 @@ class AddPet extends Component {
       this.setState({blockButton: true, isModalVisible: true})
       this._upLoadPhotos()
         .then(() => {
-        let imagesInState = this.state.images
         imagesInState.forEach((img,count) => {
           firebase.storage().ref(`images/pets/${petID}/P-${count}`).getDownloadURL().then((url)=>{
             firebase.database().ref().child(`pets/${petID}/imageUrls`).push({
@@ -134,9 +134,11 @@ class AddPet extends Component {
         this.setState({blockButton: false})
       })
       .catch((err) => {
-        this.setState({blockButton: false, isModalVisible: false})
         console.log('Error:', err)
-        Alert.alert('Error:','Hubo un error subiendo tu mascota.')
+        Alert.alert('Error:','Hubo un error subiendo tu mascota. Intenta cambiar de red a una más estable.')
+        setTimeout(() => {
+          this.setState({blockButton: false, isModalVisible: false})
+        }, 6000);
       })
     }
   }
@@ -146,7 +148,7 @@ class AddPet extends Component {
     imagesInState.forEach( (img,count)=>{
       let petID = this.state.pet_fire_key
       let fileName = `P-${count}`
-      PromisesImages.push( photoActions._uploadImage( img, petID, fileName ) )
+      PromisesImages.push( photoActions._uploadImage( img, petID, fileName,'pets') )
     })
     return Promise.all(PromisesImages);
   }

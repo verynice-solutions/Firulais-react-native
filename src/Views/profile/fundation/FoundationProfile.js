@@ -14,6 +14,7 @@ import { Button, Icon, Thumbnail, Text, Item, Input,
 import firebase from '../../../firebase/firebaseSingleton'
 import images from '../../../../assets/images'
 import { Ionicons } from '@expo/vector-icons';
+import NavigationService from '../../../routes/NavigationService'
 
 class FundationProfileView extends Component {
 	constructor(props) {
@@ -144,12 +145,15 @@ class FundationProfileView extends Component {
 				<Card key={item} style={styles.petCard}>
 					<CardItem>
 							<View style={styles.petCardContent}>
-							<Thumbnail circle large source={{ uri: imgURL}}/> 
+								<Thumbnail circle large source={{ uri: imgURL}}/> 
 								<Text numberOfLines={1} note style={{textAlign:'center', marginTop:5}}> {pets[item].tempName} </Text>
+								{this.props.currentUser.type==='admin'&&<TouchableOpacity style={{flexDirection:'row', justifyContent:'center',padding:5}} onPress={()=>this.deleteMascota(item)}>
+									<Text style={{color:'red'}}> Eliminar   </Text>
+									<Ionicons name='md-close' color='red' size={20}/>
+								</TouchableOpacity>}
 							</View>
 					</CardItem>
 				</Card>
-
 			</TouchableOpacity>
 		)
 	}
@@ -163,36 +167,115 @@ class FundationProfileView extends Component {
 				<Card key={item} style={styles.petCard}>
 					<CardItem>
 							<View style={styles.petCardContent}>
-							<Thumbnail circle large source={{ uri: imgURL}}/> 
+								<Thumbnail circle large source={{ uri: imgURL}}/> 
 								<Text numberOfLines={1} note style={{textAlign:'center', marginTop:5}}> {news[item].title}</Text>
+								{this.props.currentUser.type==='admin'&&<TouchableOpacity style={{flexDirection:'row', justifyContent:'center',padding:5}} onPress={()=>this.deleteNews(item)}>
+									<Text style={{color:'red'}}> Eliminar   </Text>
+									<Ionicons name='md-close' color='red' size={20}/>
+								</TouchableOpacity>}
 							</View>
 					</CardItem>
 				</Card>
-
 			</TouchableOpacity>
 		)
 	}
 	reportarFund =()=>{
-		// TOO DOO!!
 		let fundId = this.props.navigation.state.params.foundationID
 		let fundName = this.state.data.givenName
+		if(this.props.currentUser.type==='admin'&&this.state.data.reportes){
+			Alert.alert(
+				`Eliminar perfíl de ${fundName}`,
+				`Los datos del perfíl serán borrados. `,
+				[
+					{text: 'No', onPress: () => null, style: 'cancel'},
+					{text: 'Si', onPress: () => this._eliminateProfile(fundId)}
+				],
+				{ cancelable: false }
+			)
+		}else{
+			Alert.alert(
+				`Reportar a ${fundName}`,
+				`Esta fundación será revisada por un administrador. De encontrarse anomalías, se eliminará todo contenido no deseado de su perfil público.`,
+				[
+					{text: 'Cancelar', onPress: () => null, style: 'cancel'},
+					{text: 'Reportar', onPress: () => this._sendReport(this.props.currentUser.uid,fundId)},
+				],
+				{ cancelable: false }
+			)
+		}
+	}
+	deleteNews =(newsId)=>{
+		let fundId = this.props.navigation.state.params.foundationID
+		let fundName = this.state.data.givenName
+		let numberPhotos = Object.keys(this.state.news[newsId].imageUrls).length
 		Alert.alert(
-			`Reportar a ${fundName}`,
-			`Este perfíl será revisado por un administrador y eliminado en caso de encuentrar abusos.`,
+			`Eliminar Noticia de ${fundName}`,
+			`Esta noticia se borrará completamente de la app. ¿ Estás segur@ ?`,
 			[
 				{text: 'Cancelar', onPress: () => null, style: 'cancel'},
-				{text: 'Reportar', onPress: () => this._sendReport()},
+				{text: 'Eliminar', onPress: () => this._eliminateNews(newsId,fundId,numberPhotos)}
 			],
 			{ cancelable: false }
 		)
 	}
-	_sendReport = ()=>{
-		Toast.show({
-			text:'Fundación reportada al administrador',
-			buttonText:'Bien',
-			duration: 4000,
-		})
+	deleteMascota =(petId)=>{
+		let fundId = this.props.navigation.state.params.foundationID
+		let fundName = this.state.data.givenName
+		let numberPhotos = Object.keys(this.state.pets[petId].imageUrls).length
+		// console.log('numberOfPhotos!',numberPhotos)
+		Alert.alert(
+			`Eliminar Mascota de ${fundName}`,
+			`Esta mascota se borrará completamente de la app. ¿ Estás segur@ ? `,
+			[
+				{text: 'Cancelar', onPress: () => null, style: 'cancel'},
+				{text: 'Eliminar', onPress: () => this._eliminatePet(petId,fundId,numberPhotos)}
+			],
+			{ cancelable: false }
+		)
 	}
+	_sendReport = (uId,fundId)=>{
+		foundationsActions.reportFoundation(uId,fundId)
+
+		Toast.show({
+			text:'Se ha enviado tu denuncia correctamente. \nPronto un administrador revisará el caso.',
+			buttonText:'Ok',
+			duration: 6000,
+			type:'success'
+		})
+
+	}
+	_eliminateProfile = (fundId) => {
+		foundationsActions.deleteProfileFoundation(fundId)
+		Toast.show({
+			text:'Perfil eliminado correctamente.',
+			buttonText:'Ok',
+			duration: 4000,
+			type:'danger'
+		})
+		this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
+	}
+	_eliminatePet = (petId,fundId,numberPhotos) =>{
+		foundationsActions.deletePetFoundation(petId,fundId,numberPhotos)
+		Toast.show({
+			text:'Mascota eliminada correctamente.',
+			buttonText:'Ok',
+			duration: 4000,
+			type:'danger'
+		})
+		this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
+	}
+
+	_eliminateNews = (newId,fundId,numberPhotos) =>{
+		foundationsActions.deleteNewsFoundation(newId,fundId,numberPhotos)
+		Toast.show({
+			text:'Noticia eliminada correctamente.',
+			buttonText:'Ok',
+			duration: 4000,
+			type:'danger'
+		})
+		this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
+	}
+
 	render() {
 		const { navigate } = this.props.navigation
 		let info = this.state.data
@@ -217,7 +300,7 @@ class FundationProfileView extends Component {
 										style={{borderColor: '#2a2a2a59', borderWidth:5, marginTop: 15}} 
 										rounded large source={{ uri: info.photoUrl }}/>
 									</Left>
-									<Body>
+									<Body style={{borderBottomWidth:0}}>
 										<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>{info.name}</Text>
 
 										{profile&&profile.description&&<Text note style={{marginBottom:10}}>{profile.description}</Text>}
@@ -225,9 +308,9 @@ class FundationProfileView extends Component {
 										{profile&&profile.ciudad&&<Text note>
 										<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> {profile.ciudad}</Text>}
 									</Body>
-									<Right>
+									<Right style={{borderBottomWidth:0}}>
 										<Ripple style={{padding:12}} onPress={()=>this.reportarFund()}>
-										<Ionicons name="md-flag"  size={(16)} color="rgb(75, 75, 73)"/> 
+										<Ionicons name="md-flag"  size={(16)} color={info.reportes?'red':'black'}/> 
 										</Ripple>
 									</Right>
 								</ListItem>

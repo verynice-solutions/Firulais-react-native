@@ -1,7 +1,7 @@
 import firebase from "../firebase/firebaseSingleton";
 import {ImageManipulator} from 'expo'
 
-async function _uploadImage(localUri,entityId,fotoName){
+async function _uploadImage(localUri,entityId,fotoName,reference){
   // Optimization de Images of various sizes
   // ejemplos de compresión: (4MB -> 500 KB) (2MB -> 382KB) (800KB -> 84KB)
 
@@ -39,7 +39,7 @@ async function _uploadImage(localUri,entityId,fotoName){
   const blop = await response.blob()
 
   // Mandar a la db imagen optimizada 
-  let storage_ref = `images/pets/${entityId}/${fotoName}`
+  let storage_ref = `images/${reference}/${entityId}/${fotoName}`
   var ref = firebase.storage().ref().child(storage_ref)
   return ref.put(blop)
   // ¡ PROFIT ! 

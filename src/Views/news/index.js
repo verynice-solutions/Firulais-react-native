@@ -37,7 +37,11 @@ const TabNav = TabNavigator({
     PersonalFeed: {
       screen: PersonalFeed
     }
-  },tabBarStyle
+  },{
+    ...tabBarStyle,
+    swipeEnabled:true,
+    lazy:true
+  }
 );
 
 export default TabNav

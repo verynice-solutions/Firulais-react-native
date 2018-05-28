@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
 import {connect} from 'react-redux'
 import { View, StyleSheet, TouchableOpacity, ScrollView, Image,ActivityIndicator } from 'react-native'
 import { TabNavigator } from 'react-navigation';
@@ -19,7 +20,8 @@ class PersonalFeed extends Component {
   static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-      title: 'Mis Noticias',
+      title: 'Noticias',
+      tabBarLabel: 'SUBSCRITAS',
       tabBarIcon: <Ionicons name='md-ribbon' size={26} />
     }
 	}
@@ -28,15 +30,26 @@ class PersonalFeed extends Component {
     this.setState({fetching: true})
     foundationsActions.fetchAllUserFoundations(this.props.currentUser.uid).then( (val) =>{
       // this.setState({allFoundations: val})
+      // console.log('val',val)
       if(val){
         let promises = []
         Object.keys(val).map((item, index)=>{
+          // console.log('item',item)
           promises.push(foundationsActions.fetchFoundationNews(item))
         })
         Promise.all(promises).then((values) => { 
           // console.log("IDIDIT: ", values)
-          this.setState({feedNews: values, fetching: false}) 
-        });
+          if(values[0]){
+            // console.log('si tiene values')
+            this.setState({feedNews: values, fetching: false}) 
+          }else{
+            // console.log('No tiene values')
+            this.setState({feedNews: null, fetching: false}) 
+          }
+
+        }).catch((error)=>{
+          console.log('Error: '+ error)
+        })
       }
     })
   }
@@ -57,9 +70,8 @@ class PersonalFeed extends Component {
           <ScrollView>
           <List>
             {
-              allNews ? (
+              allNews?(
                 allNews.map((item)=>{  //Loop of different foundation's news
-                  // console.log(allNews)
                   let news = item
                   return news && (
                     Object.keys(news).map((i)=>{  //Loop of specific set
@@ -76,9 +88,9 @@ class PersonalFeed extends Component {
                 })
               ):(
                 <View style={{paddingTop:100, paddingHorizontal:30,justifyContent:'center',alignItems:'center'}}>
-                    <Image source={images.sherlock_kitty} resizeMode= 'contain' 
+                    <Image source={images.pencil_kitty} resizeMode= 'contain' 
                       style={{height: 180, width: 180}}/>
-                    <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold', textAlign:'center',lineHeight:30, fontSize:18,marginTop:18}}>No hay noticias aún.</Text>
+                    <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold', textAlign:'center',lineHeight:30, fontSize:18,marginTop:18}}>Subscribete a fundaciones para recibir sus noticias.</Text>
                 </View>
               )
             }

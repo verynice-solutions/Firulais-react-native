@@ -301,7 +301,7 @@ class CreateService extends Component {
         `Confirmar adopción`,
         `Estoy segur@ de que quiero adoptar a ${object.petObj.tempName} \u2661`,
         [
-          {text: 'NO', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+          {text: 'NO', onPress: () => null, style: 'cancel'},
           {text: 'SI', onPress: () => this.newService(object,'adoptar')},
         ],
         { cancelable: false }
