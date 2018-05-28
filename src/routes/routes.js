@@ -11,18 +11,19 @@ import SignUp from '../Views/signin/SignUp'
 import ForgotPass from '../Views/signin/ForgotPass'
 import Settings from '../Views/settings/Settings'
 import Drawer from '../Components/Drawer'
-import AddPetScreen from '../Views/profile/fundation/AddPet'
+import AddPetScreen from '../Views/pets/AddPet'
 import AllFoundationsView from '../Views/allUsers/FoundationsView'
 import AllUsersView from '../Views/allUsers/UsersView'
 import FoundationProfile from '../Views/profile/fundation/FoundationProfile'
 import UserProfile from '../Views/profile/user/UsersProfile'
-import MyServicesView from '../Views/services/MyServicesView'
+import MyServicesView from '../Views/services/index'
 import CreateService from '../Views/services/CreateService'
 import AddNewView from '../Views/news/createNew'
 import AllNewsView from '../Views/news/index'
 import NewsView from '../Views/news/newsView'
 import HistoryView from '../Views/services/History'
 import FinishedService from '../Views/services/FinishedService'
+import PetProfile from '../Views/pets/PetProfile'
 
 const SignedOutRoutes = StackNavigator({
   Login: {
@@ -79,6 +80,10 @@ const AllRoutes = StackNavigator({
   AllNewsView: {
     path: 'allNewsView',
     screen: AllNewsView
+  },  
+  PetProfile: {
+    path: 'petprofile',
+    screen: PetProfile
   },
   AddPet:{
     path: 'addpet',
@@ -99,7 +104,7 @@ const AllRoutes = StackNavigator({
   Settings: {
     path: 'settings',
     screen: Settings
-  }
+  },
 },{
   navigationOptions:{
     headerStyle:{

@@ -1,40 +1,55 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
 import {connect} from 'react-redux'
-import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, ScrollView, Image,ActivityIndicator } from 'react-native'
 import { TabNavigator } from 'react-navigation';
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body } from 'native-base';
 import { Ionicons } from '@expo/vector-icons'
 import foundationsActions from '../../actions/foundationsActions'
-
+import images from '../../../assets/images'
 
 class PersonalFeed extends Component {
 	constructor(props) {
     super(props)
     this.state = {
-      feedNews: []
+      feedNews: null,
+      fetching: false
     }
   }
 
   static navigationOptions = ({navigation}) => {
 		const params = navigation.state.params || {};
 		return{
-      title: 'Mis Noticias',
+      title: 'Noticias',
+      tabBarLabel: 'SUBSCRITAS',
       tabBarIcon: <Ionicons name='md-ribbon' size={26} />
     }
 	}
     
-  componentWillMount() {
+  componentDidMount() {
+    this.setState({fetching: true})
     foundationsActions.fetchAllUserFoundations(this.props.currentUser.uid).then( (val) =>{
       // this.setState({allFoundations: val})
+      // console.log('val',val)
       if(val){
         let promises = []
         Object.keys(val).map((item, index)=>{
+          // console.log('item',item)
           promises.push(foundationsActions.fetchFoundationNews(item))
         })
         Promise.all(promises).then((values) => { 
           // console.log("IDIDIT: ", values)
-          this.setState({feedNews: values}) 
-        });
+          if(values[0]){
+            // console.log('si tiene values')
+            this.setState({feedNews: values, fetching: false}) 
+          }else{
+            // console.log('No tiene values')
+            this.setState({feedNews: null, fetching: false}) 
+          }
+
+        }).catch((error)=>{
+          console.log('Error: '+ error)
+        })
       }
     })
   }
@@ -42,36 +57,48 @@ class PersonalFeed extends Component {
 	render() {
     let allNews = this.state.feedNews
     const { navigate } = this.props.navigation
-    return (
-      <View style={{flex:1}}> 
-        <ScrollView>
-         <List>
-          {
-            allNews ? (
-              allNews.map((item)=>{  //Loop of different foundation's news
-                // console.log(allNews)
-                let news = item
-                return news && (
-                  Object.keys(news).map((i)=>{  //Loop of specific set
-                    let imgs = news[i].imageUrls
-                    return <ListItem key={i} onPress={ ()=> navigate('NewsView', { news: news[i] }) }>
-                      <Thumbnail rounded size={80} source={{ uri: imgs[Object.keys(imgs)[0]].url }} />
-                      <Body>
-                        <Text>{news[i].title}</Text>
-                        <Text note> { news[i].description  } </Text>
-                      </Body>
-                    </ListItem>
-                  })
-                )
-              })
-            ):(
-              <Text style={{margin:10}}> No News :( </Text>
-            )
-          }
-          </List>
-        </ScrollView>
-      </View>
-    )
+    // console.log('allNews: ',allNews)
+    if(this.state.fetching){
+      return(
+        <View style={{ flex:1, justifyContent: 'center' }} >
+          <ActivityIndicator size='large' />
+        </View>
+      )
+    }else{
+      return (
+        <View style={{flex:1}}> 
+          <ScrollView>
+          <List>
+            {
+              allNews?(
+                allNews.map((item)=>{  //Loop of different foundation's news
+                  let news = item
+                  return news && (
+                    Object.keys(news).map((i)=>{  //Loop of specific set
+                      let imgs = news[i].imageUrls
+                      return <ListItem key={i} onPress={ ()=> navigate('NewsView', { news: news[i] }) }>
+                        <Thumbnail rounded size={80} source={{ uri: imgs[Object.keys(imgs)[0]].url }} />
+                        <Body>
+                          <Text>{news[i].title}</Text>
+                          <Text note numberOfLines={2}> { news[i].description  } </Text>
+                        </Body>
+                      </ListItem>
+                    })
+                  )
+                })
+              ):(
+                <View style={{paddingTop:100, paddingHorizontal:30,justifyContent:'center',alignItems:'center'}}>
+                    <Image source={images.pencil_kitty} resizeMode= 'contain' 
+                      style={{height: 180, width: 180}}/>
+                    <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold', textAlign:'center',lineHeight:30, fontSize:18,marginTop:18}}>Subscribete a fundaciones para recibir sus noticias.</Text>
+                </View>
+              )
+            }
+            </List>
+          </ScrollView>
+        </View>
+      )
+    }
   }
 }
 

@@ -12,6 +12,7 @@ import { Button, Icon, Thumbnail, Text, Item, Input,
 				Right, Label} from 'native-base'
 import firebase from '../../../firebase/firebaseSingleton'
 import images from '../../../../assets/images'
+import { Ionicons } from '@expo/vector-icons';
 
 class UsersProfile extends Component {
 	constructor(props) {
@@ -48,7 +49,7 @@ class UsersProfile extends Component {
 		}
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		let params = this.props.navigation.state.params
 		if(this.props.currentUser.uid===params.userID){this.props.navigation.setParams({ myperfil: true })}
 		let promise1 = foundationsActions.fetchByUID(params.userID).then((val)=>{
@@ -57,8 +58,12 @@ class UsersProfile extends Component {
 		let promise2 = userActions.fetchUserFoundations(params.userID).then((val)=>{
 			this.setState({foundations: val, isFetchingFoundations: false})
 		})
-		let promise3 = userActions.fetchNUserServices(params.userID, 3).then((val)=>{
-			this.setState({services: val, isFetchingServices: false})
+		let promise3 = userActions.fetchNUserServices(params.userID, 3).then((values)=>{
+			if( _.some(values,{"status":"calificado"}) ){
+				this.setState({services: _.orderBy(values,["rating"],["desc"]), isFetchingServices:false})
+			}else{
+				this.setState({services: null, isFetchingServices:false})
+			}
 		})
 	}
 
@@ -72,7 +77,7 @@ class UsersProfile extends Component {
 					<CardItem>
 							<View style={styles.petCardContent}>
 							<Thumbnail circle large source={{ uri: imgURL}}/> 
-								<Text style={{textAlign:'center'}} numberOfLines={1} note> {foundation[item].givenName ? 
+								<Text style={{textAlign:'center', marginTop:5}} numberOfLines={1} note> {foundation[item].givenName ? 
 									foundation[item].givenName : foundation[item].name}</Text>
 							</View>
 					</CardItem>
@@ -87,48 +92,31 @@ class UsersProfile extends Component {
 		let service = this.state.services
 		let data = service[item]
 		let imgURL = service[item].thumbnail
-		if(service[item].status === 'finalizado'){
+		if(service[item].status === 'calificado'){
 			return(
-					// <Card key={item} style={styles.serviceCard}>
-					// 	<CardItem>
-					// 		<View style={styles.petCardContent}>
-					// 			<Thumbnail circle large source={{ uri: imgURL}}/> 
-					// 			<Text style={{textAlign:'center'}} note>{service[item].rating? service[item].rating+'\u2b50' : ''} </Text>
-					// 		</View>
-					// 	</CardItem>
-					// </Card>
-					<Card style={{flex: 1}}>
-            <ListItem avatar>
-              <Left>
-                <Thumbnail source={{uri: data.fundInfo.photoUrl}} />
-              </Left>
-								<Body>
-                  <Text>{data.fundInfo.name}</Text>
-                  <Text note>{data.type.toUpperCase()}</Text>
-                </Body>
-							<Right>
-								<Text note>
-									{data.rating? data.rating+'\u2b50' : ''} 
-								</Text>
-							</Right>
-            </ListItem>
-            <ListItem>
-							<Left>
-								<Thumbnail large source={{uri: imgURL}}/>
-							</Left>
-							<Body style={{flexDirection: 'column'}}>
-								<Label> Comentario </Label>
-								<Text numberOfLines={3} note>
-									{data.ratingMsg}
-								</Text>
-							</Body>
-            </ListItem>
-          </Card>
-				)
-		}else {
-			return null
+				<View style={{flex: 1}}>
+					<ListItem avatar>
+						<Left>
+							<Thumbnail source={{uri: data.fundInfo.photoUrl}} />
+						</Left>
+						<Body>
+							<Text>Comentario</Text>
+							<Text numberOfLines={3} note style={{marginVertical:10}}>
+								{data.ratingMsg}
+							</Text>
+							<Text note><Ionicons name="md-person" size={(15)} color="rgb(75, 75, 73)"/>  {data.fundInfo.name}</Text>
+							<Text note><Ionicons name="md-paw" size={(15)} color="rgb(75, 75, 73)"/>  Mascota {data.petInfo.tempName}</Text>
+							<Text note><Ionicons name="md-hand" size={(15)} color="rgb(75, 75, 73)"/>  {data.type.toUpperCase()}</Text>
+						</Body>
+						<Right>
+							{data.rating&&<Text>
+						{data.rating}.0 <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/> 
+							</Text>}
+						</Right> 
+					</ListItem>
+				</View>
+			)
 		}
-		
 	}
 
 	render() {
@@ -143,43 +131,32 @@ class UsersProfile extends Component {
 					{
 						info ?(
 							<View>
-								<View>
-									<ImageBackground
-										style={{
-											backgroundColor: '#ccc',
-											flex: 1,
-											position: 'absolute',
-											width: '100%',
-											height: '100%',
-											justifyContent: 'center',
-										}}
-										source={images.purple_gradient}>
-									</ImageBackground>		
+								<View style={{backgroundColor:'#ffffff'}}>
+									<View style={{marginTop:20}}/>	
+									<ListItem avatar noBorder>
+										<Left>
+											<Thumbnail 
+											style={{borderColor: '#2a2a2a59', borderWidth:5, marginTop: 15}} 
+											rounded large source={{ uri: info.photoUrl }}/>
+										</Left>
+										<Body>
+											<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>{info.name}</Text>
+											{profile&&profile.description&&<Text note style={{marginBottom:10}}>{profile.description}</Text>}
 
-									<View style={styles.thumbContainer}>
-										<Thumbnail 
-											circle 
-											large 
-											source={{ uri: info.photoUrl }}
-											style={{borderColor: '#FFFFFF59', borderWidth:5, marginTop: 15}}/>
-										<Text style={styles.nameField}> 
-											{info.name}
-										</Text>
-									</View>
-
-									{profile&&<View style={styles.infoContainer}>
-										<Text style={styles.infoField}> {profile.description}  </Text>
-									</View>}										
+											{profile&&profile.ciudad&&<Text note>
+											<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> {profile.ciudad}</Text>}
+										</Body>
+									</ListItem>
+									<View style={{marginTop:30}}/>	
 								</View>
 
 								<View style={styles.subtitle}>
-									<ListItem itemDivider style={{justifyContent:'space-between'}}>
-										<Text style={styles.dividerText}>Fundaciones</Text>
+									<ListItem itemDivider style={{justifyContent:'space-between', backgroundColor:'#ffffff'}}>
+										<Text style={styles.dividerText}>FUNDACIONES</Text>
 										<TouchableOpacity onPress={ ()=> navigate('AllFoundationsView') }>
-											<Text style={styles.dividerText}> Ver más...</Text>
+											<Text style={styles.dividerText}> ver más..</Text>
 										</TouchableOpacity>
 									</ListItem> 
-									
 								</View>
 								{
 									this.state.isFetchingFoundations ? (
@@ -190,17 +167,16 @@ class UsersProfile extends Component {
 										<View style={styles.cardsContainer}>
 											{
 												foundations?
-														<FlatList data={Object.keys(foundations)}
-															horizontal
-															showsHorizontalScrollIndicator={false}
-															bounces={true}
-															renderItem={this.renderFoundations}
-															keyExtractor={ (item, index) => {return `${index}` } }
-														/>
+													<FlatList data={Object.keys(foundations)}
+														horizontal
+														showsHorizontalScrollIndicator={false}
+														bounces={true}
+														renderItem={this.renderFoundations}
+														keyExtractor={ (item, index) => {return `${index}` } }/>
 												:
 													<View style={styles.infoContainer}>
 														<Text style={styles.infoField}>
-														No fundaciones suscritas :(
+															{info.givenName+' '} no sigue a ninguna fundación.
 														</Text>
 													</View>
 											}
@@ -208,8 +184,8 @@ class UsersProfile extends Component {
 									)
 								}
 								<View style={styles.subtitle}>
-									<ListItem itemDivider>
-										<Left><Text style={styles.dividerText}>Últimos Servicios</Text></Left>
+									<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+										<Left><Text style={styles.dividerText}>ÚLTIMOS SERVICIOS</Text></Left>
 									</ListItem> 
 								</View>
 								{
@@ -230,13 +206,13 @@ class UsersProfile extends Component {
 											</View>											
 										):(
 											<View>
-												<ListItem>
-													<Body> 
-														<Text style={{color: '#2a2a2a'}}>No hay servicios todavía :(</Text>
+												<ListItem noBorder>
+													<Body style={{borderBottomWidth: 0}}> 
+														<Text style={{color: '#2a2a2a'}}>{info.givenName} aún no tiene servicios calificados.</Text>
 													</Body>
-													<Right>
+													<Right style={{borderBottomWidth: 0}}>
 														<Thumbnail square size={80} 
-															source={images.wonder_kitty}/>
+															source={images.sad_kitty}/>
 													</Right>
 												</ListItem>
 											</View>											
@@ -291,7 +267,7 @@ const styles = StyleSheet.create({
 	infoField: {
 		textAlign:'center', 
 		width:'80%',
-		color: '#ffffff',
+		color: '#2a2a2a',
 		marginBottom: 30,
 	},
 	cardsContainer: {
@@ -300,8 +276,6 @@ const styles = StyleSheet.create({
 		marginBottom: 5  
 	},
 	petCard: {
-		flex: 0,
-		margin: 2,
 		width: 120
 	},
 	serviceCard: {

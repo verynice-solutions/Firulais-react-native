@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Platform,	View, StyleSheet, Image, TouchableOpacity, 
 					Alert, ActivityIndicator, ScrollView, FlatList, ImageBackground} from 'react-native'
 import {connect} from 'react-redux'
+import Ripple from 'react-native-material-ripple'
 //Accions
 import foundationsActions from '../../../actions/foundationsActions'
 import userActions from '../../../actions/usersActions'
@@ -12,6 +13,8 @@ import { Button, Icon, Thumbnail, Text, Item, Input,
 					Right,Toast} from 'native-base'
 import firebase from '../../../firebase/firebaseSingleton'
 import images from '../../../../assets/images'
+import { Ionicons } from '@expo/vector-icons';
+import NavigationService from '../../../routes/NavigationService'
 
 class FundationProfileView extends Component {
 	constructor(props) {
@@ -20,9 +23,11 @@ class FundationProfileView extends Component {
 			data: [],
 			pets: [],
 			news: [],
+			imSubscribed: false,
 			isFetchingData: true,
 			isFetchingPets: true,
-			isFetchingNews: true
+			isFetchingNews: true,
+			isFetchingSubscription: true
 		}
 		this.renderPets = this.renderPets.bind(this)
 		this.renderNews = this.renderNews.bind(this)
@@ -54,9 +59,10 @@ class FundationProfileView extends Component {
 		
 	componentDidMount() {
 		let params = this.props.navigation.state.params
+		this.fetchIsSubscribed(this.props.currentUser.uid,params)
 		if(this.props.currentUser.uid===params.foundationID){this.props.navigation.setParams({ myperfil: true })}
-		this.setState({isFetchingData: true, isFetchingData: true})
 		this.fetchEverything(params)
+
 	}
 	
 	fetchEverything = async (params) =>{
@@ -73,30 +79,61 @@ class FundationProfileView extends Component {
 			this.setState({news: val, isFetchingNews: false})
 		})
 	}
+	
+	fetchIsSubscribed = async (uid,params) =>{
+		let promiseSubscribe = await userActions.fetchUserIsSubscribed(uid,params.foundationID).then((val)=>{
+			// console.log('SUBSCRITO',val)
+			if(val){
+				this.setState({imSubscribed: true, isFetchingSubscription: false })
+			}
+			
+		})
+	}
 
 	petTouched(mascotaId, fundacionId, userId,petObj) {
-		if(this.props.currentUser.type == 'user' && this.state.data) {
-			this.props.navigation.navigate('CreateService',{toCreate:{petObj:petObj,fid:fundacionId,uid:userId,fundObj:this.state.data}})
-		}else{
-			Toast.show({
-				text:'Solo usuarios voluntario pueden cuidar mascotas',
-				buttonText:'Ok',
-				duration: 4000,
-				type:'warning'
-			})
+		let myPet = this.props.currentUser.uid === petObj.idFundacion
+		if(this.state.data){
+			this.props.navigation.navigate('PetProfile',{petId: mascotaId, myPet: myPet, fundObj: this.state.data })
 		}
 	}
 
 	addVoluntario() {
-		let info = this.state.data
+		Alert.alert(
+			`Confirmar subscripción`,
+			`Estoy segur@ de que quiero recibir noticias de ${this.state.data.givenName} \u2665`,
+			[
+				{text: 'NO', onPress: () => null, style: 'cancel'},
+				{text: 'SI', onPress: () => this._updateUserSubscription()},
+			],
+			{ cancelable: false }
+		)
+	}
+	deleteVoluntario() {
+		Alert.alert(
+			'Anular subscripción',
+			`No quiero recibir más noticias de ${this.state.data.givenName}.`,
+			[
+				{text: 'NO', onPress: () => null, style: 'cancel'},
+				{text: 'SI', onPress: () => this._updateUserSubscription()},
+			],
+			{ cancelable: false }
+		)
+	}
+
+	_updateUserSubscription = ()=>{
 		let uid = this.props.currentUser.uid
 		let fundId = this.props.navigation.state.params.foundationID
-		let name = info.name
-		let thumb = info.photoUrl
-		Alert.alert('\u2b50','Se un voluntario!',[
-			{text: 'YES!', onPress: () => userActions.addFoundationToUser(uid, fundId, name, thumb)},
-		],
-		{ cancelable: true })
+		if(!this.state.imSubscribed){
+			let info = this.state.data
+			let params = this.props.navigation.state.params
+			let name = info.name
+			let thumb = info.photoUrl
+			userActions.addFoundationToUser(uid, fundId, name, thumb)
+			this.setState({imSubscribed: true})
+		}else{
+			userActions.unSubscribe(uid, fundId)
+			this.setState({imSubscribed: false})
+		}
 	}
 
 	renderPets({item, index}) {
@@ -108,12 +145,15 @@ class FundationProfileView extends Component {
 				<Card key={item} style={styles.petCard}>
 					<CardItem>
 							<View style={styles.petCardContent}>
-							<Thumbnail circle large source={{ uri: imgURL}}/> 
-								<Text numberOfLines={1} note> {pets[item].edad} años </Text>
+								<Thumbnail circle large source={{ uri: imgURL}}/> 
+								<Text numberOfLines={1} note style={{textAlign:'center', marginTop:5}}> {pets[item].tempName} </Text>
+								{this.props.currentUser.type==='admin'&&<TouchableOpacity style={{flexDirection:'row', justifyContent:'center',padding:5}} onPress={()=>this.deleteMascota(item)}>
+									<Text style={{color:'red'}}> Eliminar   </Text>
+									<Ionicons name='md-close' color='red' size={20}/>
+								</TouchableOpacity>}
 							</View>
 					</CardItem>
 				</Card>
-
 			</TouchableOpacity>
 		)
 	}
@@ -127,15 +167,115 @@ class FundationProfileView extends Component {
 				<Card key={item} style={styles.petCard}>
 					<CardItem>
 							<View style={styles.petCardContent}>
-							<Thumbnail circle large source={{ uri: imgURL}}/> 
-								<Text numberOfLines={1} note> {news[item].title}</Text>
+								<Thumbnail circle large source={{ uri: imgURL}}/> 
+								<Text numberOfLines={1} note style={{textAlign:'center', marginTop:5}}> {news[item].title}</Text>
+								{this.props.currentUser.type==='admin'&&<TouchableOpacity style={{flexDirection:'row', justifyContent:'center',padding:5}} onPress={()=>this.deleteNews(item)}>
+									<Text style={{color:'red'}}> Eliminar   </Text>
+									<Ionicons name='md-close' color='red' size={20}/>
+								</TouchableOpacity>}
 							</View>
 					</CardItem>
 				</Card>
-
 			</TouchableOpacity>
 		)
 	}
+	reportarFund =()=>{
+		let fundId = this.props.navigation.state.params.foundationID
+		let fundName = this.state.data.givenName
+		if(this.props.currentUser.type==='admin'&&this.state.data.reportes){
+			Alert.alert(
+				`Eliminar perfíl de ${fundName}`,
+				`Los datos del perfíl serán borrados. `,
+				[
+					{text: 'No', onPress: () => null, style: 'cancel'},
+					{text: 'Si', onPress: () => this._eliminateProfile(fundId)}
+				],
+				{ cancelable: false }
+			)
+		}else{
+			Alert.alert(
+				`Reportar a ${fundName}`,
+				`Esta fundación será revisada por un administrador. De encontrarse anomalías, se eliminará todo contenido no deseado de su perfil público.`,
+				[
+					{text: 'Cancelar', onPress: () => null, style: 'cancel'},
+					{text: 'Reportar', onPress: () => this._sendReport(this.props.currentUser.uid,fundId)},
+				],
+				{ cancelable: false }
+			)
+		}
+	}
+	deleteNews =(newsId)=>{
+		let fundId = this.props.navigation.state.params.foundationID
+		let fundName = this.state.data.givenName
+		let numberPhotos = Object.keys(this.state.news[newsId].imageUrls).length
+		Alert.alert(
+			`Eliminar Noticia de ${fundName}`,
+			`Esta noticia se borrará completamente de la app. ¿ Estás segur@ ?`,
+			[
+				{text: 'Cancelar', onPress: () => null, style: 'cancel'},
+				{text: 'Eliminar', onPress: () => this._eliminateNews(newsId,fundId,numberPhotos)}
+			],
+			{ cancelable: false }
+		)
+	}
+	deleteMascota =(petId)=>{
+		let fundId = this.props.navigation.state.params.foundationID
+		let fundName = this.state.data.givenName
+		let numberPhotos = Object.keys(this.state.pets[petId].imageUrls).length
+		// console.log('numberOfPhotos!',numberPhotos)
+		Alert.alert(
+			`Eliminar Mascota de ${fundName}`,
+			`Esta mascota se borrará completamente de la app. ¿ Estás segur@ ? `,
+			[
+				{text: 'Cancelar', onPress: () => null, style: 'cancel'},
+				{text: 'Eliminar', onPress: () => this._eliminatePet(petId,fundId,numberPhotos)}
+			],
+			{ cancelable: false }
+		)
+	}
+	_sendReport = (uId,fundId)=>{
+		foundationsActions.reportFoundation(uId,fundId)
+
+		Toast.show({
+			text:'Se ha enviado tu denuncia correctamente. \nPronto un administrador revisará el caso.',
+			buttonText:'Ok',
+			duration: 6000,
+			type:'success'
+		})
+
+	}
+	_eliminateProfile = (fundId) => {
+		foundationsActions.deleteProfileFoundation(fundId)
+		Toast.show({
+			text:'Perfil eliminado correctamente.',
+			buttonText:'Ok',
+			duration: 4000,
+			type:'danger'
+		})
+		this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
+	}
+	_eliminatePet = (petId,fundId,numberPhotos) =>{
+		foundationsActions.deletePetFoundation(petId,fundId,numberPhotos)
+		Toast.show({
+			text:'Mascota eliminada correctamente.',
+			buttonText:'Ok',
+			duration: 4000,
+			type:'danger'
+		})
+		this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
+	}
+
+	_eliminateNews = (newId,fundId,numberPhotos) =>{
+		foundationsActions.deleteNewsFoundation(newId,fundId,numberPhotos)
+		Toast.show({
+			text:'Noticia eliminada correctamente.',
+			buttonText:'Ok',
+			duration: 4000,
+			type:'danger'
+		})
+		this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
+	}
+
 	render() {
 		const { navigate } = this.props.navigation
 		let info = this.state.data
@@ -151,49 +291,66 @@ class FundationProfileView extends Component {
 								<ActivityIndicator size='large' />
 							</View>
 						):(
-							<View style={{backgroundColor: '#AE86A9'}}>
-								<ImageBackground
-									style={{
-										backgroundColor: '#ccc',
-										flex: 1,
-										position: 'absolute',
-										width: '100%',
-										height: '100%',
-										justifyContent: 'center',
-									}}
-									source={images.purple_gradient}>
-								</ImageBackground>	
-								<View style={styles.thumbContainer}>
-									<Thumbnail 
-										circle 
-										large 
-										source={{ uri: info.photoUrl }}
-										style={{borderColor: '#FFFFFF59', borderWidth:5, marginTop: 15}}/>
-									<Text style={styles.nameField}> 
-										{info.name}
-									</Text>
-								</View>
 
-								{profile&&<View style={styles.infoContainer}>
-									<Text style={styles.infoField}> { profile.description  }  </Text>
-								</View>}
-								{
-									this.props.currentUser.type === 'user' &&(
-										<View style={{marginHorizontal: 10, marginBottom: 10}}> 											
-											<Card style={{ borderRadius:25}}> 
+							<View style={{backgroundColor:'#ffffff'}}>
+								<View style={{marginTop:20}}/>	
+								<ListItem avatar noBorder>
+									<Left>
+										<Thumbnail 
+										style={{borderColor: '#2a2a2a59', borderWidth:5, marginTop: 15}} 
+										rounded large source={{ uri: info.photoUrl }}/>
+									</Left>
+									<Body style={{borderBottomWidth:0}}>
+										<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>{info.name}</Text>
+
+										{profile&&profile.description&&<Text note style={{marginBottom:10}}>{profile.description}</Text>}
+
+										{profile&&profile.ciudad&&<Text note>
+										<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> {profile.ciudad}</Text>}
+									</Body>
+									<Right style={{borderBottomWidth:0}}>
+										<Ripple style={{padding:12}} onPress={()=>this.reportarFund()}>
+										<Ionicons name="md-flag"  size={(16)} color={info.reportes?'red':'black'}/> 
+										</Ripple>
+									</Right>
+								</ListItem>
+
+								<View style={{marginTop:25}}/>
+
+								{this.props.currentUser.type === 'user' &&(
+										<View style={{marginHorizontal: 10, marginBottom: 10}}> 		
+
+											{!this.state.imSubscribed?<Card> 
 												<CardItem
 													button
-													onPress={this.addVoluntario}
-													style={{backgroundColor: '#E8D6E6'}}>
+													onPress={()=>this.addVoluntario()}
+													style={{backgroundColor: '#FFFFFF'}}>
 													<Left>
-														<Thumbnail source={images.medal}/>
+														<Thumbnail square small source={images.antenna_optional}/>
 														<Body>
-															<Text style={{fontWeight: 'bold'}}>¡Quiero ser voluntario!</Text>
-															<Text note>Apuntarme</Text>
+															<Text note>¿Quieres recibir noticias de esta fundación?</Text>
+															<Text style={{fontWeight: 'bold'}}>¡Subscríbeme!</Text>
 														</Body>
 													</Left>
 												</CardItem>
 											</Card>
+											:
+											<Card>
+												<Ripple onPress={()=>this.deleteVoluntario()}> 
+													<CardItem
+														style={{backgroundColor: '#FFFFFF'}}>
+														<Left>
+															<Thumbnail square small source={images.antenna_green}/>
+															<Body>
+																<Text style={{fontWeight: 'bold'}}>¡Estas subscrito a esta fundación!</Text>
+																<Text note>Te avisaremos de sus eventos.</Text>
+															</Body>
+														</Left>
+														<Ionicons name='md-close' size={20}/>
+													</CardItem>
+												</Ripple>
+											</Card>
+											}
 										</View>
 									)	
 								}
@@ -203,10 +360,10 @@ class FundationProfileView extends Component {
 					<View>
 
 						<View style={styles.subtitle}>
-							<ListItem itemDivider>
-								<Left><Text style={styles.dividerText}>Mascotas</Text></Left>
+							<ListItem itemDivider style={{backgroundColor:'#ffffff'}}>
+								<Left><Text style={{textAlign:'center', fontWeight:'bold'}}>MASCOTAS</Text></Left>
 								{/* <Right><Text style={styles.dividerText}>Ver más...</Text></Right> */}
-							</ListItem> 
+							</ListItem>
 						</View>
 						{
 							this.state.isFetchingPets ? (
@@ -215,25 +372,26 @@ class FundationProfileView extends Component {
 								</View>
 								
 							):(
-								<View style={styles.cardsContainer}>
+								<View>
 									{pets?
-									<FlatList data={Object.keys(pets)}
-										horizontal
-										showsHorizontalScrollIndicator={false}
-										bounces={true}
-										renderItem={this.renderPets}
-										keyExtractor={ (item, index) => {return `${index}` } }
-									/>
+									<View style={styles.cardsContainer}>
+										<FlatList data={Object.keys(pets)}
+											horizontal
+											showsHorizontalScrollIndicator={false}
+											bounces={true}
+											renderItem={this.renderPets}
+											keyExtractor={ (item, index) => {return `${index}` } }/>
+									</View>
 									:
 									<View>
-										<ListItem>
-											<Left>
+										<ListItem noBorder>
+											<Body style={{borderBottomWidth: 0}}> 
+												<Text style={{color: '#2a2a2a'}}>{info.givenName} no tiene mascotas todavía.</Text>
+											</Body>	
+											<Right style={{borderBottomWidth: 0}}>
 												<Thumbnail square size={80} 
-													source={images.wonder_kitty}/>
-											</Left>
-											<Body> 
-												<Text style={{color: '#2a2a2a'}}>{info.givenName} no tiene mascotas todavía :(</Text>
-											</Body>
+													source={images.sad_kitty}/>
+											</Right>
 										</ListItem>
 									</View>
 									}
@@ -244,8 +402,8 @@ class FundationProfileView extends Component {
 
 					<View>
 						<View style={styles.subtitle}>
-							<ListItem itemDivider style={{justifyContent:'space-between'}}>
-								<Text style={styles.dividerText}>Noticias</Text>
+							<ListItem itemDivider style={{justifyContent:'space-between',backgroundColor:'#ffffff'}}>
+								<Text style={styles.dividerText}>NOTICIAS</Text>
 								<TouchableOpacity onPress={ ()=> navigate('AllNewsView') }>
 									<Text style={styles.dividerText}> Ver más...</Text>
 								</TouchableOpacity>
@@ -269,11 +427,11 @@ class FundationProfileView extends Component {
 										</View>
 									):(
 										<View>
-											<ListItem>
-												<Body> 
-													<Text style={{color: '#2a2a2a'}}>No hay noticias :(</Text>
+											<ListItem noBorder>
+												<Body style={{borderBottomWidth: 0}}> 
+													<Text style={{color: '#2a2a2a'}}>Por el momento,{' '+info.givenName+' '}no tiene noticias.</Text>
 												</Body>
-												<Right>
+												<Right style={{borderBottomWidth: 0}}>
 													<Thumbnail square size={80} 
 														source={images.wonder_kitty}/>
 												</Right>
@@ -314,9 +472,9 @@ const styles = StyleSheet.create({
 	nameField: {
 		textAlign:'center',
 		fontWeight: 'bold',
-		color: '#2a2a2a',
+		color: '#ffffff',
 		marginTop: 15,
-		fontSize: 20
+		fontSize: 25
 	},
 	infoField: {
 		textAlign:'center', 
@@ -324,6 +482,11 @@ const styles = StyleSheet.create({
 
 		color: '#ffffff',
 		marginBottom: 30,
+	},
+	reportButton:{
+		flexDirection:'row',
+		justifyContent:'flex-end',
+		alignItems:'flex-end'
 	},
 	cardsContainer: {
 		alignItems:'center', 

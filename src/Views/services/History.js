@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
+import _ from 'lodash'
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Textarea } from 'native-base';
 import Modal from 'react-native-modal'
 import StarRating from 'react-native-star-rating';
 import serviceActions from '../../actions/serviceActions'
 import images from '../../../assets/images'
+import Ripple from 'react-native-material-ripple'
 
 class MyServicesView extends Component {
 	constructor(props) {
@@ -13,16 +15,18 @@ class MyServicesView extends Component {
     this.state = {
       allServices: [],
       isDetailVisible: false,
-      serviceInModal: null
+      serviceInModal: null,
+      fetching: true
     }
     this._reviewService = this._reviewService.bind(this)
   }
 
   static navigationOptions = ({navigation}) => {
     const params = navigation.state.params || {};
-    let titleTop = 'Historial'
+    let titleTop = 'Solicitudes'
 		return{
-			title: titleTop
+      title: titleTop,
+      tabBarLabel: 'Historial'
     }
   }
   
@@ -36,12 +40,24 @@ class MyServicesView extends Component {
   _fetchAll = ()=>{
     this.setState({fetching: true})
     if(this.props.currentUser.type==='fundation'){
-      serviceActions.fetchAllServices(this.props.currentUser.uid).then( (val) =>{
-        this.setState({allServices: val, fetching:false})
+      serviceActions.fetchAllServices(this.props.currentUser.uid).then( (values) =>{
+        if(_.some(values,{"status":"rechazado"})||_.some(values,{"status":"finalizado"})
+          ||_.some(values,{"status":"calificado"})
+        ){
+          this.setState({allServices: values, fetching:false})
+        }else{
+          this.setState({allServices: null, fetching:false})
+        }
       })
     }else{
-      serviceActions.fetchUserServices(this.props.currentUser.uid).then( (val) =>{
-        this.setState({allServices: val, fetching:false})
+      serviceActions.fetchUserServices(this.props.currentUser.uid).then( (values) =>{
+        if(_.some(values,{"status":"rechazado"})||_.some(values,{"status":"finalizado"})
+          ||_.some(values,{"status":"calificado"})
+        ){
+          this.setState({allServices: values, fetching:false})
+        }else{
+          this.setState({allServices: null, fetching:false})
+        }
       })
     }
   }
@@ -71,8 +87,9 @@ class MyServicesView extends Component {
             {
               services?(
                 Object.keys(services).map((i)=>{
-                  return (services[i].status == 'rechazado' || services[i].status == 'finalizado') && (
-                      <ListItem key={i} onPress={ ()=> navigate('FinishedService', { serviceKey:i, serviceInModal: services[i] }) }>
+                  return (services[i].status == 'rechazado' || services[i].status == 'finalizado'|| services[i].status == 'calificado') && (
+                    <Ripple key={i} onPress={ ()=> navigate('FinishedService', { serviceKey:i, serviceInModal: services[i] }) }>
+                      <ListItem >
                         <Thumbnail rounded size={80} source={{ uri: services[i].thumbnail }} />
                         <Body>
                           <Text>{services[i].petInfo.tempName}</Text>
@@ -80,15 +97,14 @@ class MyServicesView extends Component {
                         </Body>
                         <Text>{services[i].status}</Text>
                       </ListItem>
-                    )
-                  
+                    </Ripple>
+                  )
                 })
               ):(
                 <View style={{paddingTop:100,justifyContent:'center',alignItems:'center'}}>
-                  <Image source={images.thinking_kitty} resizeMode= 'contain' 
+                  <Image source={images.bubbles_kitty} resizeMode= 'contain' 
                     style={{height: 180, width: 180}}/>
-                  <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold',fontSize:18,marginTop:18}}> Aún no tienes 
-                  {user.type==='fundation'?' solicitudes finalizadas.':' servicios finalizados.'} </Text>
+                  <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold',fontSize:18,marginTop:18}}> Todavía no tienes servicios finalizados.</Text>
                 </View>
               )
             }

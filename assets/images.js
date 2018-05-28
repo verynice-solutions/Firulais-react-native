@@ -6,14 +6,24 @@ const images = {
 	cat_selfi: require('./images/kitty_selfie.png'),
 	//Add news
 	thinking_kitty: require('./images/kitty_thinking.png'),
+	sherlock_kitty: require('./images/sherlock_kitty.png'),
 	//Drawer
 	firulais_logo: require('./images/logo_firulais_op.png'),
-
+	//Home
+	house_kawai:require('./images/house_kawai.png'),
+	//Calendar
+	calendar_kawai:require('./images/calendar_kawai.png'),
+	//News
+	antenna_optional:require('./images/antenna_optional.png'),
+	antenna_green:require('./images/antenna_green.png'),
 	//Icon images
 	icon_menu: require('./icons/menu.png'),
 
-
-
+	super_kitty: require('./images/super_kitty.png'),
+	inlove_kitty: require('./images/kitty_inlove.png'),
+	sad_kitty: require('./images/kitty_sad.png'),
+	phone_kitty: require('./images/kitty_phone.png'),
+	bubbles_kitty: require('./images/kitty_bubbles.png'),
 	computer_kitty: require('./images/computerKitty.png'),
 	pencil_kitty: require('./images/writingKitty.png'),
 	idea_kitty: require('./images/ideaKitty.png'),
@@ -29,6 +39,7 @@ const images = {
 	record: require('./images/medical_record.png'),
 
 	calendar: require('./images/calendar.png'),
+	chat_bubbles: require('./images/chat.png'),
 };
 
 

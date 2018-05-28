@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Image, Dimensions, Platform, TouchableOpacity } from 'react-native'
 import {NavigationActions} from 'react-navigation';
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { Entypo, FontAwesome, MaterialIcons, Foundation, Ionicons } from '@expo/vector-icons';
+import { Entypo, MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Ripple from 'react-native-material-ripple';
 import {connect} from 'react-redux'
 import {Thumbnail,ListItem,Left,Right,Body,Text} from 'native-base'
@@ -83,13 +83,7 @@ class Drawer extends React.Component {
                   <Ripple style={[styles.drawerItem, activeView=='Home'?styles.activeItem:null ]} 
                     onPress={this.navigateToScreen('Home')} >
                     <Entypo name="home" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Home</Text>
-                  </Ripple>
-
-                  <Ripple style={[styles.drawerItem, activeView=='AllUsersView'?styles.activeItem:null]} 
-                    onPress={this.navigateToScreen('AllUsersView')}>
-                    <Ionicons name="md-people" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Personas</Text>
+                    <Text style={styles.drawerItemText}>Inicio</Text>
                   </Ripple>
 
                   <Ripple style={[styles.drawerItem, activeView=='AllFoundationsView'?styles.activeItem:null]} 
@@ -97,23 +91,23 @@ class Drawer extends React.Component {
                     <Ionicons name="md-hand" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
                     <Text style={styles.drawerItemText}>Fundaciones</Text>
                   </Ripple>
-                  
+
+                  <Ripple style={[styles.drawerItem, activeView=='AllUsersView'?styles.activeItem:null]} 
+                    onPress={this.navigateToScreen('AllUsersView')}>
+                    <Ionicons name="md-people" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>Voluntarios</Text>
+                  </Ripple>
+
                   <Ripple style={[styles.drawerItem, activeView=='MyServicesView'?styles.activeItem:null]} 
-                    onPress={this.navigateToScreen('MyServicesView', {isFoundation: user.type==='fundation'})}>
+                    onPress={this.navigateToScreen('MyServicesView')}>
                     <Ionicons name="md-paw" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>{user.type==='fundation'?'Solicitudes':'Servicios'}</Text>
+                    <Text style={styles.drawerItemText}>Solicitudes</Text>
                   </Ripple>
 
                   <Ripple style={[styles.drawerItem, activeView=='AllNewsView'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('AllNewsView')}>
-                    <Ionicons name="md-paper" size={moderateScale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Eventos</Text>
-                  </Ripple>
-
-                  <Ripple style={[styles.drawerItem, activeView=='HistoryView'?styles.activeItem:null]} 
-                    onPress={this.navigateToScreen('HistoryView')}>
-                    <MaterialIcons name="stars" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Historial</Text>
+                    <MaterialCommunityIcons name="newspaper" size={moderateScale(24)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
+                    <Text style={styles.drawerItemText}>Noticias</Text>
                   </Ripple>
 
                 </Col>

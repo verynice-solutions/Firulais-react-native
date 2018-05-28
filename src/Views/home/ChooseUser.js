@@ -30,7 +30,7 @@ class ChooseUser extends Component {
 								onPress={()=>this._saveUserType('fundation')} 
 								style={{justifyContent:'center', backgroundColor: '#B7CFFF'}}>
 								<Image 
-									source={images.care_home} resizeMode= 'contain' 
+									source={images.super_kitty} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
 							</CardItem>
 							<CardItem					
@@ -51,7 +51,7 @@ class ChooseUser extends Component {
 								onPress={()=>this._saveUserType('user')}
 								style={{justifyContent:'center', backgroundColor: '#DDD9FC'}}>
 								<Image 
-									source={images.angel_kitty} resizeMode= 'contain' 
+									source={images.inlove_kitty} resizeMode= 'contain' 
 									style={{height: 100, width: null, marginTop: 10, flex: 1}}/>
 							</CardItem>
 							<CardItem					

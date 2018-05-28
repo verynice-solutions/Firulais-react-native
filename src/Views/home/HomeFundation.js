@@ -56,7 +56,7 @@ class HomeFundation extends Component {
 						<Card>
 							<CardItem 
 								button 
-								onPress={()=>this.props.navigation.navigate('MyServicesView',{isFoundation:true})}
+								onPress={()=>this.props.navigation.navigate('MyServicesView')}
 								style={{justifyContent:'center', backgroundColor: '#AE86A9'}}>
 								<Image 
 									source={images.idea_kitty} resizeMode= 'contain' 
@@ -64,7 +64,7 @@ class HomeFundation extends Component {
 							</CardItem>
 							<CardItem
 								button
-								onPress={()=>this.props.navigation.navigate('MyServicesView',{isFoundation:true})}	 				
+								onPress={()=>this.props.navigation.navigate('MyServicesView')}	 				
 								style={{justifyContent:'center'}}>
 								<Text 
 									primary 

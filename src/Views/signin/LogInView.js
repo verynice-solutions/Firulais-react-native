@@ -43,13 +43,19 @@ class LogInView extends Component {
 			.then( (result)=>{
 				// ToDo: WE COULD DO A BUNCH OF STUFF WITH RESULT(eMail Verified): check out object
 				// console.log('RESULT MANUAL LOGIN:',result)
-				this.props.storeCurrentUser({ user: result })
-			},(error) => {
+				// console.log('RESULT MANUAL LOGIN:',result.uid)
+				this.props.updateUserDB(result.uid, {
+					uid: result.uid,
+					email: result.email,
+					type: 'admin'
+				})
+
+			}).catch((error) => {
 				Toast.show({
-					text:'Este medio es solo para cuentas autorizadas.',
+					text:'Credenciales incorrectas.',
 					buttonText:'OK',
 					duration: 3000,
-					type:'success'
+					type:'danger'
 				})
 				this._toggleModal()
 			});
@@ -114,9 +120,9 @@ class LogInView extends Component {
 					<Text style={styles.titleText}>    Inicia sessión con    </Text>
 					<View style={{marginTop:15}}/>
 					<View style={{justifyContent:'center'}}>	
-						<Button onPress={this.onLoginWithGoogle} rounded danger >
+						<Button onPress={()=>this.onLoginWithGoogle()} rounded danger >
 							<Icon name="logo-google" />
-							<Text>Google +   </Text>
+							<Text>GOOGLE +   </Text>
 						</Button>
 					</View>
 					<View style={{marginTop:15}}/>
@@ -124,7 +130,7 @@ class LogInView extends Component {
 					<View style={{marginTop:15}}/>
 					<View style={{justifyContent:'space-around'}}>	
 						<Button light rounded onPress={()=>this._toggleModal()}>
-							<Text> Cuenta Firulais </Text>
+							<Text> FIRULAIS ADMIN. </Text>
 						</Button>
 					</View>
 					{this.state.isModalVisible&&<View style={{marginTop:25}}/>}
@@ -152,7 +158,7 @@ class LogInView extends Component {
 						</Item>}
 					{this.state.isModalVisible&&
 						<View style={{justifyContent:'space-around'}}>	
-							<Button light rounded onPress={this.onLogin}>
+							<Button light rounded onPress={()=>this.onLogin()}>
 								<Text>       Entrar       </Text>
 							</Button>
 						</View>}

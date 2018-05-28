@@ -14,6 +14,7 @@ import {randomPuppers} from '../../utils/random_functions'
 import { FlatList } from 'react-native-gesture-handler'
 import Imagess from '../../../assets/images'
 import {Ionicons} from '@expo/vector-icons'
+import photoActions from '../../actions/photoActions'
 
 class createNew extends Component {
 	constructor(props) {
@@ -23,7 +24,7 @@ class createNew extends Component {
       fetchingImages:false,
       title:'test',
       date: '',
-      evento:true, noticia:null,
+      evento:null, noticia:true,
 
       new_fire_key: firebase.database().ref().child('news').push().key,
       blockButton: false,
@@ -87,9 +88,10 @@ class createNew extends Component {
   _añadirNew(){
     let valuesToSend = this._setValuesNew(this.state)
     let newID = this.state.new_fire_key
+    let imagesInState = this.state.images
     if(valuesToSend===false) {
       Toast.show({
-        text:'Recuerda llenar todos los campos \u2661',
+        text:'Recuerda llenar todos los campos \u2665',
         buttonText:'Ok',
         duration: 4000,
         type:'warning'
@@ -98,9 +100,11 @@ class createNew extends Component {
       this.setState({blockButton: true, isModalVisible: true})
       this._upLoadPhotos()
         .then(() => {
-        let imagesInState = this.state.images
+          // console.log('Pasaste uploadPhotos')
         imagesInState.forEach((img,count) => {
+          // console.log('¡Each foto!')
           firebase.storage().ref(`images/news/${newID}/P-${count}`).getDownloadURL().then((url)=>{
+            // console.log('¡urls images!',url)
             firebase.database().ref().child(`news/${newID}/imageUrls`).push({
               url
             })
@@ -111,8 +115,9 @@ class createNew extends Component {
           idFundacion: this.props.currentUser.uid,
         })
       }).then(() => {
+        // console.log('Pasaste meter al firebasedb')
         Toast.show({
-          text:'Noticia subida con éxito  \u2661',
+          text:'Noticia subida con éxito  \u2665',
           buttonText:'Ok',
           duration: 4000,
           type:'success'
@@ -121,9 +126,13 @@ class createNew extends Component {
 
       })
       .catch((err) => {
-        this.setState({blockButton: false, isModalVisible: false})
         console.log('Error:', err)
-        Alert.alert('Error:',' Hubo un error subiendo tu noticia.')
+        Alert.alert('Error:',' Hay un problema de conexión. Intenta cambiar de red a una más estable.')
+
+        setTimeout(() => {
+          this.setState({blockButton: false, isModalVisible: false})
+        }, 6000);
+
       })
     }
   }
@@ -133,18 +142,11 @@ class createNew extends Component {
     imagesInState.forEach( (img,count)=>{
       let newID = this.state.new_fire_key
       let fileName = `P-${count}`
-      PromisesImages.push( this._uploadImage( img, newID, fileName) )
+      PromisesImages.push( photoActions._uploadImage( img, newID, fileName,'news') )
     })
     return Promise.all(PromisesImages);
   }
-  _uploadImage = async (uri,fundId,fotoName) => {
-    // console.log('uploadImage:',uri,fotoName)
-    const response = await fetch(uri)
-    const blop = await response.blob()
-    let storage_ref = `images/news/${fundId}/${fotoName}`
-    var ref = firebase.storage().ref().child(storage_ref)
-    return ref.put(blop)
-  }
+  // aqui iba _uploadImages (merge proof)
   
   _setValuesNew(values){
     // console.log(values)
@@ -162,7 +164,7 @@ class createNew extends Component {
 
   _onCamera = async () => {
     this.setState({fetchingImages:true})
-    let result = await ImagePicker.launchCameraAsync()
+    let result = await ImagePicker.launchCameraAsync({allowsEditing:true})
     // console.log('RESULT ',result)
     if(!result.cancelled){
       this.setState({
@@ -175,7 +177,7 @@ class createNew extends Component {
   }
   _onGalery = async () => {
     this.setState({fetchingImages:true})
-    let result = await ImagePicker.launchImageLibraryAsync()
+    let result = await ImagePicker.launchImageLibraryAsync({mediaTypes:"Images",allowsEditing:true})
     // console.log('RESULT ',result)
     if(!result.cancelled){
       this.setState({
@@ -254,9 +256,11 @@ class createNew extends Component {
         }
 				<Content padder>
 					<View style={{marginTop:5}}/>
-          {imagesPupers&&<Label>Fotos</Label>}
+          {imagesPupers&&<Label style={{fontWeight: 'bold'}}>Fotos</Label>}
           {this.state.fetchingImages?
-            <ActivityIndicator size="small" /> 
+            <View style={{paddingVertical:15}}>
+              <ActivityIndicator size="small" />
+            </View> 
           :
           <FlatList horizontal style={{backgroundColor:'#F2F2F2',marginBottom:8}}
               data={imagesPupers}
@@ -267,42 +271,44 @@ class createNew extends Component {
             />
           } 
           <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-						<Button bordered onPress={this._onGalery}>
+						<Button bordered onPress={this._onGalery} style={{flex: 0.45}}>
 							<Text primary>Galería +</Text>
 						</Button>
-            <Button bordered onPress={this._onCamera}>
+            <Button bordered onPress={this._onCamera} style={{flex: 0.45}}>
 							<Text primary>Cámara +</Text>
 						</Button>
 					</View>
           <View style={{marginTop:20}}/>
           <Item stackedLabel>
-            <Label> Título </Label>
-            <Input onChangeText={(text)=> this.setState({title: text})} />
+            <Label style={{fontWeight: 'bold'}}> Título </Label>
+            <Input placeholder="Escribe un titulo para la noticia" onChangeText={(text)=> this.setState({title: text})} />
           </Item>
           <View style={{marginTop:20}}/>
           <Item stackedLabel>
-            <Label> Fecha </Label>
+            <Label style={{fontWeight: 'bold'}}> Fecha </Label>
             {this.renderDatePicker()}
           </Item>
+
           <View style={{marginTop:20}}/>
-          <Label> Descripcion </Label>
-          <Textarea bordered placeholder='Best. Doggo. Party. Ever...'
+          <Label style={{fontWeight: 'bold'}}> Contenido </Label>
+          <Textarea bordered placeholder='Describe aquí de que trata tu noticia...'
           autoCorrect={true}
           value={this.state.description}
+          rowSpan={10}
           onChangeText={(text)=> this.setState({description: text})} 
           />
           <View style={{marginTop:10}}/>
-          <Label> Tipo </Label>
-            <ListItem>
-              <CheckBox onPress={()=>{this.setState({evento:!this.state.evento ,noticia:false})}} 
-                checked={this.state.evento}/>
-              <Label style={{paddingLeft:15}}>Evento</Label>
-            </ListItem>
-            <ListItem>
-              <CheckBox onPress={()=>{this.setState({noticia:!this.state.noticia ,evento:false})}} 
-                checked={this.state.noticia} />
-              <Label style={{paddingLeft:15}}>Noticia</Label>
-            </ListItem>
+          {/* <Label style={{fontWeight: 'bold'}}> Tipo </Label>
+          <ListItem>
+            <CheckBox onPress={()=>{this.setState({evento:!this.state.evento ,noticia:false})}} 
+              checked={this.state.evento}/>
+            <Label style={{paddingLeft:15}}>Evento</Label>
+          </ListItem>
+          <ListItem>
+            <CheckBox onPress={()=>{this.setState({noticia:!this.state.noticia ,evento:false})}} 
+              checked={this.state.noticia} />
+            <Label style={{paddingLeft:15}}>Noticia</Label>
+          </ListItem> */}
         
 				</Content>
 			</Container>

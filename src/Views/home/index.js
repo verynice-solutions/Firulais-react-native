@@ -9,6 +9,7 @@ import drawerActions from '../../actions/drawerActions'
 import HomeFundation from './HomeFundation'
 import HomeUser from './HomeUser'
 import ChooseUser from './ChooseUser'
+import AdminUser from './AdminUser'
 import Imagess from '../../../assets/images'
 
 class Home extends Component {
@@ -68,8 +69,10 @@ class Home extends Component {
     if(currentUser.type){
       if(currentUser.type=='fundation'){
         return <HomeFundation navigation={this.props.navigation}/>
-      }else{
+      }else if(currentUser.type=='user'){
         return <HomeUser navigation={this.props.navigation} />
+      }else{
+        return <AdminUser navigation={this.props.navigation} />
       }
     }else{
       return <ChooseUser />

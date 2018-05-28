@@ -35,6 +35,12 @@ export function register(data, successCB, errorCB) {
       });
   };
 }
+export function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
 export function _getNowDateISO(){
   // to 2018-02-31T12:05:23 like
   let d = new Date()
