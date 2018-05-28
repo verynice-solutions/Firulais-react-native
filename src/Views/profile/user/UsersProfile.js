@@ -22,7 +22,8 @@ class UsersProfile extends Component {
 			foundations: [],
 			services: [],
 			isFetchingFoundations: true,
-			isFetchingServices: true
+			isFetchingServices: true,
+			avg: null
 		}
 		this.renderFoundations = this.renderFoundations.bind(this)
 		this.renderServices = this.renderServices.bind(this)
@@ -63,12 +64,25 @@ class UsersProfile extends Component {
 			if( _.some(values,{"status":"calificado"}) ){
 				order = _.orderBy(values,["rating"],["desc"])
 				// console.log('SERVICES',order)
-				this.setState({services: order , isFetchingServices:false})
+				let avg = this.getAvg(order)
+				this.setState({services: order , isFetchingServices:false, avg: avg})
 			}else{
 				// console.log('NO SERVICES')
 				this.setState({services: null, isFetchingServices:false})
 			}
 		})
+	}
+
+	getAvg(services) {
+		let rates = 0
+		let times = 0
+		services.map((item, index)=>{
+			if(item.rating){
+				times ++
+				rates += item.rating
+			}
+		})
+		return rates/times
 	}
 
 	renderFoundations({item, index}) {
@@ -114,7 +128,7 @@ class UsersProfile extends Component {
 						</Body>
 						<Right>
 							{data.rating&&<Text>
-								{data.rating}.0 <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/> 
+								{parseFloat(data.rating).toFixed(1)} <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/> 
 							</Text>}
 						</Right> 
 					</ListItem>
@@ -156,6 +170,11 @@ class UsersProfile extends Component {
 												</View>:null}
 											</View>}
 										</Body>
+										<Right>
+											{this.state.avg&&<Text>
+												{parseFloat(this.state.avg).toFixed(1)} <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/> 
+											</Text>}
+										</Right> 
 									</ListItem>
 									<View style={{marginTop:30}}/>	
 								</View>
