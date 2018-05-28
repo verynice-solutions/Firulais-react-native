@@ -64,25 +64,13 @@ class UsersProfile extends Component {
 			if( _.some(values,{"status":"calificado"}) ){
 				order = _.orderBy(values,["rating"],["desc"])
 				// console.log('SERVICES',order)
-				let avg = this.getAvg(order)
+				let avg = userActions.getAvg(order)
 				this.setState({services: order , isFetchingServices:false, avg: avg})
 			}else{
 				// console.log('NO SERVICES')
 				this.setState({services: null, isFetchingServices:false})
 			}
 		})
-	}
-
-	getAvg(services) {
-		let rates = 0
-		let times = 0
-		services.map((item, index)=>{
-			if(item.rating){
-				times ++
-				rates += item.rating
-			}
-		})
-		return rates/times
 	}
 
 	renderFoundations({item, index}) {

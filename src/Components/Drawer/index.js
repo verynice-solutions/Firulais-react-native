@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { StyleSheet, View, Image, Dimensions, Platform, TouchableOpacity } from 'react-native'
 import {NavigationActions} from 'react-navigation';
@@ -13,10 +14,16 @@ import Images from '../../../assets/images'
 import {moderateScale} from '../../lib/responsive'
 import drawerActions from '../../actions/drawerActions'
 import Divider from '../Divider'
+import userActions from '../../actions/usersActions'
+import action from '../../actions/serviceActions'
+
 class Drawer extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      avg: null
+    }
     this.goToRoot = this.goToRoot.bind(this)
   }
 
@@ -41,6 +48,20 @@ class Drawer extends React.Component {
     })
     return go
   }
+
+  componentDidMount(){
+    let promise = action.fetchUserServices(this.props.currentUser.uid).then((values)=>{
+			if( _.some(values,{"status":"calificado"}) ){
+				order = _.orderBy(values,["rating"],["desc"])
+				// console.log('SERVICES',order)
+        let avg = userActions.getAvg(order)
+				this.setState({avg: avg})
+			}else{
+				// console.log('NO SERVICES')
+				this.setState({avg: null})
+			}
+		})
+  }
   
   render() {
     // let {activeItemKey} = this.props.navigation
@@ -62,11 +83,15 @@ class Drawer extends React.Component {
                     <Thumbnail source={{uri: user.photoUrl||randomPuppers()}} />
                   </Left>
                   <Body style={{borderBottomWidth: 0}}>
-                    <Text style={{fontSize: moderateScale(14), fontFamily:'Roboto-Medium', color: Colors.purple}}>
+                    <Text style={{fontSize: moderateScale(14), fontFamily:'Roboto-Medium'}}>
                       {user.name||'Firulais'}
                     </Text>
-                    <Text note style={{ fontSize: moderateScale(14), fontFamily:'Roboto', color: Colors.light_purple }}> 
-                      {user.email}    </Text>
+                    {
+                      this.state.avg && (
+                        <Text note style={{ fontSize: moderateScale(14), fontFamily:'Roboto' }}> 
+                        {parseFloat(this.state.avg).toFixed(1)} <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/>  </Text>
+                      )
+                    }
                   </Body>
                   <Right style={{borderBottomWidth: 0}}>
                     <MaterialIcons name="edit" size={moderateScale(22)} color={Colors.purple} />
