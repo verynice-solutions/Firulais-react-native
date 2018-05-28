@@ -15,6 +15,7 @@ class ChooseUser extends Component {
   _saveUserType(type){
 		let {currentUser} = this.props
 		this.props.updateUserType(currentUser,type)
+		this.props.navigation.navigate('EditProfile')
 	}
 
 	render() {

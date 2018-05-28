@@ -76,7 +76,7 @@ class LogInView extends Component {
 						})
 						setTimeout(() => {
 							Toast.show({
-								text:'Inicio de sessión exitoso!',
+								text:'Inicio de sesión exitoso!',
 								buttonText:'OK',
 								duration: 3000,
 								type:'success'
@@ -117,7 +117,7 @@ class LogInView extends Component {
 
 					<Image style={{width:Dimensions.get('window').width}} source={Images.login_hero}/>
 					<View style={{marginTop:15}}/>
-					<Text style={styles.titleText}>    Inicia sessión con    </Text>
+					<Text style={styles.titleText}>    Inicia sesión con    </Text>
 					<View style={{marginTop:15}}/>
 					<View style={{justifyContent:'center'}}>	
 						<Button onPress={()=>this.onLoginWithGoogle()} rounded danger >

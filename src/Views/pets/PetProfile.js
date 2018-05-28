@@ -100,7 +100,7 @@ class PetProfile extends Component {
     // console.log("item: ", item)
 		return(
       <View style={styles.picContent}>
-        <Image source={{uri: img}} resizeMode='contain' style={{height: 300, width: 300, flex: 1}}/>
+				<Image source={{uri: img}} resizeMode='contain' style={{height: 300, width: 300, flex: 1}}/>
       </View>
 		)
 	}

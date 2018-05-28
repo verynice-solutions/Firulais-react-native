@@ -126,9 +126,9 @@ class AddPet extends Component {
         })
       }).then(() => {
         Toast.show({
-          text:'Mascota subida con éxito \u2b50',
+          text:`Mascota subida con éxito \u2b50 \n Podrás ver a ${valuesToSend.tempName} en tu perfil`,
           buttonText:'YAY!',
-          duration: 4000,
+          duration: 6000,
           type:'success'
         })
         this.setState({blockButton: false})

@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator,ScrollView, Image } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body, Right, Button, Left, Icon } from 'native-base';
 import Modal from 'react-native-modal'
+// import PopupDialog from 'react-native-popup-dialog';
 import Ripple from 'react-native-material-ripple';
 import serviceActions from '../../actions/serviceActions'
 import images from '../../../assets/images'
@@ -114,6 +115,19 @@ class MyServicesView extends Component {
       // console.log('user', user)
       return (
         <View style={{flex:1}}> 
+
+          {/* <Button title="Show Dialog - Default Animation"
+              onPress={()=>this.popupDialog.show()}>
+            <Text>SHOW YURSELF!</Text>
+          </Button>
+          <PopupDialog
+            ref={(popupDialog) => { this.popupDialog = popupDialog; }}
+          >
+            <View>
+              <Text> HEY </Text>
+            </View>
+          </PopupDialog> */}
+
           {this.state.serviceInModal&&
           <Modal isVisible={this.state.isDetailVisible}
           onBackButtonPress={()=>this._toggleModal()}
@@ -245,7 +259,7 @@ class MyServicesView extends Component {
               </View>
             </ScrollView>
           </Modal>}
-
+          
           <List>
             {
               services?(

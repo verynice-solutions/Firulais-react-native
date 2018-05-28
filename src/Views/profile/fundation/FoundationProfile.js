@@ -4,6 +4,7 @@ import { Platform,	View, StyleSheet, Image, TouchableOpacity,
 					Alert, ActivityIndicator, ScrollView, FlatList, ImageBackground} from 'react-native'
 import {connect} from 'react-redux'
 import Ripple from 'react-native-material-ripple'
+import Dialog from "react-native-dialog";
 //Accions
 import foundationsActions from '../../../actions/foundationsActions'
 import userActions from '../../../actions/usersActions'

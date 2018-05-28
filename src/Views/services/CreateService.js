@@ -205,7 +205,7 @@ class CreateService extends Component {
           </ListItem>  
           <View style={{padding: 10}}>
             <Text style={{textAlign:'center'}}>¿Por cuánto tiempo deseas cuidar a {object.petObj.tempName}?</Text>
-            <Text style={{fontStyle:'italic',textAlign:'center'}}> {object.fundObj.givenName} - "mínimo {object.petObj.tiempoMinCuidado} {object.petObj.tiempoMinCuidadoRango}"</Text>
+            {object.petObj.tiempoMinCuidado&&<Text style={{fontStyle:'italic',textAlign:'center'}}> {object.fundObj.givenName} - "mínimo {object.petObj.tiempoMinCuidado} {object.petObj.tiempoMinCuidadoRango}"</Text>}
             <View style={{flexDirection:'row',justifyContent:'space-around'}}>
               <Item fixedLabel style={{flex: 0.2}}>
                 <Input placeholder='nº' keyboardType='numeric'

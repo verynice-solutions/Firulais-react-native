@@ -58,7 +58,7 @@ class FinishedService extends Component {
       'PetProfile', {petId: this.state.serviceInModal.petId })
   }
   _rateVolunteer() {
-    if(this.state.starSelected && this.state.ratingDesc){
+    if(this.state.starSelected || this.state.ratingDesc){
       serviceActions.setRating(this.state.serviceId, this.state.starSelected, this.state.ratingDesc)
       this._fetchService()
       this.props.navigation.goBack()
@@ -106,7 +106,7 @@ class FinishedService extends Component {
                   </Right> 
                 </ListItem>:<ListItem thumbnail>
                   <Left>
-                    <Thumbnail source={images.wonder_kitty} />
+                    <Thumbnail square source={images.wonder_kitty} />
                   </Left>
                   <Body>
                     <Text>Comentario</Text>

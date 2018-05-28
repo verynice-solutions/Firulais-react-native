@@ -51,6 +51,7 @@ class UsersProfile extends Component {
 
 	componentDidMount() {
 		let params = this.props.navigation.state.params
+		let order = {}
 		if(this.props.currentUser.uid===params.userID){this.props.navigation.setParams({ myperfil: true })}
 		let promise1 = foundationsActions.fetchByUID(params.userID).then((val)=>{
 			this.setState({data: val})
@@ -60,8 +61,11 @@ class UsersProfile extends Component {
 		})
 		let promise3 = userActions.fetchNUserServices(params.userID, 3).then((values)=>{
 			if( _.some(values,{"status":"calificado"}) ){
-				this.setState({services: _.orderBy(values,["rating"],["desc"]), isFetchingServices:false})
+				order = _.orderBy(values,["rating"],["desc"])
+				// console.log('SERVICES',order)
+				this.setState({services: order , isFetchingServices:false})
 			}else{
+				// console.log('NO SERVICES')
 				this.setState({services: null, isFetchingServices:false})
 			}
 		})
@@ -110,7 +114,7 @@ class UsersProfile extends Component {
 						</Body>
 						<Right>
 							{data.rating&&<Text>
-						{data.rating}.0 <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/> 
+								{data.rating}.0 <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/> 
 							</Text>}
 						</Right> 
 					</ListItem>
@@ -124,7 +128,7 @@ class UsersProfile extends Component {
 		let info = this.state.data
 		let foundations = this.state.foundations
 		let services = this.state.services 
-		let profile = info.profile
+		// let profile = info.profile||null
 		return (
 			<ScrollView style={{flex:1}}>
 				<View style={{ flexDirection:'column'}}>
@@ -141,10 +145,16 @@ class UsersProfile extends Component {
 										</Left>
 										<Body>
 											<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>{info.name}</Text>
-											{profile&&profile.description&&<Text note style={{marginBottom:10}}>{profile.description}</Text>}
-
-											{profile&&profile.ciudad&&<Text note>
-											<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> {profile.ciudad}</Text>}
+											{info.profile&&<View>
+												<Text note style={{marginBottom:10}}>
+												{info.profile.description}	</Text>
+												{info.profile.ciudad?<View style={{flexDirection:'row'}}>
+													<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> 
+													<Text note>
+														{'  '+info.profile.ciudad}
+													</Text>
+												</View>:null}
+											</View>}
 										</Body>
 									</ListItem>
 									<View style={{marginTop:30}}/>	
@@ -188,8 +198,7 @@ class UsersProfile extends Component {
 										<Left><Text style={styles.dividerText}>ÚLTIMOS SERVICIOS</Text></Left>
 									</ListItem> 
 								</View>
-								{
-									this.state.isFetchingServices ? (
+								{this.state.isFetchingServices ? (
 										<View style={styles.infoContainer}>
 											<ActivityIndicator size='large' />
 										</View>

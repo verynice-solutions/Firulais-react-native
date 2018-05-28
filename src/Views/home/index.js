@@ -75,7 +75,7 @@ class Home extends Component {
         return <AdminUser navigation={this.props.navigation} />
       }
     }else{
-      return <ChooseUser />
+      return <ChooseUser navigation={this.props.navigation} />
     }
 	}
 }

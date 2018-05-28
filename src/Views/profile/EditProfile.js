@@ -131,7 +131,7 @@ class EditProfileView extends Component {
 
 						<Item stackedLabel>
 							<Label> Móvil </Label>
-							<Input placeholder='3004347...' keyboardType='phone-pad' 
+							<Input placeholder='300 000...' keyboardType='phone-pad' 
 							value={this.state.phone} onChangeText={(text)=> this.setState({phone: text})} />
 						</Item>
 						<Item stackedLabel>
