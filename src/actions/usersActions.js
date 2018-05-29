@@ -88,6 +88,18 @@ function fetchNUserServices(uid, n) {
   return promise
 }
 
+function getAvg(services) {
+  let rates = 0
+  let times = 0
+  services.map((item, index)=>{
+    if(item.rating){
+      times ++
+      rates += item.rating
+    }
+  })
+  return rates/times
+}
+
 const usersActions = {
     fetchAllUsers,
     fetchByUID,
@@ -96,7 +108,8 @@ const usersActions = {
     fetchUserFoundations,
     fetchUserIsSubscribed,
     addFoundationToUser,
-    unSubscribe
+    unSubscribe, 
+    getAvg
 }
 
 export default usersActions
