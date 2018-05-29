@@ -18,40 +18,61 @@ class PersonalFeed extends Component {
   }
 
   static navigationOptions = ({navigation}) => {
-		const params = navigation.state.params || {};
+    const params = navigation.state.params || {};
+    // console.log('params',params)
+    let label = params.usertype=='user'?'SUBSCRITAS':'MIS NOTICIAS';
 		return{
       title: 'Noticias',
-      tabBarLabel: 'SUBSCRITAS',
+      tabBarLabel: label,
       tabBarIcon: <Ionicons name='md-ribbon' size={26} />
     }
 	}
     
   componentDidMount() {
+    
+    
     this.setState({fetching: true})
-    foundationsActions.fetchAllUserFoundations(this.props.currentUser.uid).then( (val) =>{
-      // this.setState({allFoundations: val})
-      // console.log('val',val)
-      if(val){
-        let promises = []
-        Object.keys(val).map((item, index)=>{
-          // console.log('item',item)
-          promises.push(foundationsActions.fetchFoundationNews(item))
-        })
-        Promise.all(promises).then((values) => { 
-          // console.log("IDIDIT: ", values)
-          if(values[0]){
-            // console.log('si tiene values')
-            this.setState({feedNews: values, fetching: false}) 
-          }else{
-            // console.log('No tiene values')
-            this.setState({feedNews: null, fetching: false}) 
-          }
-
-        }).catch((error)=>{
-          console.log('Error: '+ error)
-        })
-      }
-    })
+    let user = this.props.currentUser
+    this.props.navigation.setParams({ usertype: user.type })
+    if(user.type=='user'){
+      foundationsActions.fetchAllUserFoundations(this.props.currentUser.uid).then( (val) =>{
+        // this.setState({allFoundations: val})
+        // console.log('val',val)
+        if(val){
+          let promises = []
+          Object.keys(val).map((item, index)=>{
+            // console.log('item',item)
+            promises.push(foundationsActions.fetchFoundationNews(item))
+          })
+          Promise.all(promises).then((values) => { 
+            // console.log("IDIDIT: ", values)
+            if(values[0]){
+              // console.log('si tiene values')
+              this.setState({feedNews: values, fetching: false}) 
+            }else{
+              // console.log('No tiene values')
+              this.setState({feedNews: null, fetching: false}) 
+            }
+  
+          }).catch((error)=>{
+            console.log('Error: '+ error)
+          })
+        }else{
+          this.setState({feedNews: null, fetching: false}) 
+        }
+      })
+    }else{
+      foundationsActions.fetchFoundationNews(user.uid).then((values) => { 
+        // console.log("IDIDIT: ", values)
+        if(values){
+          // console.log('si tiene values')
+          this.setState({feedNews: [values], fetching: false}) 
+        }else{
+          // console.log('No tiene values')
+          this.setState({feedNews: null, fetching: false}) 
+        }
+      })
+    }
   }
  
 	render() {
@@ -90,7 +111,13 @@ class PersonalFeed extends Component {
                 <View style={{paddingTop:100, paddingHorizontal:30,justifyContent:'center',alignItems:'center'}}>
                     <Image source={images.pencil_kitty} resizeMode= 'contain' 
                       style={{height: 180, width: 180}}/>
-                    <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold', textAlign:'center',lineHeight:30, fontSize:18,marginTop:18}}>Subscribete a fundaciones para recibir sus noticias.</Text>
+                    <Text style={{fontStyle:'italic',fontFamily:'Roboto-Bold', textAlign:'center',lineHeight:30, fontSize:18,marginTop:18}}>
+                      {this.props.currentUser.type=='user'?
+                        'Subscribete a fundaciones para recibir sus noticias.'
+                        :
+                        'Crea noticias y aparecerán aquí para ti.'
+                      }
+                    </Text>
                 </View>
               )
             }

@@ -29,17 +29,20 @@ class Home extends Component {
       )
     }
   }
-  componentWillMount(){
+  componentDidMount(){
     this.getCameraPermission()
       .then(() => {
         //success getting permissions!
+      })
+      .catch(()=>{
+        //failing getting permissions!
       })
   }
   getCameraPermission= async ()=>{
     try{
       //ASK FOR CAMERA PERMISSION
       const cameraPermi = await Permissions.getAsync(Permissions.CAMERA);
-      // console.log('RESPONSE CAMERA PERMISSION:',cameraPermi)
+      console.log('RESPONSE CAMERA PERMISSION:',cameraPermi.status)
       if (cameraPermi.status !== 'granted') {
         if (cameraPermi.status === 'denied' || cameraPermi.status === 'undetermined') {
           const { status } = await Permissions.askAsync(Permissions.CAMERA);

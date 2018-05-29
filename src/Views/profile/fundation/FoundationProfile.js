@@ -185,8 +185,8 @@ class FundationProfileView extends Component {
 		let fundName = this.state.data.givenName
 		if(this.props.currentUser.type==='admin'&&this.state.data.reportes){
 			Alert.alert(
-				`Eliminar perfíl de ${fundName}`,
-				`Los datos del perfíl serán borrados. `,
+				`Eliminar reporte de ${fundName}`,
+				`No se encontró motivos para el reporte. `,
 				[
 					{text: 'No', onPress: () => null, style: 'cancel'},
 					{text: 'Si', onPress: () => this._eliminateProfile(fundId)}
@@ -246,12 +246,13 @@ class FundationProfileView extends Component {
 
 	}
 	_eliminateProfile = (fundId) => {
-		foundationsActions.deleteProfileFoundation(fundId)
+		// foundationsActions.deleteProfileFoundation(fundId)
+		foundationsActions.cancelReportsFoundation(fundId)
 		Toast.show({
-			text:'Perfil eliminado correctamente.',
+			text:'Reporte eliminado',
 			buttonText:'Ok',
-			duration: 4000,
-			type:'danger'
+			duration: 3000,
+			type:'success'
 		})
 		this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
 	}
@@ -263,7 +264,7 @@ class FundationProfileView extends Component {
 			duration: 4000,
 			type:'danger'
 		})
-		this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
+		// this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
 	}
 
 	_eliminateNews = (newId,fundId,numberPhotos) =>{
@@ -274,7 +275,7 @@ class FundationProfileView extends Component {
 			duration: 4000,
 			type:'danger'
 		})
-		this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
+		// this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
 	}
 
 	render() {
@@ -310,6 +311,7 @@ class FundationProfileView extends Component {
 										<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> {profile.ciudad}</Text>}
 									</Body>
 									<Right style={{borderBottomWidth:0}}>
+										<Text note>REPORTAR</Text>
 										<Ripple style={{padding:12}} onPress={()=>this.reportarFund()}>
 										<Ionicons name="md-flag"  size={(16)} color={info.reportes?'red':'black'}/> 
 										</Ripple>

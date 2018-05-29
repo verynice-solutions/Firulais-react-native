@@ -29,6 +29,13 @@ function deleteProfileFoundation(fundacionId){
         reportes: null
     })
 }
+function cancelReportsFoundation(fundacionId){
+    let dbRef = ref.child(fundacionId)
+    dbRef.update({
+        unBanned: new Date(),
+        reportes: null
+    })
+}
 
 function deletePetFoundation(petId,fundId,numberImages){
     let dbRef = db.ref('pets').child(petId)
@@ -129,6 +136,7 @@ const foundationsActions = {
     fetchFoundationNews,
     fetchByUID,
     reportFoundation,
+    cancelReportsFoundation,
     deleteProfileFoundation,
     deletePetFoundation,
     deleteNewsFoundation
