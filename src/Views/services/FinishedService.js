@@ -58,17 +58,17 @@ class FinishedService extends Component {
       'PetProfile', {petId: this.state.serviceInModal.petId })
   }
   _rateVolunteer() {
-    if(this.state.starSelected || this.state.ratingDesc){
+    if(this.state.starSelected && this.state.ratingDesc){
       serviceActions.setRating(this.state.serviceId, this.state.starSelected, this.state.ratingDesc)
       this._fetchService()
       this.props.navigation.goBack()
     }else{
-      Toast.show({
-        text:'Recuerda llenar todos los campos \u2665',
-        buttonText:'Ok',
-        duration: 3000,
-        type:'warning'
-      })
+      // Toast.show({
+      //   text:'Recuerda llenar todos los campos \u2665',
+      //   buttonText:'Ok',
+      //   duration: 3000,
+      //   type:'warning'
+      // })
     }
   }
 	render() {

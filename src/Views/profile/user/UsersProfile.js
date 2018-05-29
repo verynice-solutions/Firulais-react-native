@@ -145,7 +145,7 @@ class UsersProfile extends Component {
 											style={{borderColor: '#2a2a2a59', borderWidth:5, marginTop: 15}} 
 											rounded large source={{ uri: info.photoUrl }}/>
 										</Left>
-										<Body>
+										<Body style={{borderBottomWidth:0}} >
 											<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>{info.name}</Text>
 											{info.profile&&<View>
 												<Text note style={{marginBottom:10}}>
@@ -158,7 +158,7 @@ class UsersProfile extends Component {
 												</View>:null}
 											</View>}
 										</Body>
-										<Right>
+										<Right style={{borderBottomWidth:0}}>
 											{this.state.avg&&<Text>
 												{parseFloat(this.state.avg).toFixed(1)} <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/> 
 											</Text>}

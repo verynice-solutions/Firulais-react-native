@@ -280,6 +280,7 @@ class FundationProfileView extends Component {
 
 	render() {
 		const { navigate } = this.props.navigation
+		let fundId = this.props.navigation.state.params.foundationID
 		let info = this.state.data
 		let pets = this.state.pets
 		let news = this.state.news
@@ -311,10 +312,14 @@ class FundationProfileView extends Component {
 										<Ionicons name="md-globe" size={(15)} color="rgb(75, 75, 73)"/> {profile.ciudad}</Text>}
 									</Body>
 									<Right style={{borderBottomWidth:0}}>
-										<Text note>REPORTAR</Text>
-										<Ripple style={{padding:12}} onPress={()=>this.reportarFund()}>
-										<Ionicons name="md-flag"  size={(16)} color={info.reportes?'red':'black'}/> 
-										</Ripple>
+										{this.props.currentUser.uid!==fundId?
+											<View>										
+												<Ripple style={{padding:12, justifyContent:'center' }} onPress={()=>this.reportarFund()}>
+													<Text note>REPORTAR</Text>
+													<Ionicons name="md-flag"  size={(16)} color={info.reportes?'red':'black'}/> 
+												</Ripple>
+											</View>
+										:null}
 									</Right>
 								</ListItem>
 
