@@ -211,7 +211,7 @@ class FundationProfileView extends Component {
 		let numberPhotos = Object.keys(this.state.news[newsId].imageUrls).length
 		Alert.alert(
 			`Eliminar Noticia de ${fundName}`,
-			`Esta noticia se borrará completamente de la app. ¿ Estás segur@ ?`,
+			`Esta noticia se borrará completamente de la app. ¿ Estás seguro ?`,
 			[
 				{text: 'Cancelar', onPress: () => null, style: 'cancel'},
 				{text: 'Eliminar', onPress: () => this._eliminateNews(newsId,fundId,numberPhotos)}
@@ -226,7 +226,7 @@ class FundationProfileView extends Component {
 		// console.log('numberOfPhotos!',numberPhotos)
 		Alert.alert(
 			`Eliminar Mascota de ${fundName}`,
-			`Esta mascota se borrará completamente de la app. ¿ Estás segur@ ? `,
+			`Esta mascota se borrará completamente de la app. ¿ Estás seguro ? `,
 			[
 				{text: 'Cancelar', onPress: () => null, style: 'cancel'},
 				{text: 'Eliminar', onPress: () => this._eliminatePet(petId,fundId,numberPhotos)}
@@ -254,7 +254,8 @@ class FundationProfileView extends Component {
 			duration: 3000,
 			type:'success'
 		})
-		this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
+		this.fetchEverything(this.props.navigation.state.params)
+		// this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
 	}
 	_eliminatePet = (petId,fundId,numberPhotos) =>{
 		foundationsActions.deletePetFoundation(petId,fundId,numberPhotos)
@@ -264,6 +265,7 @@ class FundationProfileView extends Component {
 			duration: 4000,
 			type:'danger'
 		})
+		this.fetchEverything(this.props.navigation.state.params)
 		// this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
 	}
 
@@ -275,6 +277,8 @@ class FundationProfileView extends Component {
 			duration: 4000,
 			type:'danger'
 		})
+		
+		this.fetchEverything(this.props.navigation.state.params)
 		// this.props.navigation.dispatch(NavigationService.navigateToRoot('Home'))
 	}
 

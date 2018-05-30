@@ -21,7 +21,7 @@ class Settings extends Component{
   }
 	static navigationOptions = ({navigation}) => {
 		return{
-			title: 'Opciones',
+			title: 'Sesión',
     }
   }
   onPressSignout= ()=>{

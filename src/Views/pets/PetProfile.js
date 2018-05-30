@@ -129,7 +129,7 @@ class PetProfile extends Component {
 								rounded large source={{uri: thumbnail}}/>
 								<Body style={{borderBottomWidth:0, marginTop:10}}>
 									<Text style={{fontSize: 20, fontWeight:'bold', marginBottom:10}}>{pet.tempName}</Text>
-									<Text note>
+									{/* <Text note>
 										<Ionicons name="md-paw" size={(15)} color="rgb(75, 75, 73)"/> {_.capitalize(pet.tipo)}
 									</Text>
 									<Text note>
@@ -140,7 +140,7 @@ class PetProfile extends Component {
 									</Text>
 									<Text note>
 									<MaterialCommunityIcons name="weight"  size={(15)} color="rgb(75, 75, 73)"/> {_.capitalize(pet.tamaño)}
-									</Text>
+									</Text> */}
 								</Body>
 							</ListItem>
 							
@@ -154,7 +154,7 @@ class PetProfile extends Component {
 											<Left>
 												<Thumbnail source={images.medal}/>
 												<Body>
-													<Text note>¡Quiero ofrecerme como voluntari@!</Text>
+													<Text note>¡Quiero ofrecerme como voluntario!</Text>
 													<Text style={{fontWeight: 'bold'}}>Enviar Solicitud</Text>
 												</Body>
 											</Left>

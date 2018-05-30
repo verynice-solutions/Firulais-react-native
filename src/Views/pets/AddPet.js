@@ -308,6 +308,7 @@ class AddPet extends Component {
               onValueChange={(value)=>{this.setState({tipo: value})}}>
               <Picker.Item label="Perro" value="perro" />
               <Picker.Item label="Gato" value="gato" />
+              <Picker.Item label="Otro" value="otro" />
             </Picker>
           </View>
 

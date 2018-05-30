@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Platform, View, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { Platform, View, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native'
 import {connect} from 'react-redux'
 import sessionActions from '../../actions/sessionActions'
 //Style
@@ -11,11 +11,28 @@ class ChooseUser extends Component {
 	constructor(props) {
 		super(props);
 		this._saveUserType=this._saveUserType.bind(this)
+		this._confirmTypeOfUser=this._confirmTypeOfUser.bind(this)
   }
   _saveUserType(type){
 		let {currentUser} = this.props
 		this.props.updateUserType(currentUser,type)
 		this.props.navigation.navigate('EditProfile')
+	}
+
+	_confirmTypeOfUser(type){
+		if(type=='fundation'){
+			Alert.alert(
+				`Quiero ser Fundación`,
+				`¿Estas segur@ que quieres tener el rol de fundación rescatista de animales dentro de Firulais?`,
+				[
+					{text: 'NO', onPress: () => null, style: 'cancel'},
+					{text: 'SIP', onPress: () => this._saveUserType(type)},
+				],
+				{ cancelable: false }
+			)
+		}else{
+			this._saveUserType(type)
+		}
 	}
 
 	render() {
@@ -28,7 +45,7 @@ class ChooseUser extends Component {
 						<Card>
 							<CardItem 
 								button
-								onPress={()=>this._saveUserType('fundation')} 
+								onPress={()=>this._confirmTypeOfUser('fundation')} 
 								style={{justifyContent:'center', backgroundColor: '#B7CFFF'}}>
 								<Image 
 									source={images.super_kitty} resizeMode= 'contain' 

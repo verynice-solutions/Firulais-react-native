@@ -42,7 +42,7 @@ class Home extends Component {
     try{
       //ASK FOR CAMERA PERMISSION
       const cameraPermi = await Permissions.getAsync(Permissions.CAMERA);
-      console.log('RESPONSE CAMERA PERMISSION:',cameraPermi.status)
+      // console.log('RESPONSE CAMERA PERMISSION:',cameraPermi.status)
       if (cameraPermi.status !== 'granted') {
         if (cameraPermi.status === 'denied' || cameraPermi.status === 'undetermined') {
           const { status } = await Permissions.askAsync(Permissions.CAMERA);

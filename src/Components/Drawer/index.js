@@ -87,9 +87,13 @@ class Drawer extends React.Component {
                       {user.name||'Firulais'}
                     </Text>
                     {
-                      this.state.avg && (
+                      this.state.avg? (
                         <Text note style={{ fontSize: moderateScale(14), fontFamily:'Roboto' }}> 
                         {parseFloat(this.state.avg).toFixed(1)} <Ionicons name="md-star" size={(20)} color="rgb(75, 75, 73)"/>  </Text>
+                      ):(
+                        <Text note style={{ fontSize: moderateScale(14), fontFamily:'Roboto' }}>
+                        {user.email}
+                        </Text> 
                       )
                     }
                   </Body>
@@ -142,7 +146,7 @@ class Drawer extends React.Component {
                   <Ripple style={[styles.drawerItem,activeView=='Settings'?styles.activeItem:null]} 
                     onPress={this.navigateToScreen('Settings')}>
                     <MaterialIcons name="settings" size={moderateScale(22)} color="rgb(75, 75, 73)" style={styles.drawerItemIcon}/>
-                    <Text style={styles.drawerItemText}>Opciones</Text>
+                    <Text style={styles.drawerItemText}>Sesión</Text>
                   </Ripple>
                 </Col>
               </Row>

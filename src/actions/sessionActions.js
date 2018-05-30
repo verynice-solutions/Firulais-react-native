@@ -76,7 +76,7 @@ function rehydrateCurrentUser() {
       if (currentUser) {
         dispatch( setCurrentUser({...currentUser, loadedFromCache: true}) )
       } else {
-        console.log('NO CURRENT USER',err)
+        console.log('NO CURRENT USER')
         dispatch( signOut() )
       }
     }).catch(err=>{

@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import Ripple from 'react-native-material-ripple'
 import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Body } from 'native-base';
+import _ from 'lodash'
 
 import usersActions from '../../actions/usersActions'
 
